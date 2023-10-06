@@ -1,16 +1,16 @@
-const path = require("path");
-require("dotenv").config();
+const path = require('path');
+require('dotenv').config();
 /* PLUGINS */
-const { HotModuleReplacementPlugin, ProvidePlugin } = require("webpack");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const { HotModuleReplacementPlugin, ProvidePlugin } = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 const _constants = {
-  BUILD_DIR: path.resolve(__dirname, "build"),
-  PUBLIC_DIR: path.resolve(__dirname, "static"),
-  SRC_DIR: path.resolve(__dirname, "src"),
-  HTML_TEMPLATE: path.join(__dirname, "public", "index.html"),
-  ENTRYPOINT: path.join(__dirname, "src", "index.tsx"),
+  BUILD_DIR: path.resolve(__dirname, 'build'),
+  PUBLIC_DIR: path.resolve(__dirname, 'static'),
+  SRC_DIR: path.resolve(__dirname, 'src'),
+  HTML_TEMPLATE: path.join(__dirname, 'public', 'index.html'),
+  ENTRYPOINT: path.join(__dirname, 'src', 'index.tsx'),
 };
 
 const configurePlugins = () => {
@@ -25,7 +25,7 @@ const configurePlugins = () => {
     /* for page reloading */
     new HotModuleReplacementPlugin({}),
     new ProvidePlugin({
-      React: "react",
+      React: 'react',
     }),
   ];
 
@@ -46,7 +46,7 @@ const configureRules = () => {
       test: /\.[jt]sx?$/,
       exclude: /node_modules/,
       use: {
-        loader: "babel-loader",
+        loader: 'babel-loader',
         options: {
           cacheDirectory: true, // Using a cache to avoid of recompilation
         },
@@ -64,28 +64,28 @@ const configureRules = () => {
     //   },
     // },
     // --- HTML
-    { test: /\.(html)$/, use: ["html-loader"] },
+    { test: /\.(html)$/, use: ['html-loader'] },
     // --- IMG
     {
       test: /\.(png|jpe?g|gif|svg|webp|ico)$/i,
-      type: "asset/resource",
+      type: 'asset/resource',
       generator: {
-        filename: "assets/img/[hash][ext]",
+        filename: 'assets/img/[hash][ext]',
       },
     },
     // --- FONTS
     {
       test: /\.(woff2?|eot|ttf|otf)$/i,
       exclude: /node_modules/,
-      type: "asset/resource",
+      type: 'asset/resource',
       generator: {
-        filename: "assets/fonts/[hash][ext]",
+        filename: 'assets/fonts/[hash][ext]',
       },
     },
     // --- CSS
     {
       test: /\.css$/i,
-      use: ["style-loader", "css-loader", "postcss-loader"],
+      use: ['style-loader', 'css-loader', 'postcss-loader'],
     },
   ];
 };
@@ -108,6 +108,9 @@ const configureDevServer = () => {
       progress: true, // Prints compilation progress in percentage in the browser.
     },
     port: process.env.PORT ?? 3000,
+    devMiddleware: {
+      writeToDisk: true,
+    },
   };
 };
 
@@ -121,11 +124,11 @@ module.exports = {
   entry: _constants.ENTRYPOINT,
   output: {
     path: _constants.BUILD_DIR,
-    publicPath: "/",
+    publicPath: '/',
     clean: true,
   },
   resolve: {
-    extensions: [".tsx", ".ts", ".js"],
+    extensions: ['.tsx', '.ts', '.js'],
   },
   module: {
     strictExportPresence: true,
