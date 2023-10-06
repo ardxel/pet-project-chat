@@ -1,0 +1,47 @@
+name: Run Tests on Push
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js (Backend)
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+
+      - name: Install Backend Dependencies
+        run: cd backend && npm install
+        working-directory: ./backend
+
+      - name: Run Backend Tests
+        run: cd backend && npm test
+        working-directory: ./backend
+
+  frontend-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js (Frontend)
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+
+      - name: Install Frontend Dependencies
+        run: cd frontend && npm install
+        working-directory: ./frontend
+
+      - name: Run Frontend Tests
+        run: cd frontend && npm test
+        working-directory: ./frontend
