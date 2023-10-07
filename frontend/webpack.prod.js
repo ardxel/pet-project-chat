@@ -1,16 +1,16 @@
-const { merge } = require("webpack-merge");
-const common = require("./webpack.common");
-const TerserPlugin = require("terser-webpack-plugin");
+const { merge } = require('webpack-merge');
+const common = require('./webpack.common');
+const TerserPlugin = require('terser-webpack-plugin');
 
 /**
  * Webpack prod config
  * @type {import('webpack').Configuration}
  */
 const config = {
-  mode: "production",
+  mode: 'production',
   devtool: false,
   output: {
-    filename: "[fullhash].js",
+    filename: '[fullhash].js',
   },
   optimization: {
     minimize: true,
@@ -21,7 +21,7 @@ const config = {
           compress: true,
           output: {
             comments: false,
-            beautify: false,
+            beautify: true,
           },
         },
         extractComments: false,

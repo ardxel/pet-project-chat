@@ -5,12 +5,22 @@ const { HotModuleReplacementPlugin, ProvidePlugin } = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
+const resolveFromDir = (endpoint) => {
+  return path.resolve(__dirname, endpoint);
+};
+
 const _constants = {
-  BUILD_DIR: path.resolve(__dirname, 'build'),
-  PUBLIC_DIR: path.resolve(__dirname, 'static'),
-  SRC_DIR: path.resolve(__dirname, 'src'),
-  HTML_TEMPLATE: path.join(__dirname, 'public', 'index.html'),
-  ENTRYPOINT: path.join(__dirname, 'src', 'index.tsx'),
+  paths: {
+    BUILD_DIR: resolveFromDir('build'),
+    PUBLIC_DIR: resolveFromDir('static'),
+    SRC_DIR: resolveFromDir('src'),
+    HTML_TEMPLATE: path.join(__dirname, 'public', 'index.html'),
+    ENTRYPOINT: path.join(__dirname, 'src', 'index.tsx'),
+  },
+  env: {
+    isServe: Boolean(process.env.SERVE),
+    port: parseInt(process.env.PORT, 10) || 3000,
+  },
 };
 
 const configurePlugins = () => {
@@ -20,7 +30,7 @@ const configurePlugins = () => {
   const plugins = [
     /* to simplify the creation of the main HTML file and maintenance of webpack bundles */
     new HtmlWebpackPlugin({
-      template: _constants.HTML_TEMPLATE,
+      template: _constants.paths.HTML_TEMPLATE,
     }),
     /* for page reloading */
     new HotModuleReplacementPlugin({}),
@@ -29,7 +39,7 @@ const configurePlugins = () => {
     }),
   ];
 
-  if (process.env.SERVE) {
+  if (_constants.env.isServe) {
     /* for enabling "fast refresh" of react components  */
     plugins.push(new ReactRefreshWebpackPlugin());
   }
@@ -64,7 +74,10 @@ const configureRules = () => {
     //   },
     // },
     // --- HTML
-    { test: /\.(html)$/, use: ['html-loader'] },
+    {
+      test: /\.(html)$/,
+      use: ['html-loader'],
+    },
     // --- IMG
     {
       test: /\.(png|jpe?g|gif|svg|webp|ico)$/i,
@@ -107,7 +120,7 @@ const configureDevServer = () => {
       },
       progress: true, // Prints compilation progress in percentage in the browser.
     },
-    port: process.env.PORT ?? 3000,
+    port: _constants.env.port,
     devMiddleware: {
       writeToDisk: true,
     },
@@ -121,9 +134,9 @@ const configureDevServer = () => {
 module.exports = {
   devServer: configureDevServer(),
   plugins: configurePlugins(),
-  entry: _constants.ENTRYPOINT,
+  entry: _constants.paths.ENTRYPOINT,
   output: {
-    path: _constants.BUILD_DIR,
+    path: _constants.paths.BUILD_DIR,
     publicPath: '/',
     clean: true,
   },
