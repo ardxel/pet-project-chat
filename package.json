@@ -4,7 +4,7 @@
   "description": "my pet project chat",
   "main": "''",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepare": "npx husky install"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/ardxel/pet-project-chat/issues"
   },
-  "homepage": "https://github.com/ardxel/pet-project-chat#readme"
+  "homepage": "https://github.com/ardxel/pet-project-chat#readme",
+  "dependencies": {
+    "husky": "^8.0.3"
+  }
 }
