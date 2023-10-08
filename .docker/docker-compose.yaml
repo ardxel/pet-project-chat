@@ -1,0 +1,38 @@
+version: "3.8"
+services:
+  backend-dev:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile.dev
+    ports:
+      - 3111:3111
+    container_name: dev_backend
+    volumes:
+      - ../backend:/usr/src/app/backend
+    env_file:
+      - ./.env.backend.dev
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:7.0
+    container_name: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - ../mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: dev
+      MONGO_INITDB_ROOT_PASSWORD: 123
+
+  frontend-dev:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - 3000:3000
+    container_name: dev_frontend
+    volumes:
+      - ../frontend:/usr/src/app/frontend
+    env_file:
+      - ./.env.frontend.dev
