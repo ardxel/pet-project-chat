@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "paths": {
+      "common/*": ["common/*"],
+      "utils/*": ["utils/*"]
+    },
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
@@ -9,7 +13,7 @@
     "target": "ES2021",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
+    "baseUrl": "./src",
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
