@@ -10,7 +10,7 @@
     "lint:check": "eslint src/**/*.{ts,tsx}",
     "lint:fix": "eslint --fix src/**/*.{ts,tsx}",
     "prettier:check": "npx prettier --check src/**/*.{ts,tsx}",
-    "prettier:fix": "npx prettier --write src/**/*.{ts,tsx}",
+    "format": "npx prettier --write src/**/*.{ts,tsx}",
     "test": "npx jest"
   },
   "author": "",
