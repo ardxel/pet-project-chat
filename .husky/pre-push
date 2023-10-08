@@ -1,25 +1,20 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# Function for formatting a directory
-format_directory() {
-  local dir="$1"
-  echo "Formatting $dir..."
-  (cd "$dir" && npm run format)
+# Function to run linting for a directory
+run_lint() {
+  local directory="$1"
+  echo "Linting the $directory..."
+  (cd "$directory" && npm run test) # Replace with the actual linting command for the directory
 }
 
-# Check the changed files
-changed_files=$(git diff --cached --name-only --diff-filter=ACM)
-
-# Array of directories to format
-directories_to_format=("frontend" "backend")
-
-# Iterate over directories and format them if there are changes
-for dir in "${directories_to_format[@]}"; do
-  if echo "$changed_files" | grep -q "^$dir/"; then
-    format_directory "$dir"
+# Check if there are changes in the backend or frontend
+check_changes() {
+  local relative_path="$1"
+  if git diff --cached --name-only --exit-code --relative="$relative_path" >/dev/null; then
+    run_lint "$relative_path"
   fi
-done
+}
 
-# Continue the commit if formatting is successful
-exit 0
+check_changes "backend"
+check_changes "frontend"
