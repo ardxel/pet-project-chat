@@ -20,7 +20,7 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - ../mongodb_data:/data/db
+      - mongodb_data:/data/db
     environment:
       MONGO_INITDB_ROOT_USERNAME: dev
       MONGO_INITDB_ROOT_PASSWORD: 123
@@ -36,3 +36,5 @@ services:
       - ../frontend:/usr/src/app/frontend
     env_file:
       - ./.env.frontend.dev
+volumes:
+  - mongodb_data
