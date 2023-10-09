@@ -4,7 +4,7 @@
 # Function to run linting for a directory
 run_lint() {
   local directory="$1"
-  echo "Linting the $directory..."
+  echo "Testing the $directory..."
   (cd "$directory" && npm run test) # Replace with the actual linting command for the directory
 }
 
