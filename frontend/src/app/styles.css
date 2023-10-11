@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --icon-bg: 226 232 240;
+    --icon-active-color: 37 99 235;
+    --icon-active-bg: 191 219 254;
+    --active-link: 59 130 246;
+    --icon-color: 51 65 85;
+    --bg: 255 255 255;
+    --media-color: 71 85 105;
+    --link-color: 203 213 239;
+    --border: 219 234 254;
+  }
+
+  :root[class='dark'] {
+    --icon-bg: 32 48 71;
+    --icon-color: 148 163 184;
+    --bg: 19 32 54;
+    --media-color: 203 213 225;
+    --link-color: 203 213 239;
+    --border: 51 65 85;
+  }
+}
+
+@layer base {
+  span,
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  svg {
+    @apply text-media-color text-sm;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold;
+  }
+  a,
+  button {
+    @apply text-link-color;
+  }
+}
+
+@layer utilities {
+  .header-icon {
+    @apply w-11 h-11 md:w-12 md:h-12;
+  }
+  /* Dropdown container */
+  .dropdown {
+    @apply relative inline-block;
+  }
+  /* Dropdown menu */
+  .dropdown-menu {
+    @apply absolute right-0 mt-3 bg-bg flex flex-col z-[999] min-w-[96px] border-border border rounded-md;
+  }
+}

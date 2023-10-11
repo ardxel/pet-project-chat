@@ -4,16 +4,18 @@ require('dotenv').config();
 const { HotModuleReplacementPlugin, ProvidePlugin } = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const DotenvPlugin = require('dotenv-webpack');
 
-const resolveFromDir = (endpoint) => {
+const resolveFromMainDir = (endpoint) => {
   return path.resolve(__dirname, endpoint);
 };
 
 const _constants = {
   paths: {
-    BUILD_DIR: resolveFromDir('build'),
-    PUBLIC_DIR: resolveFromDir('static'),
-    SRC_DIR: resolveFromDir('src'),
+    BUILD_DIR: resolveFromMainDir('build'),
+    PUBLIC_DIR: resolveFromMainDir('static'),
+    SRC_DIR: resolveFromMainDir('src'),
     HTML_TEMPLATE: path.join(__dirname, 'public', 'index.html'),
     ENTRYPOINT: path.join(__dirname, 'src', 'index.tsx'),
   },
@@ -31,6 +33,11 @@ const configurePlugins = () => {
     /* to simplify the creation of the main HTML file and maintenance of webpack bundles */
     new HtmlWebpackPlugin({
       template: _constants.paths.HTML_TEMPLATE,
+    }),
+    new DotenvPlugin({
+      systemvars: true,
+      safe: process.env.NODE_ENV === 'development',
+      silent: true,
     }),
     /* for page reloading */
     new HotModuleReplacementPlugin({}),
@@ -80,11 +87,16 @@ const configureRules = () => {
     },
     // --- IMG
     {
-      test: /\.(png|jpe?g|gif|svg|webp|ico)$/i,
+      test: /\.(png|jpe?g|gif|webp|ico)$/i,
       type: 'asset/resource',
       generator: {
         filename: 'assets/img/[hash][ext]',
       },
+    },
+    // --- SVG
+    {
+      test: /\.svg$/,
+      use: ['@svgr/webpack'],
     },
     // --- FONTS
     {
@@ -129,7 +141,7 @@ const configureDevServer = () => {
 
 /**
  * Webpack common config
- * @type {import('webpack').Configuration}
+ * @return {import('webpack').Configuration}
  */
 module.exports = {
   devServer: configureDevServer(),
@@ -142,6 +154,7 @@ module.exports = {
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
+    plugins: [new TsconfigPathsPlugin({ baseUrl: _constants.paths.SRC_DIR })],
   },
   module: {
     strictExportPresence: true,

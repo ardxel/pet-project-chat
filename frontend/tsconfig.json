@@ -7,6 +7,8 @@
     "jsx": "react-jsx",
     "allowJs": true,
     "moduleResolution": "node",
-    "allowUmdGlobalAccess": true
+    "allowUmdGlobalAccess": true,
+    "skipLibCheck": true,
+    "baseUrl": "./src"
   }
 }
