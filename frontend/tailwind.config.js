@@ -8,6 +8,10 @@ const appColors = [
   '--icon-active-color',
   '--icon-active-bg',
   '--active-link',
+  '--aside-bg',
+  '--heading-color',
+  '--form-color',
+  '--btn-bg',
 ];
 
 /**
@@ -20,6 +24,7 @@ const config = {
       xs3: '320px',
       xs2: '476px',
       xs1: '520px',
+      xs0: '576px',
       ...require('tailwindcss/defaultTheme').screens,
     },
     colors: modernColors(appColors),

@@ -1,4 +1,5 @@
 import Layout from 'app/providers';
+import { LoginForm as LoginPage, RegistrForm as RegistrationPage } from 'pages';
 import { Navigate, createBrowserRouter } from 'react-router-dom';
 import { Paths } from 'shared/routing';
 
@@ -20,6 +21,14 @@ const router = createBrowserRouter([
       {
         path: Paths.stories,
         element: <div></div>,
+      },
+      {
+        path: Paths.login,
+        element: <LoginPage />,
+      },
+      {
+        path: Paths.registration,
+        element: <RegistrationPage />,
       },
       {
         path: Paths.band,

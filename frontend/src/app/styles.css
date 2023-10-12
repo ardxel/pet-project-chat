@@ -5,37 +5,50 @@
 @layer base {
   :root {
     --icon-bg: 226 232 240;
+    --btn-bg: 37 99 235;
+    --aside-bg: 219 234 254;
     --icon-active-color: 37 99 235;
     --icon-active-bg: 191 219 254;
     --active-link: 59 130 246;
+    --form-color: 100 116 139;
     --icon-color: 51 65 85;
     --bg: 255 255 255;
     --media-color: 71 85 105;
+    --heading-color: 71 85 105;
     --link-color: 203 213 239;
     --border: 219 234 254;
   }
 
   :root[class='dark'] {
     --icon-bg: 32 48 71;
+    --aside-bg: 15 23 42;
     --icon-color: 148 163 184;
     --bg: 19 32 54;
+    --form-color: 148 163 184;
     --media-color: 203 213 225;
+    --heading-color: 255 255 255;
     --link-color: 203 213 239;
     --border: 51 65 85;
   }
 }
 
 @layer base {
+  div#root {
+    @apply flex flex-col h-[100vh];
+  }
   span,
   p,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
   svg {
     @apply text-media-color text-sm;
+  }
+
+  label,
+  input {
+    @apply text-form-color;
+  }
+
+  label {
+    @apply font-bold text-sm;
   }
 
   h1,
@@ -44,7 +57,7 @@
   h4,
   h5,
   h6 {
-    @apply font-bold;
+    @apply font-bold text-heading-color;
   }
   a,
   button {
@@ -53,6 +66,13 @@
 }
 
 @layer utilities {
+  .main {
+    @apply overflow-y-auto flex-grow-[1] flex-shrink-[1] flex-auto;
+  }
+  .form-input {
+    @apply bg-bg border-border border text-sm outline-none px-4 py-3 leading-4 rounded-md;
+  }
+  /* util for icons in header */
   .header-icon {
     @apply w-11 h-11 md:w-12 md:h-12;
   }
