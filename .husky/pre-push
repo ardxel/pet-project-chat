@@ -1,18 +1,7 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# Функция для проверки изменений в директории
-check_directory_changes() {
-  local directory="$1"
-  if git diff --cached --name-only | grep -E "$directory/"; then
-    echo "Изменения обнаружены в директории '$directory'. Запускаем 'npm run test' в '$directory'..."
-    (cd "$directory" && npm run test)
-  fi
-}
+(cd backend && npm run test) && (cd frontend && npm run test)
 
-# Проверяем изменения в "backend" и "frontend"
-check_directory_changes "backend"
-check_directory_changes "frontend"
-
-# Продолжаем с отправкой изменений, независимо от результата проверки
+# Continue with the push
 exit 0
