@@ -7,4 +7,5 @@ export enum Paths {
   contacts = '/contacts',
   stories = '/stories',
   settings = '/settings',
+  error = '/error',
 }

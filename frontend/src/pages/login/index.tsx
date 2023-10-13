@@ -4,7 +4,7 @@ import { Paths } from 'shared/routing';
 import { Logo, PasswordInput } from 'shared/ui';
 import * as yup from 'yup';
 
-export const LoginForm = () => {
+const LoginForm = () => {
   return (
     <div className='bg-aside-bg main flex justify-center items-center'>
       <div className='w-full mx-4 xs0:mx-auto xs0:w-auto'>
@@ -65,7 +65,7 @@ export const LoginForm = () => {
                   </div>
                   <button
                     type='submit'
-                    className='w-full text-center text-heading-color rounded-md mt-5 font-bold py-3 bg-btn-bg'>
+                    className='w-full text-center text-whie rounded-md mt-5 font-bold py-3 bg-btn-bg'>
                     Войти
                   </button>
                 </Form>
@@ -85,3 +85,5 @@ export const LoginForm = () => {
     </div>
   );
 };
+
+export default LoginForm;

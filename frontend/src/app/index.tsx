@@ -1,6 +1,6 @@
 import { RouterProvider } from 'react-router';
-import './styles.css';
 import router from './routes';
+import './styles.css';
 
 const App = () => <RouterProvider router={router} />;
 

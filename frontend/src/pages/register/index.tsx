@@ -7,7 +7,7 @@ import * as yup from 'yup';
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 // full password regex =
 // ^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%^&+=!])([A-Za-z\d@#$%^&+=!-_.]){8,}$
-export const RegistrForm = () => {
+const RegistrForm = () => {
   return (
     <div className='bg-aside-bg main flex justify-center items-center'>
       <div className='w-full mx-4 xs0:mx-auto xs0:w-auto'>
@@ -122,7 +122,7 @@ export const RegistrForm = () => {
 
                   <button
                     type='submit'
-                    className='w-full text-center text-heading-color rounded-md mt-3 font-bold py-3 bg-btn-bg'>
+                    className='w-full text-center text-white rounded-md mt-3 font-bold py-3 bg-btn-bg'>
                     Зарегистрироваться
                   </button>
                 </Form>
@@ -142,3 +142,5 @@ export const RegistrForm = () => {
     </div>
   );
 };
+
+export default RegistrForm;

@@ -1,7 +1,10 @@
 import Layout from 'app/providers';
-import { LoginForm as LoginPage, RegistrForm as RegistrationPage } from 'pages';
+import { lazy, useEffect } from 'react';
 import { Navigate, createBrowserRouter } from 'react-router-dom';
 import { Paths } from 'shared/routing';
+
+const LoginPage = lazy(() => import('pages/login'));
+const RegistrationPage = lazy(() => import('pages/register'));
 
 const redirectTo = (path: string) => <Navigate to={path} />;
 
@@ -23,6 +26,10 @@ const router = createBrowserRouter([
         element: <div></div>,
       },
       {
+        path: '/123',
+        element: <BuggyComponent />,
+      },
+      {
         path: Paths.login,
         element: <LoginPage />,
       },
@@ -39,3 +46,9 @@ const router = createBrowserRouter([
 ]);
 
 export default router;
+function BuggyComponent() {
+  useEffect(() => {
+    throw new Error('JOPA');
+  });
+  return <div>Hello world</div>;
+}

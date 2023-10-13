@@ -2,7 +2,16 @@ import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import { useField } from 'formik';
 import { FC, InputHTMLAttributes, useState } from 'react';
-interface PasswordInputProps extends InputHTMLAttributes<HTMLInputElement> {}
+
+/**
+ * Удалил type атрибут из интерфейса чтобы нельзя было прокинуть этот пропс в input
+ * и не нарушить работу компонента.
+ */
+interface PasswordInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {}
+
+/**
+ * Данный компонент работает только внутри formik провайдера.
+ */
 
 export const PasswordInput: FC<PasswordInputProps> = ({ className, ...rest }) => {
   const [field] = useField({ name: rest.name });
