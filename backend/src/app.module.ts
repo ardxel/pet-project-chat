@@ -34,7 +34,7 @@ import { isDevMode } from './utils';
     }),
     /* Authentication module */
     AuthModule,
-    /* User module */
+    // /* User module */
     UserModule,
   ],
   controllers: [AppController],
