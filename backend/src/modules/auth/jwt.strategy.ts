@@ -5,8 +5,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UserDocument } from 'schemas';
 
 interface JwtUserPayload {
-  email: string;
-  _id: string;
+  sub: string;
 }
 
 @Injectable()
@@ -18,12 +17,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: Record<string, any> & JwtUserPayload): Promise<UserDocument | undefined> {
-    const user = await this.userService.readByEmail(payload.email);
+  async validate(payload: Record<string, any> & JwtUserPayload): Promise<UserDocument> {
+    const user = await this.userService.readById(payload.sub);
     if (!user) {
       throw new UnauthorizedException();
     }
-
     return user;
   }
 }

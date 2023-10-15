@@ -9,13 +9,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { RegisterUserDto } from 'modules/auth/dto';
 import { Model, Types } from 'mongoose';
 import { User, UserDocument } from 'schemas';
-import { exclude } from 'utils/exclude.util';
+import { exclude } from 'utils';
 
 type UserSafeCopy = Omit<User, 'password'> & { _id: Types.ObjectId };
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel('user') private readonly model: Model<UserDocument>) {}
+  constructor(@InjectModel(User.name) private readonly model: Model<UserDocument>) {}
 
   public async create(registerUserDto: RegisterUserDto, safe?: boolean): Promise<UserDocument | UserSafeCopy> {
     const user = new this.model({ ...registerUserDto });

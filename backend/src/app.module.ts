@@ -1,7 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
-import { MongooseModule, MongooseModuleFactoryOptions } from '@nestjs/mongoose';
+import { MongooseModule } from '@nestjs/mongoose';
 import { HttpExceptionFilter, LoggerMiddleware } from 'common';
 import cors from 'cors';
 import { AuthModule, UserModule } from 'modules';
@@ -19,11 +19,10 @@ import { isDevMode } from './utils';
     }),
     /* Mongoose module */
     MongooseModule.forRootAsync({
-      useFactory: async (configService: ConfigService) => {
-        const uri = configService.get<string>('MONGO_URI');
-        const dbName = configService.get<string>('DB_NAME');
-        return { uri, dbName } as MongooseModuleFactoryOptions;
-      },
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGO_URI'),
+        dbName: configService.get<string>('DB_NAME'),
+      }),
       inject: [ConfigService],
     }),
     /* Winston module */
@@ -51,7 +50,9 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     if (isDevMode()) {
       consumer.apply(LoggerMiddleware).forRoutes('*');
-    } else {
+    }
+
+    if (!isDevMode()) {
       consumer.apply(cors({ origin: [process.env.CLIENT_DOMAIN], methods: ['GET', 'PUT', 'POST', 'PATCH', 'DELETE'] }));
     }
   }

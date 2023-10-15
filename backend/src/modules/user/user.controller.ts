@@ -1,5 +1,7 @@
-import { Controller, Get } from '@nestjs/common';
-import { UserService } from './services';
+import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'common';
+import { Request } from 'express';
+import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
@@ -11,5 +13,11 @@ export class UserController {
   @Get('count-users')
   public async countUsers() {
     return await this.userService.__getUserCount();
+  }
+
+  @Get('test-guard')
+  @UseGuards(JwtAuthGuard)
+  public async testGuard(@Req() req: Request) {
+    return req.user;
   }
 }

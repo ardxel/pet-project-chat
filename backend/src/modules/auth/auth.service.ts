@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto, RegisterUserDto } from 'modules/auth/dto';
-import { HashService, UserService } from 'modules/user/services';
+import { HashService, UserService } from 'modules/user';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +16,7 @@ export class AuthService {
       throw new BadRequestException('this email is already taken');
     }
     const user = await this.userService.create(registerUserDto, true);
-    const token = await this.jwtService.signAsync({ email: user.email });
+    const token = await this.jwtService.signAsync({ sub: user._id });
     return { user, token };
   }
 
