@@ -17,7 +17,7 @@ module.exports = {
   // // Module mapping for mocking styles (if necessary)
 
   // // Settings for the @testing-library library
-  setupFilesAfterEnv: ['<rootDir>/__jest__/jest.setup.ts', '@testing-library/jest-dom'],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts', '@testing-library/jest-dom'],
 
   // Specify Jest to use jsdom as the testing environment
   testEnvironment: 'jsdom',

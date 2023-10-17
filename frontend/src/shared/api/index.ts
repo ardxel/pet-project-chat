@@ -1,2 +1,6 @@
+export * from './baseApi';
+export * from './baseQuery';
 export { default as config } from './config';
-export * from './instance';
+export * from './errorTypeChecker';
+export * from './tags';
+export * from './types';

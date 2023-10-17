@@ -57,7 +57,6 @@ function modernColors(colorVars) {
      */
     colors[keyWithoutPrefix] = `rgb(var(${color}) / <alpha-value>)`;
   }
-  console.log(colors);
   return { ...require('tailwindcss/colors'), ...colors };
 }
 
