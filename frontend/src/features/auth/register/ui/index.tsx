@@ -5,17 +5,17 @@ import { useAppDispatch } from 'shared/model';
 import { Paths } from 'shared/routing';
 import { Logo, PasswordInput } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
-import { registrThunk } from '../model/registrThunk';
-import { validationRegistrSchema } from '../model/schema';
+import { registerThunk } from '../model';
+import { validationRegisterSchema } from '../model/schema';
 
 // full password regex =
 // ^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%^&+=!])([A-Za-z\d@#$%^&+=!-_.]){8,}$
 
-interface RegistrFormProps {
+interface RegisterFormProps {
   onSuccess: () => void;
 }
 
-export const RegistrForm: FC<RegistrFormProps> = ({ onSuccess }) => {
+export const RegisterForm: FC<RegisterFormProps> = ({ onSuccess }) => {
   const [error, setError] = useState<string | null>(null);
 
   const dispatch = useAppDispatch();
@@ -40,10 +40,10 @@ export const RegistrForm: FC<RegistrFormProps> = ({ onSuccess }) => {
                 password: '',
                 repeatPassword: '',
               }}
-              validationSchema={validationRegistrSchema}
+              validationSchema={validationRegisterSchema}
               onSubmit={async ({ email, name, password }, { resetForm }) => {
                 try {
-                  await dispatch(registrThunk({ email, name, password })).unwrap();
+                  await dispatch(registerThunk({ email, name, password })).unwrap();
                   onSuccess();
                 } catch (error) {
                   setError((error as Error).message);

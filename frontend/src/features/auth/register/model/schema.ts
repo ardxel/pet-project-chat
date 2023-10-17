@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 
-export const validationRegistrSchema = yup.object().shape({
+export const validationRegisterSchema = yup.object().shape({
   agree: yup.boolean().oneOf([true], 'Вы должны согласиться с Правилами и Условиями'),
   name: yup.string().min(4).required('имя пользователя является обязательным.'),
   email: yup.string().email('Неправильный почтовый адрес.').required('почтовый адрес является обязательным.'),

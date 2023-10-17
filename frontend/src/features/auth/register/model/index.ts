@@ -1,2 +1,2 @@
-export * from './registrThunk';
+export * from './registerThunk';
 export * from './schema';

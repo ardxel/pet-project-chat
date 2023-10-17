@@ -1,11 +1,15 @@
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { DataResponse } from './types';
 
-export function isRegisteredError(error: unknown): error is FetchBaseQueryError & { data: DataResponse<never> } {
-  return isFetchBaseQueryError(error) && errorHasBaseDataResponse(error.data);
+interface FailDataResponse extends DataResponse<never> {
+  status: 'fail';
 }
 
-export function errorHasBaseDataResponse(errorData: unknown): errorData is DataResponse<never> {
+export function isRegisteredError(error: unknown): error is FetchBaseQueryError & { data: FailDataResponse } {
+  return isFetchBaseQueryError(error) && errorHasDataResponse(error.data) && error.data.status === 'fail';
+}
+
+export function errorHasDataResponse(errorData: unknown): errorData is FailDataResponse {
   return typeof errorData === 'object' && errorData !== null && 'status' in errorData && 'message' in errorData;
 }
 

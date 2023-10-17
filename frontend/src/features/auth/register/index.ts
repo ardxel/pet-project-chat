@@ -1,2 +1,2 @@
 export * from './model';
-export { RegistrForm } from './ui';
+export { RegisterForm } from './ui';

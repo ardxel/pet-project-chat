@@ -3,7 +3,7 @@ import { sessionApi } from 'entities/session/api/sessionApi';
 import { isRegisteredError } from 'shared/api';
 import { ClientError, ServerError } from 'shared/exceptions';
 
-export const registrThunk = createAsyncThunk<void, { email: string; password: string; name: string }>(
+export const registerThunk = createAsyncThunk<void, { email: string; password: string; name: string }>(
   'authentication/registration',
   async (body, { dispatch }) => {
     try {
