@@ -1,21 +1,25 @@
-import Layout from 'app/providers';
-import { lazy, useEffect } from 'react';
-import { Navigate, createBrowserRouter } from 'react-router-dom';
+import { lazy } from 'react';
+import { Navigate, Outlet, createBrowserRouter } from 'react-router-dom';
 import { Paths } from 'shared/routing';
+import { Header } from 'widgets';
 
 const LoginPage = lazy(() => import('pages/login'));
 const RegistrationPage = lazy(() => import('pages/register'));
-
-const redirectTo = (path: string) => <Navigate to={path} />;
+const ChatPage = lazy(() => import('pages/chat'));
 
 const router = createBrowserRouter([
   {
     path: Paths.home,
-    element: <Layout />,
+    element: (
+      <>
+        <Header />
+        <Outlet />
+      </>
+    ),
     children: [
       {
         path: Paths.chat,
-        element: <div></div>,
+        element: <ChatPage />,
       },
       {
         path: Paths.contacts,
@@ -26,9 +30,14 @@ const router = createBrowserRouter([
         element: <div></div>,
       },
       {
-        path: '/123',
-        element: <BuggyComponent />,
+        path: Paths.band,
+        element: <Navigate to={Paths.home} />,
       },
+    ],
+  },
+  {
+    path: Paths.home,
+    children: [
       {
         path: Paths.login,
         element: <LoginPage />,
@@ -39,16 +48,10 @@ const router = createBrowserRouter([
       },
       {
         path: Paths.band,
-        element: redirectTo('/'),
+        element: <Navigate to={Paths.home} />,
       },
     ],
   },
 ]);
 
 export default router;
-function BuggyComponent() {
-  useEffect(() => {
-    throw new Error('JOPA');
-  });
-  return <div>Hello world</div>;
-}

@@ -1,17 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { IUser } from 'shared/api/user';
-import { sessionApi } from '../api/sessionApi';
+import { UserDto } from '../api';
+import { sessionApi } from '../api/session.api';
 
 interface SessionSliceState {
-  user: IUser | undefined;
+  user?: UserDto;
   isAuthorized: boolean;
-  accessToken: string | null;
+  accessToken?: string;
 }
 
 const initialSessionState: () => SessionSliceState = () => ({
-  user: undefined,
   isAuthorized: false,
-  accessToken: localStorage.getItem('access_token'),
 });
 
 export const sessionSlice = createSlice({
@@ -19,7 +17,7 @@ export const sessionSlice = createSlice({
   initialState: initialSessionState,
   reducers: {
     clearSessionData: (state) => {
-      state.accessToken = null;
+      state.accessToken = undefined;
       state.isAuthorized = false;
       state.user = undefined;
     },
@@ -27,11 +25,16 @@ export const sessionSlice = createSlice({
   extraReducers: (builder) => {
     builder.addMatcher(sessionApi.endpoints.register.matchFulfilled, (state, { payload }) => {
       // TODO
-      console.log(payload);
+      state.accessToken = payload.token;
+      state.user = payload.user;
+      state.isAuthorized = true;
     });
     builder.addMatcher(sessionApi.endpoints.login.matchFulfilled, (state, { payload }) => {
+      console.log('session.slice activated');
       // TODO
-      console.log(payload);
+      state.accessToken = payload.token;
+      state.user = payload.user;
+      state.isAuthorized = true;
     });
   },
 });

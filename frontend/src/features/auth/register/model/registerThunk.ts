@@ -1,9 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { sessionApi } from 'entities/session/api/sessionApi';
+import { RequestRegisterBody, sessionApi } from 'entities/session/api';
 import { isRegisteredError } from 'shared/api';
 import { ClientError, ServerError } from 'shared/exceptions';
 
-export const registerThunk = createAsyncThunk<void, { email: string; password: string; name: string }>(
+export const registerThunk = createAsyncThunk<void, RequestRegisterBody>(
   'authentication/registration',
   async (body, { dispatch }) => {
     try {

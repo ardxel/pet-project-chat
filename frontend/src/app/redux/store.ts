@@ -1,13 +1,28 @@
 import { configureStore } from '@reduxjs/toolkit';
+import { sessionSlice } from 'entities/session';
+import { themeSlice } from 'entities/theme';
+import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer, persistStore } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import { baseApi } from 'shared/api';
-import { rootReducer } from './root-reducer';
+import { rootReducer } from './root.reducer';
 
-const store = configureStore({
-  reducer: rootReducer,
-  middleware: (getDefailtMiddleware) => getDefailtMiddleware().concat(baseApi.middleware),
+const persistConfig = {
+  key: 'root',
+  storage,
+  whiteList: [sessionSlice.name, themeSlice.name],
+};
+
+export const store = configureStore({
+  reducer: persistReducer(persistConfig, rootReducer),
+  middleware: (getDefailtMiddleware) =>
+    getDefailtMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }).concat(baseApi.middleware),
 });
 
-export default store;
+export const persistedStore = persistStore(store);
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;

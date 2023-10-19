@@ -19,7 +19,7 @@
     --border: 219 234 254;
   }
 
-  :root[class='dark'] {
+  :root.dark {
     --icon-bg: 32 48 71;
     --aside-bg: 15 23 42;
     --icon-color: 148 163 184;
@@ -80,6 +80,11 @@
   .dropdown {
     @apply relative inline-block;
   }
+
+  .list-item-in-dropdown {
+    @apply [&>*]:text-[13px] flex gap-x-2 [&>svg]:text-lg [&>svg]:text-xl  [&>*]:hover:text-active-link;
+  }
+
   /* Dropdown menu */
   .dropdown-menu {
     @apply absolute right-0 mt-3 bg-bg flex flex-col z-[999] min-w-[96px] border-border border rounded-md;

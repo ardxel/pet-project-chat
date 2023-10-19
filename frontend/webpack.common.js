@@ -17,7 +17,7 @@ const _constants = {
     PUBLIC_DIR: resolveFromMainDir('static'),
     SRC_DIR: resolveFromMainDir('src'),
     HTML_TEMPLATE: path.join(__dirname, 'public', 'index.html'),
-    ENTRYPOINT: path.join(__dirname, 'src', 'index.tsx'),
+    ENTRYPOINT: path.join(__dirname, 'src', 'app', 'index.tsx'),
   },
   env: {
     isServe: Boolean(process.env.SERVE),

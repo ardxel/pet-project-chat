@@ -1,8 +1,9 @@
 import { Menu, Switch } from '@headlessui/react';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
-import { useEffect, useState } from 'react';
+import { changeTheme, selectCurrentTheme } from 'entities/theme';
 import { Link } from 'react-router-dom';
 import { profileLinks } from 'shared/custom';
+import { useAppDispatch, useAppSelector } from 'shared/model';
 import { twMerge } from 'tailwind-merge';
 
 const ProfileTitle = () => {
@@ -20,18 +21,12 @@ const ProfileTitle = () => {
 };
 
 const ProfileDarkModeSwitcher = () => {
-  const [enabledDarkTheme, setenabledDarkTheme] = useState(localStorage.theme === 'dark');
+  const theme = useAppSelector(selectCurrentTheme);
+  const enabledDarkTheme = theme === 'dark';
+  const dispatch = useAppDispatch();
 
   const switchTheme = () => {
-    if (enabledDarkTheme) {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-      setenabledDarkTheme(false);
-    } else {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-      setenabledDarkTheme(true);
-    }
+    dispatch(changeTheme(enabledDarkTheme ? 'light' : 'dark'));
   };
 
   return (
@@ -72,19 +67,6 @@ const ProfileLinks = () => {
 };
 
 const HeaderProfile = () => {
-  useEffect(() => {
-    if (
-      localStorage.theme === 'dark' ||
-      (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
-    ) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      localStorage.setItem('theme', 'light');
-      document.documentElement.classList.remove('dark');
-    }
-  }, []);
-
   return (
     <Menu as='div' className='dropdown'>
       <Menu.Button className='w-11 h-11 md:w-12 md:h-12 relative'>

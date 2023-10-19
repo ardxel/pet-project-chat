@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { useAppDispatch } from 'shared/model';
 import { Paths } from 'shared/routing';
 import { Logo, PasswordInput } from 'shared/ui';
-import { twMerge } from 'tailwind-merge';
 import { registerThunk } from '../model';
 import { validationRegisterSchema } from '../model/schema';
 
@@ -14,6 +13,14 @@ import { validationRegisterSchema } from '../model/schema';
 interface RegisterFormProps {
   onSuccess: () => void;
 }
+
+const ErrMessage = ({ name }: { name: string }) => (
+  <ErrorMessage
+    component='p'
+    name={name}
+    className="text-xs mt-1 h-8 max-h-8 before:content-['*'] before:inline-block"
+  />
+);
 
 export const RegisterForm: FC<RegisterFormProps> = ({ onSuccess }) => {
   const [error, setError] = useState<string | null>(null);
@@ -50,17 +57,13 @@ export const RegisterForm: FC<RegisterFormProps> = ({ onSuccess }) => {
                   resetForm();
                 }
               }}>
-              {() => (
+              {({ isSubmitting }) => (
                 <Form>
                   <div className='grid grid-cols-1 xs0:grid-cols-2 lg:grid-cols-2 gap-y-6 xs0:gap-x-6 xs0:gap-y-4'>
                     <div className='flex flex-col'>
                       <label htmlFor='name'>Имя:</label>
                       <Field className='form-input mt-3' name='name' id='name' type='text' placeholder='ваше имя' />
-                      <ErrorMessage
-                        component='p'
-                        name='name'
-                        className="text-xs mt-1 h-8 max-h-8 before:content-['*'] before:inline-block"
-                      />
+                      <ErrMessage name='name' />
                     </div>
                     <div className='flex flex-col'>
                       <label htmlFor='email'>Почтовый адрес:</label>
@@ -71,20 +74,12 @@ export const RegisterForm: FC<RegisterFormProps> = ({ onSuccess }) => {
                         type='text'
                         placeholder='вашапочта@почта.ру'
                       />
-                      <ErrorMessage
-                        component='p'
-                        name='email'
-                        className="text-xs mt-1 h-8 max-h-8 before:content-['*'] before:inline-block"
-                      />
+                      <ErrMessage name='email' />
                     </div>
                     <div className='flex flex-col'>
                       <label htmlFor='password'>Пароль:</label>
                       <PasswordInput className='mt-3' name='password' id='password' placeholder='пароль' />
-                      <ErrorMessage
-                        component='p'
-                        name='password'
-                        className="text-xs mt-1 h-8 max-h-8 before:content-['*'] before:inline-block"
-                      />
+                      <ErrMessage name='password' />
                     </div>
                     <div className='flex flex-col'>
                       <label htmlFor='repeatPassword'>Повторите пароль:</label>
@@ -94,29 +89,22 @@ export const RegisterForm: FC<RegisterFormProps> = ({ onSuccess }) => {
                         id='repeatPassword'
                         placeholder='пароль снова'
                       />
-                      <ErrorMessage
-                        component='p'
-                        name='repeatPassword'
-                        className="text-xs mt-1 h-8 max-h-8 before:content-['*'] before:inline-block"
-                      />
+                      <ErrMessage name='repeatPassword' />
                     </div>
                   </div>
                   <div className='mt-4'>
-                    <label className={twMerge('w-full inline-block')}>
+                    <label className={'w-full inline-block'}>
                       <Field type='checkbox' name='agree' className='mr-2 w-4 h-4' />
                       {'Я согласен с политикой конфиденциальности и условиями'}
-                      <ErrorMessage
-                        name='agree'
-                        component='p'
-                        className="text-xs mt-1 h-8 max-h-8 before:content-['*'] before:inline-block"
-                      />
+                      <ErrMessage name='agree' />
                     </label>
                   </div>
 
                   <button
+                    disabled={isSubmitting}
                     type='submit'
                     className='w-full text-center text-white rounded-md mt-3 font-bold py-3 bg-btn-bg'>
-                    Зарегистрироваться
+                    {isSubmitting ? 'Идет загрузка...' : 'Зарегистрироваться'}
                   </button>
                 </Form>
               )}

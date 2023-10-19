@@ -6,7 +6,7 @@ import QuickLinks from './quick-navigation';
 
 export const Header = () => {
   return (
-    <header className='w-full flex flex-grow-0 flex-shrink-0 h-16 md:h-[72px] border-b bg-bg border-blue-100 '>
+    <header className='w-full flex flex-grow-0 flex-shrink-0 h-16 md:h-[72px] border-b bg-bg border-border '>
       <div className='border-r border-border'>
         <Logo />
       </div>

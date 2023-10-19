@@ -11,6 +11,14 @@ interface LoginFormProps {
   onSuccess: () => void;
 }
 
+const ErrMessage = ({ name }: { name: string }) => (
+  <ErrorMessage
+    component='p'
+    name={name}
+    className="text-xs mt-1 h-8 max-h-8 before:content-['*'] before:inline-block"
+  />
+);
+
 export const LoginForm: FC<LoginFormProps> = ({ onSuccess }) => {
   const [error, setError] = useState<string | null>(null);
   const dispatch = useAppDispatch();
@@ -42,7 +50,7 @@ export const LoginForm: FC<LoginFormProps> = ({ onSuccess }) => {
                   resetForm();
                 }
               }}>
-              {() => (
+              {({ isSubmitting }) => (
                 <Form>
                   <div className='flex flex-col gap-y-6 xs0:gap-x-6 xs0:gap-y-4'>
                     <div className='flex flex-col'>
@@ -54,23 +62,16 @@ export const LoginForm: FC<LoginFormProps> = ({ onSuccess }) => {
                         type='text'
                         placeholder='вашапочта@почта.ру'
                       />
-                      <ErrorMessage
-                        component='p'
-                        name='email'
-                        className="text-xs mt-1 h-8 max-h-8 before:content-['*'] before:inline-block"
-                      />
+                      <ErrMessage name='email' />
                     </div>
                     <div className='flex flex-col'>
                       <label htmlFor='password'>Пароль:</label>
                       <PasswordInput className='mt-3' name='password' id='password' placeholder='пароль' />
-                      <ErrorMessage
-                        component='p'
-                        name='password'
-                        className="text-xs mt-1 h-8 max-h-8 before:content-['*'] before:inline-block"
-                      />
+                      <ErrMessage name='password' />
                     </div>
                   </div>
                   <button
+                    disabled={isSubmitting}
                     type='submit'
                     className='w-full text-center text-whie rounded-md mt-5 font-bold py-3 bg-btn-bg'>
                     Войти

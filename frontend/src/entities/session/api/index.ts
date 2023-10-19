@@ -1,2 +1,2 @@
-export * from './sessionApi';
+export * from './session.api';
 export * from './types';

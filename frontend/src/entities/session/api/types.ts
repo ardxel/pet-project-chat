@@ -1,8 +1,6 @@
-import { IUser } from 'shared/api/user';
-
 export interface SessionUserDto {
   token: string;
-  user: IUser;
+  user: UserDto;
 }
 
 export interface RequestRegisterBody {
@@ -14,4 +12,20 @@ export interface RequestRegisterBody {
 export interface RequestLoginBody {
   email: string;
   password: string;
+}
+
+export interface UserDto {
+  _id: string;
+  email: string;
+  name: string;
+  // TODO
+  avatar?: string;
+  contacts: UserDto[];
+  fullname?: string;
+  birthday?: Date;
+  gender?: string;
+  language?: string[];
+  hometown?: string;
+  phoneNumber?: string;
+  about?: string;
 }
