@@ -5,19 +5,19 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 export const profileLinks = [
   {
     id: 0,
-    icon: <PersonOutlineOutlinedIcon />,
+    Icon: PersonOutlineOutlinedIcon,
     href: '/profile',
     text: 'Профиль',
   },
   {
     id: 1,
-    icon: <SettingsOutlinedIcon />,
+    Icon: SettingsOutlinedIcon,
     href: '/settings',
     text: 'Настройки',
   },
   {
     id: 2,
-    icon: <LockOpenOutlinedIcon />,
+    Icon: LockOpenOutlinedIcon,
     href: '/profile/edit',
     text: 'Изменить пароль',
   },

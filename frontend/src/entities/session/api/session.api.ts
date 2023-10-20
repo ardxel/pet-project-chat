@@ -1,4 +1,5 @@
-import { baseApi, SESSION_TAG } from 'shared/api';
+import { baseApi, DataResponse, SESSION_TAG } from 'shared/api';
+import { mapSession } from '../lib/mapSession';
 import { RequestLoginBody, RequestRegisterBody, SessionUserDto } from './types';
 
 export const sessionApi = baseApi.injectEndpoints({
@@ -10,7 +11,7 @@ export const sessionApi = baseApi.injectEndpoints({
         body,
       }),
       invalidatesTags: [SESSION_TAG],
-      transformResponse: (response: SessionUserDto) => response,
+      transformResponse: (response: DataResponse<SessionUserDto>) => mapSession(response),
     }),
     register: build.mutation({
       query: (body: RequestRegisterBody) => ({
@@ -19,7 +20,7 @@ export const sessionApi = baseApi.injectEndpoints({
         body,
       }),
       invalidatesTags: [SESSION_TAG],
-      transformResponse: (response: SessionUserDto) => response,
+      transformResponse: (response: DataResponse<SessionUserDto>) => mapSession(response),
     }),
   }),
 });

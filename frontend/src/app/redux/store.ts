@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { sessionSlice } from 'entities/session';
 import { themeSlice } from 'entities/theme';
+import { invalidateAccessTokenListener } from 'features/auth/invalidateAccessToken/model/listener';
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { baseApi } from 'shared/api';
@@ -19,7 +20,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(baseApi.middleware),
+    }).concat(baseApi.middleware, invalidateAccessTokenListener.middleware),
 });
 
 export const persistedStore = persistStore(store);

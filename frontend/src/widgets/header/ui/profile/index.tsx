@@ -1,9 +1,14 @@
 import { Menu, Switch } from '@headlessui/react';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import PowerSettingsNewOutlinedIcon from '@mui/icons-material/PowerSettingsNewOutlined';
+import { clearSessionData, selectIsAuthorized } from 'entities/session/model/session.slice';
 import { changeTheme, selectCurrentTheme } from 'entities/theme';
+import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { profileLinks } from 'shared/custom';
 import { useAppDispatch, useAppSelector } from 'shared/model';
+import { Paths } from 'shared/routing';
+import { DropdownListItem } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
 
 const ProfileTitle = () => {
@@ -56,14 +61,40 @@ const ProfileLinks = () => {
     <ul className='flex flex-col gap-y-2'>
       {profileLinks.map((link) => (
         <li key={link.href}>
-          <Link to={link.href} className='flex items-center gap-x-2 [&>svg]:text-xl  [&>*]:hover:text-active-link '>
-            {link.icon}
-            <p>{link.text}</p>
+          <Link to={link.href}>
+            <DropdownListItem Icon={<link.Icon />} text={link.text} />
           </Link>
         </li>
       ))}
     </ul>
   );
+};
+
+const LogoutBtn = () => {
+  const isAuthorized = useAppSelector(selectIsAuthorized);
+  const dispatch = useAppDispatch();
+
+  const onLogout = useCallback(() => {
+    dispatch(clearSessionData());
+  }, []);
+
+  if (isAuthorized) {
+    return (
+      <ul className='flex'>
+        <li>
+          <Link
+            to={Paths.login}
+            onClick={onLogout}
+            className='flex items-center gap-x-2 [&>svg]:text-xl  [&>*]:hover:text-active-link '>
+            <PowerSettingsNewOutlinedIcon />
+            <p>Выйти</p>
+          </Link>
+        </li>
+      </ul>
+    );
+  }
+
+  return null;
 };
 
 const HeaderProfile = () => {
@@ -78,7 +109,9 @@ const HeaderProfile = () => {
           src='https://connectme-html.themeyn.com/images/avatar/3.jpg'
         />
       </Menu.Button>
-      <Menu.Items as='div' className='dropdown-menu w-60 bg-bg [&>div]:p-4'>
+      <Menu.Items
+        as='div'
+        className='dropdown-menu w-60 bg-bg [&>div]:p-4 [&>*:last-child]:border-t [&>*:last-child]:border-border'>
         <Menu.Item as='div' className='border-b border-border'>
           <ProfileTitle />
         </Menu.Item>
@@ -87,6 +120,9 @@ const HeaderProfile = () => {
         </Menu.Item>
         <Menu.Item as='div'>
           <ProfileLinks />
+        </Menu.Item>
+        <Menu.Item as='div'>
+          <LogoutBtn />
         </Menu.Item>
       </Menu.Items>
     </Menu>

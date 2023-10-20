@@ -1,21 +1,13 @@
+import { UserDto } from 'entities/session';
 import { FC, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { MenuButton } from './userMenuButton';
 
-const mockUser = {
-  fullname: 'Jasmine Thompson',
-  lastMessage: 'Had they visited Rome before',
-  date: '45 min',
-  avatar: 'https://connectme-html.themeyn.com/images/avatar/3.jpg',
-};
-
-interface UserListItemProps {
-  user?: Partial<typeof mockUser>;
+interface ContactsListItemProps {
+  user: UserDto;
 }
 
-export const UserListItem: FC<UserListItemProps> = ({ user }) => {
+export const ContactListItem: FC<ContactsListItemProps> = ({ user }) => {
   const [hover, setHover] = useState(false);
-
   return (
     <div
       className='flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-900 px-4 py-3 relative'
@@ -31,13 +23,11 @@ export const UserListItem: FC<UserListItemProps> = ({ user }) => {
         <div>
           <h4 className='text-left text-sm'>{user.fullname}</h4>
           <div>
-            <p className='text-xs mt-1'>{user.lastMessage}</p>
+            <p className='text-xs mt-1'>{user.name}</p>
           </div>
         </div>
       </div>
-      <div>
-        <MenuButton show={hover} />
-      </div>
+      <div>{/* <MenuButton show={hover} /> */}</div>
     </div>
   );
 };

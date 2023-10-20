@@ -1,4 +1,4 @@
-import { UserListItem } from 'entities/userListItem';
+import { ChatListItem } from 'entities/chatListItem';
 import { FC } from 'react';
 import { SearchInput } from 'shared/ui';
 import { LeftBar } from 'widgets';
@@ -54,7 +54,7 @@ const ChatPage: FC<ChatPageProps> = () => {
       </div>
       <div className='flex flex-col'>
         {mockUsers.map((user, i) => {
-          return <UserListItem key={i} user={user} />;
+          return <ChatListItem key={i} user={user} />;
         })}
       </div>
     </LeftBar>

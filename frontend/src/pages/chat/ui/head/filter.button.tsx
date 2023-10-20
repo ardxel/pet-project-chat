@@ -2,6 +2,7 @@ import { Menu } from '@headlessui/react';
 import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
 import { FC, useState } from 'react';
 import { filterChatItems } from 'shared/custom';
+import { DropdownListItem } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
 
 interface FilterButtonProps {
@@ -29,17 +30,16 @@ export const FilterButton: FC<FilterButtonProps> = ({ onSelect }) => {
       </Menu.Button>
       <Menu.Items as={'div'} className='dropdown-menu gap-y-3 px-6 py-4 w-44'>
         {filterChatItems.map((item) => (
-          <Menu.Item
+          <DropdownListItem
+            Icon={<item.Icon />}
+            text={item.text}
             as='button'
             key={item.text}
             onClick={() => select(item.text)}
             className={twMerge(
               'flex items-center gap-x-2 [&>svg]:text-lg [&>*]:hover:text-active-link',
               selected === item.text ? '[&>*]:text-active-link' : '',
-            )}>
-            <item.Icon />
-            <p className='text-[13px] font-medium'>{item.text}</p>
-          </Menu.Item>
+            )}></DropdownListItem>
         ))}
       </Menu.Items>
     </Menu>

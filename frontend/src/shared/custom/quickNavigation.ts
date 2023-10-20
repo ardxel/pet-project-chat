@@ -10,19 +10,19 @@ export const quickNavigation = [
       {
         id: 0,
         href: Paths.chat,
-        icon: <ChatIcon />,
+        Icon: ChatIcon,
         text: 'Чаты',
       },
       {
         id: 1,
         href: Paths.contacts,
-        icon: <PeopleAltIcon />,
+        Icon: PeopleAltIcon,
         text: 'Контакты',
       },
       {
         id: 2,
         href: Paths.stories,
-        icon: <SwitchAccountIcon />,
+        Icon: SwitchAccountIcon,
         text: 'Сторисы',
       },
     ],

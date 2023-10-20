@@ -14,7 +14,7 @@ export const SearchInput: FC<SearchInputProps> = ({ onChange, placeholder, class
       <input
         type='text'
         className={twMerge(
-          'absolute w-full h-full py-3 pl-10 leading-4 rounded-full',
+          'w-full h-full py-3 pl-10 leading-4 rounded-full',
           'bg-icon-bg dark:bg-bg border-border border text-sm outline-none',
           'transition-all duration-[400]',
           'dark:focus:bg-gray-900 dark:focus:border-gray-900',

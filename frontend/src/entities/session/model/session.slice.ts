@@ -8,9 +8,11 @@ interface SessionSliceState {
   accessToken?: string;
 }
 
-const initialSessionState: () => SessionSliceState = () => ({
+const initialSessionState: SessionSliceState = {
   isAuthorized: false,
-});
+  user: undefined,
+  accessToken: undefined,
+};
 
 export const sessionSlice = createSlice({
   name: 'session',
@@ -31,10 +33,16 @@ export const sessionSlice = createSlice({
     });
     builder.addMatcher(sessionApi.endpoints.login.matchFulfilled, (state, { payload }) => {
       console.log('session.slice activated');
+      console.log(payload);
       // TODO
       state.accessToken = payload.token;
       state.user = payload.user;
       state.isAuthorized = true;
+      console.log('result: ', state);
     });
   },
 });
+
+export const selectIsAuthorized = (state: RootState) => state.session.isAuthorized;
+
+export const { clearSessionData } = sessionSlice.actions;

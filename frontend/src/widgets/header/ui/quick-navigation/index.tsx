@@ -2,7 +2,7 @@ import { Menu } from '@headlessui/react';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import { Link } from 'react-router-dom';
 import { quickNavigation } from 'shared/custom';
-import { IconWrapper } from 'shared/ui';
+import { DropdownListItem, IconWrapper } from 'shared/ui';
 
 const QuickNavigation = () => {
   return (
@@ -24,11 +24,8 @@ const QuickNavigation = () => {
                     <ul className='pb-2'>
                       {links.map((link) => (
                         <li key={link.href} className='px-5 py-2'>
-                          <Link
-                            to={link.href}
-                            className='flex items-center gap-x-2 [&>svg]:text-xl [&>*]:hover:text-active-link '>
-                            {link.icon}
-                            <p>{link.text}</p>
+                          <Link to={link.href}>
+                            <DropdownListItem Icon={<link.Icon />} text={link.text} />
                           </Link>
                         </li>
                       ))}
