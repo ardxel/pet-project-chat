@@ -1,6 +1,6 @@
 import { TypedStartListening, createListenerMiddleware } from '@reduxjs/toolkit';
 import { logoutThunk } from 'features/auth/logout';
-import { invalidateAccessToken } from 'shared/api/invalidateAccessTokenEvent';
+import { invalidateAccessToken } from 'shared/api';
 
 export const invalidateAccessTokenListener = createListenerMiddleware();
 
@@ -12,6 +12,6 @@ export const startInvalidateAccessTokenListener = invalidateAccessTokenListener.
 startInvalidateAccessTokenListener({
   actionCreator: invalidateAccessToken,
   effect: async (_, api) => {
-    api.dispatch(logoutThunk());
+    await api.dispatch(logoutThunk());
   },
 });

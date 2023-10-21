@@ -1,13 +1,10 @@
 import { Menu, Switch } from '@headlessui/react';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
-import PowerSettingsNewOutlinedIcon from '@mui/icons-material/PowerSettingsNewOutlined';
-import { clearSessionData, selectIsAuthorized } from 'entities/session/model/session.slice';
 import { changeTheme, selectCurrentTheme } from 'entities/theme';
-import { useCallback } from 'react';
+import { LogoutButton } from 'features/auth/logout';
 import { Link } from 'react-router-dom';
 import { profileLinks } from 'shared/custom';
 import { useAppDispatch, useAppSelector } from 'shared/model';
-import { Paths } from 'shared/routing';
 import { DropdownListItem } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
 
@@ -70,33 +67,6 @@ const ProfileLinks = () => {
   );
 };
 
-const LogoutBtn = () => {
-  const isAuthorized = useAppSelector(selectIsAuthorized);
-  const dispatch = useAppDispatch();
-
-  const onLogout = useCallback(() => {
-    dispatch(clearSessionData());
-  }, []);
-
-  if (isAuthorized) {
-    return (
-      <ul className='flex'>
-        <li>
-          <Link
-            to={Paths.login}
-            onClick={onLogout}
-            className='flex items-center gap-x-2 [&>svg]:text-xl  [&>*]:hover:text-active-link '>
-            <PowerSettingsNewOutlinedIcon />
-            <p>Выйти</p>
-          </Link>
-        </li>
-      </ul>
-    );
-  }
-
-  return null;
-};
-
 const HeaderProfile = () => {
   return (
     <Menu as='div' className='dropdown'>
@@ -122,7 +92,7 @@ const HeaderProfile = () => {
           <ProfileLinks />
         </Menu.Item>
         <Menu.Item as='div'>
-          <LogoutBtn />
+          <LogoutButton />
         </Menu.Item>
       </Menu.Items>
     </Menu>

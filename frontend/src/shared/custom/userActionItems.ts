@@ -8,26 +8,12 @@ import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined
 import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
 import UnarchiveOutlinedIcon from '@mui/icons-material/UnarchiveOutlined';
 import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
-import { FC } from 'react';
 
-export type UserActionItemKeys =
-  | 'sendMessage'
-  | 'markAsRead'
-  | 'disableNotifications'
-  | 'viewProfile'
-  | 'audioCall'
-  | 'videoCall'
-  | 'saveToArchive'
-  | 'remove'
-  | 'report'
-  | 'block';
+export type UserActionItemKeys = keyof typeof userActionItems;
 
-export type UserActionItem = {
-  Icon: FC;
-  text: string;
-};
+export type UserActionItem = (typeof userActionItems)[UserActionItemKeys];
 
-export const userActionItems: Record<UserActionItemKeys, UserActionItem> = {
+export const userActionItems = {
   sendMessage: {
     Icon: ChatBubbleOutlineOutlinedIcon,
     text: 'Отправить сообщение',

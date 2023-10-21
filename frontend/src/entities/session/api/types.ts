@@ -14,14 +14,21 @@ export interface RequestLoginBody {
   password: string;
 }
 
+export interface Contact {
+  user: UserDto;
+  isFavorite: boolean;
+  createdAt: string;
+}
+
 export interface UserDto {
   _id: string;
   email: string;
   name: string;
   // TODO
   avatar?: string;
-  contacts: UserDto[];
-  fullname?: string;
+  contacts: Contact[];
+  firstName?: string;
+  lastName?: string;
   birthday?: Date;
   gender?: string;
   language?: string[];

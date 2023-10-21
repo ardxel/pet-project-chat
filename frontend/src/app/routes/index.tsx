@@ -1,55 +1,49 @@
 import { lazy } from 'react';
-import { Navigate, Outlet, createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import { Paths } from 'shared/routing';
-import { Header } from 'widgets';
+import { withAuthGuard } from './auth.guard';
+import { withGuestGuard } from './guest.guard';
+import { LayoutWithoutHeader, MainLayout } from './layouts';
+import { NOT_FOUND } from './not-found';
 
 const LoginPage = lazy(() => import('pages/login'));
 const RegistrationPage = lazy(() => import('pages/register'));
 const ChatPage = lazy(() => import('pages/chat'));
-
+const ContactsPage = lazy(() => import('pages/contacts'));
 const router = createBrowserRouter([
   {
+    element: <MainLayout />,
     path: Paths.home,
-    element: (
-      <>
-        <Header />
-        <Outlet />
-      </>
-    ),
+
     children: [
       {
         path: Paths.chat,
-        element: <ChatPage />,
+        index: true,
+        element: withGuestGuard(<ChatPage />),
       },
       {
         path: Paths.contacts,
-        element: <div></div>,
+        element: withGuestGuard(<ContactsPage />),
       },
       {
         path: Paths.stories,
         element: <div></div>,
       },
-      {
-        path: Paths.band,
-        element: <Navigate to={Paths.home} />,
-      },
+      NOT_FOUND,
     ],
   },
   {
-    path: Paths.home,
+    element: <LayoutWithoutHeader />,
     children: [
       {
         path: Paths.login,
-        element: <LoginPage />,
+        element: withAuthGuard(<LoginPage />),
       },
       {
         path: Paths.registration,
-        element: <RegistrationPage />,
+        element: withAuthGuard(<RegistrationPage />),
       },
-      {
-        path: Paths.band,
-        element: <Navigate to={Paths.home} />,
-      },
+      NOT_FOUND,
     ],
   },
 ]);

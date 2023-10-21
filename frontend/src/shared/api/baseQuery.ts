@@ -14,7 +14,6 @@ export const appBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
       const { accessToken } = (getState() as RootState).session;
 
       if (accessToken) {
-        console.log('has accessToken!');
         headers.set('Authorization', `Bearer ${accessToken}`);
       }
       return headers;

@@ -34,7 +34,7 @@
 
 @layer base {
   div#root {
-    @apply flex flex-col h-[100vh];
+    @apply flex flex-col h-[100vh] dark:bg-gray-900;
   }
   span,
   p,

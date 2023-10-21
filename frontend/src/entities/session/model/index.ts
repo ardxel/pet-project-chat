@@ -1,1 +1,1 @@
-export { sessionSlice } from './session.slice';
+export * from './session.slice';
