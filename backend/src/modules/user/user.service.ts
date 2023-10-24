@@ -11,54 +11,64 @@ import { Model, Types } from 'mongoose';
 import { User, UserDocument } from 'schemas';
 import { exclude } from 'utils';
 
-type UserSafeCopy = Omit<User, 'password'> & { _id: Types.ObjectId };
+type UserSafeCopy = Omit<User, 'password' | 'contacts'> & { _id: Types.ObjectId };
+
+type EmailOrId = { email?: string; _id?: Types.ObjectId | string };
 
 @Injectable()
 export class UserService {
   constructor(@InjectModel(User.name) private readonly model: Model<UserDocument>) {}
 
-  public async create(registerUserDto: RegisterUserDto, safe?: boolean): Promise<UserDocument | UserSafeCopy> {
-    const user = new this.model({ ...registerUserDto });
-    const userDocument = await this.save(user);
-    return safe ? this.getSafeCopy(userDocument) : userDocument;
+  async create(dto: RegisterUserDto): Promise<UserSafeCopy> {
+    const user = new this.model(dto);
+    const savedUser = await this.saveUserAsync(user);
+    return this.getSafeCopy(savedUser);
   }
-  public async readById(_id: Types.ObjectId | string): Promise<UserDocument | null> {
+
+  async findById(_id: Types.ObjectId): Promise<UserDocument | null> {
     return await this.model.findById(_id);
   }
-  public async readByEmail(email: string): Promise<UserDocument | null> {
+
+  async findByEmail(email: string): Promise<UserDocument | null> {
     return await this.model.findOne({ email });
   }
-  public async readManyByIds(_ids: Types.ObjectId[] | string[]): Promise<UserDocument[]> {
-    return await this.model.find({ _id: { $in: _ids } });
+
+  async update(_id: Types.ObjectId, entity: Partial<User>) {
+    return await this.model.findByIdAndUpdate(_id, { $set: entity });
   }
-  public async update(_id: Types.ObjectId | string, fields: Partial<User>) {
-    return await this.model.findByIdAndUpdate(_id, { $set: fields });
-  }
-  public async delete(_id: Types.ObjectId | string): Promise<boolean> {
-    if (!(await this.model.findByIdAndDelete(_id))) {
-      throw new NotFoundException('User with this ID not found');
-    } else {
-      return true;
-    }
-  }
-  public async __deleteAllUsers(): Promise<boolean> {
-    await this.model.deleteMany({});
+
+  async delete(_id: Types.ObjectId): Promise<boolean> {
+    await this.model.findByIdAndDelete(_id);
     return true;
   }
 
-  public async __getUserCount() {
-    return await this.model.countDocuments();
+  async getUserContactsById(_id: Types.ObjectId): Promise<{ contacts: User[] }> {
+    if (await this.isNotExist({ _id })) throw new NotFoundException('There is no user with this ID');
+
+    const { contacts } = await this.model
+      .findById(_id)
+      .select('contacts')
+      .populate<{ contacts: User[] }>({ path: 'contacts.user', select: '-password -contacts' })
+      .select('contacts');
+
+    return { contacts };
   }
 
-  public async isUserExist(email: string): Promise<boolean> {
-    return Boolean(await this.model.findOne({ email }));
+  async isExist({ email, _id }: EmailOrId) {
+    const count = await this.model.countDocuments(email ? { email } : { _id });
+    return count > 0;
   }
 
-  public getSafeCopy(user: UserDocument): UserSafeCopy {
-    return exclude(user.toObject(), 'password');
+  async isNotExist({ email, _id }: EmailOrId) {
+    const count = await this.model.countDocuments(email ? { email } : { _id });
+    return count === 0;
   }
 
-  private async save(user: UserDocument): Promise<UserDocument> {
+  getSafeCopy(user: UserDocument): UserSafeCopy {
+    return exclude(user.toObject(), 'password', 'contacts');
+  }
+
+  private async saveUserAsync(user: UserDocument): Promise<UserDocument> {
     try {
       const saved = await user.save();
       return saved;

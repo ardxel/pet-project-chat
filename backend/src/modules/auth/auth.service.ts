@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto, RegisterUserDto } from 'modules/auth/dto';
 import { HashService, UserService } from 'modules/user';
+import { JwtUserPayload } from './jwt.strategy';
 
 @Injectable()
 export class AuthService {
@@ -12,16 +13,20 @@ export class AuthService {
   ) {}
 
   public async signUp(registerUserDto: RegisterUserDto) {
-    if (await this.userService.isUserExist(registerUserDto.email)) {
+    if (await this.userService.isExist({ email: registerUserDto.email })) {
       throw new BadRequestException('this email is already taken');
     }
-    const user = await this.userService.create(registerUserDto, true);
+
+    registerUserDto.password = await this.hashService.encryptPassword(registerUserDto.password);
+
+    const user = await this.userService.create(registerUserDto);
     const token = await this.jwtService.signAsync({ sub: user._id });
+
     return { user, token };
   }
 
   public async signIn(loginUserDto: LoginUserDto) {
-    const user = await this.userService.readByEmail(loginUserDto.email);
+    const user = await this.userService.findByEmail(loginUserDto.email);
 
     if (!user) {
       throw new BadRequestException('user with this email is not exist');
@@ -35,5 +40,17 @@ export class AuthService {
     const token = await this.jwtService.signAsync({ sub: user._id });
 
     return { user: safeUser, token };
+  }
+
+  public async getUserFromAccessToken(token: string) {
+    try {
+      const payload: JwtUserPayload = await this.jwtService.verifyAsync(token);
+      if (!payload) {
+        return undefined;
+      }
+      return await this.userService.findById(payload.sub);
+    } catch (error) {
+      return undefined;
+    }
   }
 }

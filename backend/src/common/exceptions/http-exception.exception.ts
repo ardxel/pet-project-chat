@@ -34,4 +34,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     response.status(statusCode).json({ status, message, stack });
   }
+
+  // handleHttpException(exception: HttpException) {}
+  // handleWsException(exception: WsException) {}
 }
