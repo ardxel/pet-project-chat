@@ -1,4 +1,5 @@
 import { persistedStore, store } from 'app/redux';
+import { ChatSocketProvider } from 'entities/chats';
 import { ThemeProvider } from 'entities/theme';
 import { createRoot } from 'react-dom/client';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -16,7 +17,9 @@ function bootstrap() {
         <ReduxProvider store={store}>
           <PersistGate loading={null} persistor={persistedStore}>
             <ThemeProvider>
-              <RouterProvider router={router} />
+              <ChatSocketProvider>
+                <RouterProvider router={router} />
+              </ChatSocketProvider>
             </ThemeProvider>
           </PersistGate>
         </ReduxProvider>

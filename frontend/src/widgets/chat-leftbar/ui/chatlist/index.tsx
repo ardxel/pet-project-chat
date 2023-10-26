@@ -1,50 +1,22 @@
-import { ChatListItem } from 'entities/chatItem';
-
-const mockUsers = [
-  {
-    fullname: 'Jasmine Thompson',
-    lastMessage: 'Had they visited Rome before',
-    date: '45 min',
-    avatar: 'https://connectme-html.themeyn.com/images/avatar/3.jpg',
-  },
-  {
-    fullname: 'Konstantin Frank',
-    lastMessage: 'Liked that disco music',
-    date: '1 days',
-    avatar: 'https://connectme-html.themeyn.com/images/avatar/3.jpg',
-  },
-  {
-    fullname: 'Mathias Devos',
-    lastMessage: 'Hey, how`s it going?',
-    date: '2 days',
-    avatar: 'https://connectme-html.themeyn.com/images/avatar/3.jpg',
-  },
-  {
-    fullname: 'Jasmine Thompson',
-    lastMessage: 'Had they visited Rome before',
-    date: '45 min',
-    avatar: 'https://connectme-html.themeyn.com/images/avatar/3.jpg',
-  },
-  {
-    fullname: 'Konstantin Frank',
-    lastMessage: 'Liked that disco music',
-    date: '1 days',
-    avatar: 'https://connectme-html.themeyn.com/images/avatar/3.jpg',
-  },
-  {
-    fullname: 'Mathias Devos',
-    lastMessage: 'Hey, how`s it going?',
-    date: '2 days',
-    avatar: 'https://connectme-html.themeyn.com/images/avatar/3.jpg',
-  },
-];
+import { ChatListItem, fetchConversations, selectChatCompanions } from 'entities/chats';
+import { IUser } from 'entities/session';
+import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from 'shared/model';
 
 export const ChatList = () => {
+  const companions = useAppSelector(selectChatCompanions);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchConversations());
+  }, []);
+
   return (
     <div className='flex flex-col'>
-      {mockUsers.map((user, i) => {
-        return <ChatListItem key={i} user={user} />;
-      })}
+      {companions &&
+        companions.map((user, i) => {
+          return <ChatListItem key={i} user={user as IUser} />;
+        })}
     </div>
   );
 };

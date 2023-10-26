@@ -25,7 +25,6 @@ export const store = configureStore({
 });
 
 export const persistedStore = persistStore(store);
-
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof rootReducer>;
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}

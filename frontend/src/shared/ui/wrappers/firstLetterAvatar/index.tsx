@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 
 export const AvatartByFirstLetter = ({ name }: { name: string }) => {
   const letter = useMemo(() => {
+    if (!name) return;
     for (let i = 0; i < name.length; i++) {
       if (/[A-Za-z]/.test(name[i])) {
         return name[i];

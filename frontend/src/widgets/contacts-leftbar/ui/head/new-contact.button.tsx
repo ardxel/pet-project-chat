@@ -1,5 +1,5 @@
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
-import { AddContactModal } from 'features/contact';
+import { AddContactModal } from 'features/contacts';
 import { useState } from 'react';
 import { IconWrapper } from 'shared/ui';
 export const NewContactButton = () => {

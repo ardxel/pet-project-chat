@@ -1,6 +1,6 @@
 export interface SessionUserDto {
   token: string;
-  user: UserDto;
+  user: IUser;
 }
 
 export interface RequestRegisterBody {
@@ -15,12 +15,12 @@ export interface RequestLoginBody {
 }
 
 export interface Contact {
-  user: UserDto;
+  user: IUser;
   isFavorite: boolean;
   createdAt: string;
 }
 
-export interface UserDto {
+export interface IUser {
   _id: string;
   email: string;
   name: string;

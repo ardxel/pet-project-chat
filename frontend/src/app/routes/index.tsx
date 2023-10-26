@@ -10,6 +10,7 @@ const LoginPage = lazy(() => import('pages/login'));
 const RegistrationPage = lazy(() => import('pages/register'));
 const ChatPage = lazy(() => import('pages/chat'));
 const ContactsPage = lazy(() => import('pages/contacts'));
+
 const router = createBrowserRouter([
   {
     element: <MainLayout />,

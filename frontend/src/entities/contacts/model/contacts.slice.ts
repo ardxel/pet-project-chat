@@ -3,15 +3,15 @@ import { Contact } from 'entities/session';
 import { contactsApi } from '../api/contacts.api';
 
 export const contactFilterOptions = ['Все', 'Новые', 'Избранные'] as const;
-
+const SEVEN_DAYS_IN_MS = 604800000;
 interface ContactsState {
   contacts?: Contact[];
-  filtered: Contact[];
+  filtered?: Contact[];
 }
 
 const initialContactsState: ContactsState = {
   contacts: undefined,
-  filtered: [],
+  filtered: undefined,
 };
 
 export const contactsSlice = createSlice({
@@ -36,25 +36,30 @@ export const contactsSlice = createSlice({
       });
     },
     filterBy(state, action: PayloadAction<number>) {
-      console.log(action.payload);
-      if (action.payload === 0) {
-        state.filtered.length === 0;
-        state.filtered = state.contacts;
-      }
-
-      if (action.payload === 1) {
-        state.filtered.filter((contact) => Number(new Date()) - Number(new Date(contact.createdAt)) <= 604800000);
-      }
-
-      if (action.payload === 2) {
-        state.filtered.filter((contact) => contact.isFavorite);
+      switch (action.payload) {
+        // Все
+        case 0:
+          state.filtered = state.contacts;
+          break;
+        // Новые
+        case 1:
+          state.filtered = state.contacts.filter(
+            (contact) => Number(new Date()) - Number(new Date(contact.createdAt)) <= SEVEN_DAYS_IN_MS,
+          );
+          break;
+        // Избранные
+        case 2:
+          state.filtered = state.contacts.filter((contact) => contact.isFavorite);
+          break;
+        default:
+          break;
       }
     },
   },
   extraReducers: (builder) => {
     builder.addMatcher(contactsApi.endpoints.getContacts.matchFulfilled, (state, { payload }) => {
-      console.log(payload);
       state.contacts = payload;
+      state.filtered = payload;
     });
   },
 });

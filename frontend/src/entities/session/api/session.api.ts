@@ -1,6 +1,6 @@
 import { baseApi, DataResponse, SESSION_TAG } from 'shared/api';
 import { mapSession } from '../lib/mapSession';
-import { RequestLoginBody, RequestRegisterBody, SessionUserDto } from './types';
+import { RequestLoginBody, RequestRegisterBody, SessionUserDto } from '../model/types';
 
 export const sessionApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
