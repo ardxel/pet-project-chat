@@ -4,23 +4,23 @@ import { contactsApi } from '../api/contacts.api';
 
 export const contactFilterOptions = ['Все', 'Новые', 'Избранные'] as const;
 const SEVEN_DAYS_IN_MS = 604800000;
+
 interface ContactsState {
   contacts?: Contact[];
   filtered?: Contact[];
 }
 
 const initialContactsState: ContactsState = {
-  contacts: undefined,
-  filtered: undefined,
+  contacts: [],
+  filtered: [],
 };
 
 export const contactsSlice = createSlice({
   name: 'contacts',
   initialState: initialContactsState,
   reducers: {
-    clearsContactsData(state) {
-      state.contacts = [];
-      state.filtered = [];
+    clearsContactsData() {
+      return initialContactsState;
     },
     search(state, action: PayloadAction<string>) {
       const inputLower = action.payload.toLowerCase();

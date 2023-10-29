@@ -10,11 +10,9 @@ import {
   WebSocketServer,
   WsException,
 } from '@nestjs/websockets';
-import { BaseWsExceptionFilter } from 'common/exceptions';
-import { GetMessagesDto } from 'modules/conversation';
-import { ConversationService } from 'modules/conversation/conversation.service';
-import { CreateMessageDto } from 'modules/message/dto';
-import { MessageService } from 'modules/message/message.service';
+import { BaseWsExceptionFilter, WsExceptionWithEvent } from 'common/exceptions';
+import { ConversationService, GetMessagesDto } from 'modules/conversation';
+import { CreateMessageDto, MessageService } from 'modules/message';
 import { UserService } from 'modules/user';
 import { Types } from 'mongoose';
 import { User } from 'schemas';
@@ -27,13 +25,20 @@ interface UserSocket extends Socket {
 }
 
 enum ChatEvents {
+  USER_INIT = 'user:init',
   CONVERSATION_CREATE = 'conversation:create',
-  CONVERSATION_UPDATE = 'conversation:update',
+  CONVERSATION_FETCH = 'conversation:fetch',
   MESSAGE_CREATE = 'message:create',
   MESSAGE_FETCH = 'message:fetch',
 }
 
-@WebSocketGateway({ namespace: 'chat' })
+enum ChatClientErrorEvents {
+  CONVERSATION_CREATE = 'error:conversation-create',
+  MESSAGE_CREATE = 'error:message-create',
+  MESSAGE_FETCH = 'error:message-fetch',
+}
+
+@WebSocketGateway({ namespace: 'chat', cors: { origin: '*' } })
 @UseFilters(BaseWsExceptionFilter)
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
   @WebSocketServer()
@@ -53,8 +58,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
 
   async handleConnection(@ConnectedSocket() socket: UserSocket) {
     try {
-      await this.joinSocketToOwnRoomByMongoId(socket);
-      await this.joinInAllConversationRooms(socket);
+      await this.authenticateUserBySocket(socket)
+        .then(() => this.joinToOwnRoomByMongoId(socket))
+        .then(() => this.joinInAllConversationRooms(socket))
+        .then(() => this.sendUserData(socket));
     } catch (error) {
       this.logger.error(error);
       socket.disconnect();
@@ -86,12 +93,19 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
       this.server.in(conversationId).emit(ChatEvents.CONVERSATION_CREATE, newConversation);
     } catch (error) {
       this.logger.error(error);
-      throw new WsException(error);
+      throw new WsExceptionWithEvent(error, ChatClientErrorEvents.CONVERSATION_CREATE);
     }
   }
 
+  @SubscribeMessage(ChatEvents.CONVERSATION_FETCH)
+  async onConversationFetch(@ConnectedSocket() socket: UserSocket) {
+    const userId = socket.user._id;
+    const conversations = await this.conversationService.findAllByUserId(userId);
+    this.server.in(String(userId)).emit(ChatEvents.CONVERSATION_FETCH, conversations);
+  }
+
   @SubscribeMessage(ChatEvents.MESSAGE_FETCH)
-  async onConversationPopulateMessages(@ConnectedSocket() socket: UserSocket, @MessageBody() dto: GetMessagesDto) {
+  async onFetchMessages(@ConnectedSocket() socket: UserSocket, @MessageBody() dto: GetMessagesDto) {
     try {
       dto.page = dto.page || 1;
       dto.limit = dto.limit || 25;
@@ -104,7 +118,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
       socket.emit(ChatEvents.MESSAGE_FETCH, messages);
     } catch (error) {
       this.logger.error(error);
-      throw new WsException(error);
+      throw new WsExceptionWithEvent(error, ChatClientErrorEvents.MESSAGE_FETCH);
     }
   }
 
@@ -124,12 +138,19 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
       this.server.in(dto.conversationId.toString()).emit(ChatEvents.MESSAGE_CREATE, message);
     } catch (error) {
       this.logger.error(error);
-      throw new WsException(error);
+      throw new WsExceptionWithEvent(error, ChatClientErrorEvents.MESSAGE_CREATE);
     }
   }
 
-  private async joinSocketToOwnRoomByMongoId(socket: UserSocket) {
-    socket.user = await this.chatService.getUserFromSocket(socket);
+  public async authenticateUserBySocket(socket: UserSocket) {
+    const user = await this.chatService.getUserFromSocket(socket);
+    if (!user) {
+      throw new WsExceptionWithEvent('Token is invalid', 'error');
+    }
+    socket.user = user;
+  }
+
+  private async joinToOwnRoomByMongoId(socket: UserSocket) {
     socket.join(socket.user._id.toString());
   }
 
@@ -137,5 +158,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     const conversations = await this.conversationService.findAllByUserId(socket.user._id);
     socket.join(conversations.map((conversation) => conversation._id.toString()));
     this.logger.log(`Connection established: ${socket.user.email}`);
+  }
+
+  private async sendUserData(socket: UserSocket) {
+    this.server.in(socket.id).emit(ChatEvents.USER_INIT, socket.user);
   }
 }

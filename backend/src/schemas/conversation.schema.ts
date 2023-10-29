@@ -8,6 +8,8 @@ export class Conversation {
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Message' }], default: [] })
   messages?: Types.ObjectId[];
+
+  _id: Types.ObjectId;
 }
 
 export type ConversationDocument = HydratedDocument<Conversation>;

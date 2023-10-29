@@ -4,6 +4,8 @@ export interface IMessage {
   conversationId: string;
   sender: string;
   text: string;
+  updatedAt: Date;
+  createdAt: Date;
 }
 
 export interface IConversation {

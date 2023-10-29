@@ -49,7 +49,9 @@ export class ConversationService {
   }
 
   async findMessages(dto: GetMessagesDto) {
-    const { page, limit, conversationId } = dto;
+    const page = dto.page || 1;
+    const limit = dto.limit || 25;
+    const conversationId = dto.conversationId;
 
     const conversation = await this.model.findById(conversationId);
 
@@ -69,8 +71,13 @@ export class ConversationService {
 
   async findAllByUserId(userId: Types.ObjectId) {
     const user = await this.userService.findById(userId);
-    const { conversations } = await user.populate({ path: 'conversations' });
-    return conversations;
+    const userWithPopulatedConversations = await user.populate<{ conversations: Conversation[] }>({
+      path: 'conversations',
+    });
+    const { conversations } = await userWithPopulatedConversations.populate<{ conversations: Conversation[] }>({
+      path: 'conversations.users',
+    });
+    return conversations as Conversation[];
   }
 
   // TODO

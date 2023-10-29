@@ -1,10 +1,9 @@
-import { ChatListItem, fetchConversations, selectChatCompanions } from 'entities/chats';
-import { IUser } from 'entities/session';
+import { ChatListItem, fetchConversations, selectConversationIdAndCompanionList } from 'entities/chats';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
 
 export const ChatList = () => {
-  const companions = useAppSelector(selectChatCompanions);
+  const chats = useAppSelector(selectConversationIdAndCompanionList);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -13,9 +12,9 @@ export const ChatList = () => {
 
   return (
     <div className='flex flex-col'>
-      {companions &&
-        companions.map((user, i) => {
-          return <ChatListItem key={i} user={user as IUser} />;
+      {chats &&
+        chats.map((chat, i) => {
+          return <ChatListItem key={i} user={chat.companion} conversationId={chat.conversationId} />;
         })}
     </div>
   );

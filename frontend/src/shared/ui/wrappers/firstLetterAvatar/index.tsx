@@ -1,6 +1,12 @@
-import { useMemo } from 'react';
+import { FC, useMemo } from 'react';
+import { twMerge } from 'tailwind-merge';
 
-export const AvatartByFirstLetter = ({ name }: { name: string }) => {
+interface AvatartByFirstLetterProps {
+  name: string;
+  className?: string;
+}
+
+export const AvatartByFirstLetter: FC<AvatartByFirstLetterProps> = ({ name, className }) => {
   const letter = useMemo(() => {
     if (!name) return;
     for (let i = 0; i < name.length; i++) {
@@ -12,7 +18,7 @@ export const AvatartByFirstLetter = ({ name }: { name: string }) => {
   }, [name]);
 
   return (
-    <div className='relative border border-border w-full h-full rounded-md'>
+    <div className={twMerge('relative border border-border w-full h-full rounded-md ', className)}>
       <h1 className='text-center text-2xl leading-none  absolute left-1/2 -transform translate-y-1/2 -translate-x-1/2'>
         {letter}
       </h1>

@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { WsException } from '@nestjs/websockets';
 import { AuthService } from 'modules/auth';
 import { Socket } from 'socket.io';
 
@@ -17,7 +16,7 @@ export class ChatService {
     }
 
     if (!jwtToken) {
-      throw new WsException('No token found');
+      return undefined;
     }
 
     return await this.authService.getUserFromAccessToken(jwtToken);

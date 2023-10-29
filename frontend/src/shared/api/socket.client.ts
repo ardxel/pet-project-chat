@@ -21,7 +21,7 @@ export class SocketClient {
     });
   }
 
-  emit(event: string, data: unknown) {
+  emit(event: string, data?: unknown) {
     return new Promise((resolve, reject) => {
       if (!this.socket || (this.socket && !this.socket.active)) {
         return reject('No socket connection.');
@@ -30,7 +30,7 @@ export class SocketClient {
         if (response) {
           resolve(response);
         } else {
-          reject('ERROR');
+          reject(undefined);
         }
       });
     });
@@ -45,5 +45,10 @@ export class SocketClient {
       this.socket.on(event, fun);
       resolve(void 1);
     });
+  }
+
+  off(event: string, fun: (...args: unknown[]) => unknown) {
+    if (!this.socket) return;
+    this.socket.off(event, fun);
   }
 }

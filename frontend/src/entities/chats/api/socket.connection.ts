@@ -11,7 +11,6 @@ export const useChatSocketConnection = () => {
 
   async function connect() {
     if (isAuthorized) {
-      dispatch(setIsConnected(false));
       await chatSocket.connect(config.socketUrl, { extraHeaders: { Authorization: `Bearer ${access_token}` } });
       dispatch(setIsConnected(true));
     }
@@ -28,5 +27,5 @@ export const useChatSocketConnection = () => {
     return () => {
       disconnect();
     };
-  }, []);
+  }, [isAuthorized]);
 };

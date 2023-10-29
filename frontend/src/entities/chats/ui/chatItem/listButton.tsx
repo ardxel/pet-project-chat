@@ -14,12 +14,12 @@ export const MenuButton: FC<UserListItemMenuButtonProps> = ({ show, className })
   if (show) {
     return (
       <Menu as='div' className='dropdown'>
-        <Menu.Button className={twMerge('w-10 h-10', className)}>
+        <Menu.Button className={twMerge('w-10 h-10', className)} onClick={(event) => event.stopPropagation()}>
           <IconWrapper className='bg-white dark:bg-bg dark:hover:bg-icon-active-bg'>
             <MoreHorizIcon />
           </IconWrapper>
         </Menu.Button>
-        <Menu.Items as='div' className='dropdown-menu w-[300px] !mt-0 [&>*]:px-4 [&>*]:py-4'>
+        <Menu.Items as='div' className='dropdown-menu  w-[300px] !mt-0 [&>*]:px-4 [&>*]:py-4'>
           <ActionList />
         </Menu.Items>
       </Menu>

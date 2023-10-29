@@ -11,9 +11,9 @@ import { Model, Types } from 'mongoose';
 import { User, UserDocument } from 'schemas';
 import { exclude } from 'utils';
 
-type UserSafeCopy = Omit<User, 'password' | 'contacts'> & { _id: Types.ObjectId };
+type UserSafeCopy = Omit<User, 'password' | 'contacts'>;
 
-type EmailOrId = { email?: string; _id?: Types.ObjectId | string };
+type EmailOrId = { email?: string; _id?: Types.ObjectId };
 
 @Injectable()
 export class UserService {
@@ -29,11 +29,11 @@ export class UserService {
     return await this.model.findById(_id);
   }
 
-  async findByEmail(email: string): Promise<UserDocument | null> {
-    return await this.model.findOne({ email });
+  async findByEmail(email: string, withPassword = false): Promise<UserDocument | null> {
+    return await this.model.findOne({ email }).select(withPassword ? '+password' : undefined);
   }
 
-  async update(_id: Types.ObjectId, entity: Partial<User>) {
+  async update(_id: Types.ObjectId, entity: Partial<User>): Promise<UserDocument> {
     return await this.model.findByIdAndUpdate(_id, { $set: entity });
   }
 

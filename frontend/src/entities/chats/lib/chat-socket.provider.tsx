@@ -1,6 +1,5 @@
 import { FC, ReactNode } from 'react';
-import { useChatSocketListeners } from '../api';
-import { useChatSocketConnection } from './useChatSocketConnection.hook';
+import { useChatSocketConnection, useChatSocketListeners } from '../api';
 
 export const ChatSocketProvider: FC<{ children: ReactNode }> = ({ children }) => {
   useChatSocketConnection();

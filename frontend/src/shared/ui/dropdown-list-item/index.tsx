@@ -6,10 +6,10 @@ export interface DropdownListItemProps extends HTMLProps<unknown> {
   text: string;
 }
 
-export const DropdownListItem: FC<DropdownListItemProps> = ({ Icon, as = 'div', text, ...rest }) => {
+export const DropdownListItem: FC<DropdownListItemProps> = ({ Icon, as = 'div', text, className, ...rest }) => {
   return createElement(
     as,
-    { className: 'flex list-item-in-dropdown', ...rest },
+    { className: 'flex list-item-in-dropdown ' + className, ...rest },
     <Fragment>
       {typeof Icon === 'function' ? Icon() : Icon}
       <p className='first-letter:capitalize'>{text}</p>

@@ -2,34 +2,45 @@ import {
   ChatEvents,
   IConversation,
   IMessage,
-  addConversation,
-  addMessage,
+  addPrivateConversation,
+  addPrivateMessages,
   chatSocket,
+  selectIsConnected,
   setUserId,
 } from 'entities/chats';
 import { IUser } from 'entities/session';
 import { useEffect } from 'react';
-import { useAppDispatch } from 'shared/model';
+import { useAppDispatch, useAppSelector } from 'shared/model';
 
 export const useChatSocketListeners = () => {
+  const isConnected = useAppSelector(selectIsConnected);
   const dispatch = useAppDispatch();
-  const connected = Boolean(chatSocket);
 
   useEffect(() => {
-    if (!connected) return;
+    if (!isConnected) {
+      return offListeners();
+    }
 
-    chatSocket.on(ChatEvents.USER_INIT, (data: IUser) => {
-      dispatch(setUserId(data._id));
-    });
+    const onUserInit = (data: IUser) => dispatch(setUserId(data._id));
+    const onPrivateConversationFetch = (data: IConversation | IConversation[]) =>
+      dispatch(addPrivateConversation(data));
+    const onMessageCreate = (data: IMessage) => dispatch(addPrivateMessages(data));
+    const onMessageFetch = (data: IMessage[]) => dispatch(addPrivateMessages(data));
 
-    chatSocket.on(ChatEvents.CONVERSATION_FETCH, (data: IConversation | IConversation[]) => {
-      console.log(data);
-      dispatch(addConversation(data));
-    });
+    chatSocket.on(ChatEvents.USER_INIT, onUserInit);
+    chatSocket.on(ChatEvents.CONVERSATION_FETCH, onPrivateConversationFetch);
+    chatSocket.on(ChatEvents.MESSAGE_CREATE, onMessageCreate);
+    chatSocket.on(ChatEvents.MESSAGE_FETCH, onMessageFetch);
 
-    chatSocket.on(ChatEvents.MESSAGE_CREATE, (data: IMessage) => {
-      console.log(data);
-      dispatch(addMessage(data));
-    });
-  }, []);
+    function offListeners() {
+      chatSocket.off(ChatEvents.USER_INIT, onUserInit);
+      chatSocket.off(ChatEvents.CONVERSATION_FETCH, onPrivateConversationFetch);
+      chatSocket.off(ChatEvents.MESSAGE_CREATE, onMessageCreate);
+      chatSocket.off(ChatEvents.MESSAGE_FETCH, onMessageFetch);
+    }
+
+    return () => {
+      offListeners();
+    };
+  }, [isConnected]);
 };

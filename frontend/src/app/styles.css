@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    --scroll-thrumb-bg: rgb(100, 100, 100);
     --icon-bg: 226 232 240;
     --btn-bg: 37 99 235;
     --aside-bg: 219 234 254;
@@ -20,6 +21,7 @@
   }
 
   :root.dark {
+    --scroll-thrumb-bg: rgb(10, 10, 10);
     --icon-bg: 32 48 71;
     --aside-bg: 15 23 42;
     --icon-color: 148 163 184;
@@ -34,7 +36,7 @@
 
 @layer base {
   div#root {
-    @apply flex flex-col h-[100vh] dark:bg-gray-900;
+    @apply flex flex-col h-[100vh] dark:bg-gray-900 overflow-hidden;
   }
   span,
   p,
@@ -76,6 +78,9 @@
   .header-icon {
     @apply w-11 h-11 md:w-12 md:h-12;
   }
+  .header-chat-icon {
+    @apply w-9 h-9 md:w-10 md:h-10 rounded-md [&>svg]:!w-6 [&>svg]:!h-6 [&>svg]:md:!w-7 [&>svg]:md:!h-7;
+  }
   /* Dropdown container */
   .dropdown {
     @apply relative inline-block;
@@ -89,4 +94,30 @@
   .dropdown-menu {
     @apply absolute right-0 mt-3 bg-bg flex flex-col z-[999] min-w-[96px] border-border border rounded-md;
   }
+}
+
+/* scrollbar */
+@property --var1 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+.scroll {
+  overflow-y: scroll;
+  transition: --var1 0.5s;
+}
+
+.scroll:hover {
+  --var1: var(--scroll-thrumb-bg);
+}
+
+.scroll::-webkit-scrollbar {
+  background: transparent;
+  width: 8px;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+  background: var(--var1);
+  border-radius: 8px;
 }

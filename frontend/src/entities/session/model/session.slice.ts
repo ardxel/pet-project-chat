@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { SessionUserDto, UserDto } from '../api';
+import { IUser, SessionUserDto } from '../api';
 import { sessionApi } from '../api/session.api';
 
-type SessionSliceState = { user?: UserDto; accessToken?: string; isAuthorized: boolean };
+type SessionSliceState = { user?: IUser; accessToken?: string; isAuthorized: boolean };
 
 const initialSessionState: SessionSliceState = {
   isAuthorized: false,
@@ -14,10 +14,8 @@ export const sessionSlice = createSlice({
   name: 'session',
   initialState: initialSessionState,
   reducers: {
-    clearSessionData: (state) => {
-      state.accessToken = undefined;
-      state.isAuthorized = false;
-      state.user = undefined;
+    clearSessionData: () => {
+      return initialSessionState;
     },
   },
   extraReducers: (builder) => {

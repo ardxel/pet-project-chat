@@ -11,6 +11,8 @@ export class Message {
 
   @Prop({ required: true, type: String })
   text: string;
+
+  _id: Types.ObjectId;
 }
 
 export type MessageDocument = HydratedDocument<Message>;

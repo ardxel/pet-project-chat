@@ -1,7 +1,13 @@
-import ChatLeftbar from 'widgets/chat-leftbar/ui';
+import { ChatLeftbar } from 'widgets/chat-leftbar';
+import { ChatWindow } from 'widgets/chat-window';
 
 const ChatPage = () => {
-  return <ChatLeftbar />;
+  return (
+    <div className='flex h-full w-full'>
+      <ChatLeftbar />
+      <ChatWindow />
+    </div>
+  );
 };
 
 export default ChatPage;

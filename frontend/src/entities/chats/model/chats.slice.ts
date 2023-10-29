@@ -1,62 +1,97 @@
 import { PayloadAction, createSelector, createSlice } from '@reduxjs/toolkit';
 import { IUser } from 'entities/session';
+import { handleAddConversation, handleAddConversationArray, handleAddMessage, handleAddMessageArray } from '../lib';
 import { IConversation, IMessage } from './types';
 
 interface ChatsState {
-  chats: Record<IMessage['conversationId'], { companions: IUser[]; messages: IMessage[] }>;
+  privateChats: Record<string, { companion: IUser; messages: IMessage[] }>;
+  publicChats: Record<string, { companions: IUser[]; messages: IMessage[] }>;
   isConnected: boolean;
   userId?: string;
+  openedChatId?: IMessage['conversationId'];
+  isHiddenChat: boolean;
 }
 
 const initialChatsState: ChatsState = {
   userId: undefined,
-  chats: {},
+  privateChats: {},
+  publicChats: {},
   isConnected: false,
+  openedChatId: undefined,
+  isHiddenChat: true,
 };
 
 export const chatsSlice = createSlice({
   name: 'chats',
   initialState: initialChatsState,
   reducers: {
+    clearChatsData: () => {
+      return initialChatsState;
+    },
+
+    setOpenedChatId: (state, action: PayloadAction<IMessage['conversationId']>) => {
+      state.openedChatId = action.payload;
+    },
+
+    setIsHiddenChat: (state, action: PayloadAction<boolean>) => {
+      state.isHiddenChat = action.payload;
+    },
+
     setIsConnected: (state, action: PayloadAction<boolean>) => {
       state.isConnected = action.payload;
     },
+
     setUserId: (state, action: PayloadAction<string>) => {
       state.userId = action.payload;
     },
-    addConversation: (state, action: PayloadAction<IConversation | IConversation[]>) => {
-      if (Array.isArray(action.payload) && action.payload.length > 0) {
-        for (const conversation of action.payload) {
-          state.chats[conversation._id] = {
-            companions: conversation.users.filter((user) => user._id !== state.userId),
-            messages: conversation.messages,
-          };
-        }
-        return;
-      }
 
-      const { _id: conversationId, messages, users } = action.payload as IConversation;
-      state.chats[conversationId] = {
-        companions: users.filter((user) => user._id !== state.userId),
-        messages,
-      };
+    addPrivateConversation: (state, action: PayloadAction<IConversation | IConversation[]>) => {
+      if (Array.isArray(action.payload)) {
+        handleAddConversationArray(state, action.payload);
+      } else {
+        handleAddConversation(state, action.payload as IConversation);
+      }
     },
 
-    addMessage: (state, action: PayloadAction<IMessage>) => {
-      const { conversationId } = action.payload;
-
-      if (conversationId in state.chats) {
-        state.chats[conversationId]['messages'].push(action.payload);
+    addPrivateMessages: (state, action: PayloadAction<IMessage | IMessage[]>) => {
+      if (Array.isArray(action.payload)) {
+        handleAddMessageArray(state, action.payload);
       } else {
-        state.chats[conversationId]['messages'] = [action.payload];
+        handleAddMessage(state, action.payload as IMessage);
       }
     },
   },
 });
 
-export const { addConversation, addMessage, setIsConnected, setUserId } = chatsSlice.actions;
+export const {
+  addPrivateConversation,
+  addPrivateMessages,
+  setIsConnected,
+  setUserId,
+  clearChatsData,
+  setOpenedChatId,
+  setIsHiddenChat,
+} = chatsSlice.actions;
 
-export const selectChatList = (state: RootState) => state.chats.chats;
-export const selectChatCompanions = createSelector(selectChatList, (chats) =>
-  Object.values(chats).map((item) => (item.companions.length > 1 ? item.companions : item.companions[0])),
+export const selectIsConnected = (state: RootState) => state.chats.isConnected;
+export const selectPrivateChatList = (state: RootState) => state.chats.privateChats;
+export const selectOpenedChatId = (state: RootState) => state.chats.openedChatId;
+export const selectIsHiddenChat = (state: RootState) => state.chats.isHiddenChat;
+export const selectOpenedChatData = createSelector(
+  selectOpenedChatId,
+  selectPrivateChatList,
+  (chatId, chatList) => chatList[chatId],
+);
+
+export const selectConversationIdAndCompanionList = createSelector(selectPrivateChatList, (chats) =>
+  chats ? Object.entries(chats).map(([conversationId, item]) => ({ conversationId, companion: item.companion })) : [],
+);
+
+export const selectOpenedChatCompanion = createSelector(selectOpenedChatId, selectPrivateChatList, (chatId, chats) => {
+  const conversationId = Object.keys(chats).find((id) => id === chatId);
+  return conversationId ? chats[conversationId].companion : null;
+});
+
+export const selectOpenedChatMessages = createSelector(selectOpenedChatData, (data) =>
+  data ? data.messages : undefined,
 );

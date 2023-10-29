@@ -8,8 +8,10 @@ import { Header } from 'widgets';
 const Navigator = () => {
   const isAuthorized = useAppSelector(selectIsAuthorized);
   const location = useLocation();
+  const isMainPage = location.pathname === '/';
   /* Главный path - это /chat */
-  if (isAuthorized && location.pathname === '/') return <Navigate replace to={Paths.chat} />;
+  if (isAuthorized && isMainPage) return <Navigate replace to={Paths.chat} />;
+  if (!isAuthorized && isMainPage) return <Navigate replace to={Paths.login} />;
   else return null;
 };
 

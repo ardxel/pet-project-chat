@@ -4,10 +4,11 @@ import { NestFactory } from '@nestjs/core';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { useContainer } from 'class-validator';
 import { TransformResponseInterceptor } from 'common';
+import { setupSwagger } from 'common/swagger';
 import { AppModule } from './app.module';
 
 const corsOptions = {
-  development: {},
+  development: { origin: '*' },
   production: { origin: [process.env.CLIENT_DOMAIN], methods: ['GET', 'PUT', 'POST', 'PATCH', 'DELETE'] },
 };
 
@@ -26,6 +27,10 @@ async function bootstrap() {
 
   app.useWebSocketAdapter(new IoAdapter(app));
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
+
+  if (node_env === 'development') {
+    setupSwagger(app);
+  }
 
   await app.listen(port, () => {
     console.log(`Server listen on port: ${port}`);

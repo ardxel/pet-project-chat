@@ -23,7 +23,7 @@ export const LoginForm: FC<LoginFormProps> = ({ onSuccess }) => {
   const [error, setError] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   return (
-    <div className='bg-aside-bg main flex justify-center items-center'>
+    <div className='bg-aside-bg main flex justify-center items-center overflow-hidden'>
       <div className='w-full mx-4 xs0:mx-auto xs0:w-auto'>
         <div className='flex items-center justify-center mx-auto'>
           <Logo />

@@ -1,2 +1,2 @@
-export * from './http-exception.exception';
-export * from './ws-exception.filter';
+export * from './filters';
+export * from './ws-exception-with-event.exception';

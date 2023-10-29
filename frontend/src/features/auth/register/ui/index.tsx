@@ -28,7 +28,7 @@ export const RegisterForm: FC<RegisterFormProps> = ({ onSuccess }) => {
   const dispatch = useAppDispatch();
   return (
     <div className='bg-aside-bg main flex justify-center items-center'>
-      <div className='w-full mx-4 xs0:mx-auto xs0:w-auto'>
+      <div className='w-full xs0:mx-auto xs0:w-auto'>
         <div className='flex items-center justify-center mx-auto'>
           <Logo />
           <h1 className='text-xl'>ConnectMe</h1>
