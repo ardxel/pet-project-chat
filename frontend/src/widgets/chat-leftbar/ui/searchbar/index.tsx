@@ -1,9 +1,14 @@
+import { ChangeEvent, FC } from 'react';
 import { SearchInput } from 'shared/ui';
 
-export const SearchBar = () => {
+interface SearchBarProps {
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => unknown;
+}
+
+export const SearchBar: FC<SearchBarProps> = ({ onChange }) => {
   return (
     <div className='px-5 mb-4'>
-      <SearchInput placeholder='Найти контакт / чат' />
+      <SearchInput onChange={onChange} placeholder='Найти контакт / чат' />
     </div>
   );
 };

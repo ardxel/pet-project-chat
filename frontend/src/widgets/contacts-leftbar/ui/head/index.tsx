@@ -1,5 +1,5 @@
+import { AddContact } from 'features/contact@add';
 import { FC } from 'react';
-import { NewContactButton } from './new-contact.button';
 
 interface LeftbarHeaderProps {}
 
@@ -12,7 +12,7 @@ export const LeftbarHeader: FC<LeftbarHeaderProps> = () => {
           <p className='mt-2 text-xs'>127 контактов</p>
         </div>
 
-        <NewContactButton />
+        <AddContact />
       </div>
     </div>
   );

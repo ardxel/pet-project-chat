@@ -1,6 +1,6 @@
 import { IMessage } from 'entities/chats';
+import { ChatMessage } from 'entities/message';
 import { selectUserId } from 'entities/session';
-import { ChatMessage } from 'features/message';
 import { FC } from 'react';
 import { useAppSelector } from 'shared/model';
 

@@ -37,7 +37,7 @@ export class ConversationService {
     // Сохраняем пользователей и созданную беседу параллельно
     await Promise.all([newConversation.save(), usersToUpdate.map((user) => user.save())]);
 
-    return newConversation;
+    return (await this.findById(newConversation._id)).populate({ path: 'users' });
   }
 
   async findById(conversationId: Types.ObjectId) {
@@ -61,12 +61,12 @@ export class ConversationService {
     const { messages } = await conversation.populate({
       path: 'messages',
       options: {
+        sort: '-createdAt',
         skip: (page - 1) * limit,
         limit,
       },
     });
-
-    return messages;
+    return messages.reverse();
   }
 
   async findAllByUserId(userId: Types.ObjectId) {

@@ -3,13 +3,36 @@ import { IUser } from 'entities/session';
 import { handleAddConversation, handleAddConversationArray, handleAddMessage, handleAddMessageArray } from '../lib';
 import { IConversation, IMessage } from './types';
 
+type PrivateChatsMap = Record<
+  string,
+  {
+    companion: IUser;
+    messages: IMessage[];
+    isFull: boolean;
+    page: number;
+    limit: number;
+  }
+>;
+
+type PublicChatsMap = Record<
+  string,
+  {
+    companions: IUser[];
+    messages: IMessage[];
+    isFull: boolean;
+    page: number;
+    limit: number;
+  }
+>;
+
 interface ChatsState {
-  privateChats: Record<string, { companion: IUser; messages: IMessage[] }>;
-  publicChats: Record<string, { companions: IUser[]; messages: IMessage[] }>;
+  privateChats: PrivateChatsMap;
+  publicChats: PublicChatsMap;
   isConnected: boolean;
   userId?: string;
   openedChatId?: IMessage['conversationId'];
   isHiddenChat: boolean;
+  searchInput: string;
 }
 
 const initialChatsState: ChatsState = {
@@ -19,14 +42,24 @@ const initialChatsState: ChatsState = {
   isConnected: false,
   openedChatId: undefined,
   isHiddenChat: true,
+  searchInput: '',
 };
 
 export const chatsSlice = createSlice({
   name: 'chats',
-  initialState: initialChatsState,
+  initialState: () => initialChatsState,
   reducers: {
     clearChatsData: () => {
       return initialChatsState;
+    },
+
+    setSearchInput: (state, action: PayloadAction<string>) => {
+      state.searchInput = action.payload;
+    },
+
+    incrementPageCount: (state, action: PayloadAction<string>) => {
+      const chatId = action.payload;
+      state.privateChats[chatId].page += 1;
     },
 
     setOpenedChatId: (state, action: PayloadAction<IMessage['conversationId']>) => {
@@ -45,7 +78,7 @@ export const chatsSlice = createSlice({
       state.userId = action.payload;
     },
 
-    addPrivateConversation: (state, action: PayloadAction<IConversation | IConversation[]>) => {
+    addConversation: (state, action: PayloadAction<IConversation | IConversation[]>) => {
       if (Array.isArray(action.payload)) {
         handleAddConversationArray(state, action.payload);
       } else {
@@ -53,35 +86,44 @@ export const chatsSlice = createSlice({
       }
     },
 
-    addPrivateMessages: (state, action: PayloadAction<IMessage | IMessage[]>) => {
-      if (Array.isArray(action.payload)) {
+    addMessages: (state, action: PayloadAction<{ conversationId: string; messages: IMessage[] }>) => {
+      if (Array.isArray(action.payload.messages)) {
         handleAddMessageArray(state, action.payload);
-      } else {
-        handleAddMessage(state, action.payload as IMessage);
       }
+    },
+
+    addMessage: (state, action: PayloadAction<{ conversationId: string; message: IMessage }>) => {
+      handleAddMessage(state, action.payload);
     },
   },
 });
 
 export const {
-  addPrivateConversation,
-  addPrivateMessages,
+  addConversation,
+  addMessages,
+  addMessage,
   setIsConnected,
   setUserId,
   clearChatsData,
   setOpenedChatId,
   setIsHiddenChat,
+  setSearchInput,
+  incrementPageCount,
 } = chatsSlice.actions;
 
 export const selectIsConnected = (state: RootState) => state.chats.isConnected;
 export const selectPrivateChatList = (state: RootState) => state.chats.privateChats;
 export const selectOpenedChatId = (state: RootState) => state.chats.openedChatId;
 export const selectIsHiddenChat = (state: RootState) => state.chats.isHiddenChat;
+export const selectSearchInput = (state: RootState) => state.chats.searchInput;
+
 export const selectOpenedChatData = createSelector(
   selectOpenedChatId,
   selectPrivateChatList,
   (chatId, chatList) => chatList[chatId],
 );
+
+export const selectOpenedChatHasAllMessages = createSelector(selectOpenedChatData, ({ isFull }) => isFull);
 
 export const selectConversationIdAndCompanionList = createSelector(selectPrivateChatList, (chats) =>
   chats ? Object.entries(chats).map(([conversationId, item]) => ({ conversationId, companion: item.companion })) : [],
@@ -95,3 +137,6 @@ export const selectOpenedChatCompanion = createSelector(selectOpenedChatId, sele
 export const selectOpenedChatMessages = createSelector(selectOpenedChatData, (data) =>
   data ? data.messages : undefined,
 );
+
+export const selectPrivateChatLastPage = (chatId: string) => (state: RootState) =>
+  state.chats.privateChats[chatId].page;

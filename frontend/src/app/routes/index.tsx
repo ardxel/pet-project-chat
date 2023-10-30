@@ -21,6 +21,16 @@ const router = createBrowserRouter([
         path: Paths.chat,
         index: true,
         element: withGuestGuard(<ChatPage />),
+        // children: [
+        //   {
+        //     path: ':id',
+        //     element: (
+        //       <ChatPage>
+        //         <ChatWindow />
+        //       </ChatPage>
+        //     ),
+        //   },
+        // ],
       },
       {
         path: Paths.contacts,

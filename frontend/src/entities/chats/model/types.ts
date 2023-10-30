@@ -4,12 +4,13 @@ export interface IMessage {
   conversationId: string;
   sender: string;
   text: string;
-  updatedAt: Date;
-  createdAt: Date;
+  updatedAt: string;
+  createdAt: string;
 }
 
 export interface IConversation {
   users: IUser[];
   messages: IMessage[];
+  isPrivate: boolean;
   _id: string;
 }

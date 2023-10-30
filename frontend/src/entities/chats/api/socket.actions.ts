@@ -8,10 +8,13 @@ export interface ResponseMessagesBody {
   conversationId: string;
 }
 
-export const fetchConversations = createAsyncThunk('fetchConversations', async () => {
-  await chatSocket.emit(ChatEvents.CONVERSATION_FETCH);
+export const fetchConversations = createAsyncThunk('fetchConversations', () => {
+  chatSocket.emit(ChatEvents.CONVERSATION_FETCH);
 });
 
-export const fetchMessages = createAsyncThunk<void, ResponseMessagesBody>('fetchMessages', async (body) => {
-  await chatSocket.emit(ChatEvents.MESSAGE_FETCH, body);
-});
+export const fetchMessages = createAsyncThunk<void, ResponseMessagesBody, { state: RootState; dispatch: AppDispatch }>(
+  'fetchMessages',
+  (body) => {
+    chatSocket.emit(ChatEvents.MESSAGE_FETCH, body);
+  },
+);

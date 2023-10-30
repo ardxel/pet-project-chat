@@ -10,4 +10,5 @@ export enum ChatClientErrorEvents {
   CONVERSATION_CREATE = 'error:conversation-create',
   MESSAGE_CREATE = 'error:message-create',
   MESSAGE_FETCH = 'error:message-fetch',
+  INVALID_TOKEN = 'error:invalid-token',
 }

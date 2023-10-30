@@ -10,6 +10,7 @@ import { RegisterUserDto } from 'modules/auth/dto';
 import { Model, Types } from 'mongoose';
 import { User, UserDocument } from 'schemas';
 import { exclude } from 'utils';
+import { FindManyQueryDto } from './dto';
 
 type UserSafeCopy = Omit<User, 'password' | 'contacts'>;
 
@@ -31,6 +32,23 @@ export class UserService {
 
   async findByEmail(email: string, withPassword = false): Promise<UserDocument | null> {
     return await this.model.findOne({ email }).select(withPassword ? '+password' : undefined);
+  }
+
+  async findMany(queryDto: FindManyQueryDto) {
+    if (!queryDto.limit || queryDto.limit > 10) {
+      queryDto.limit = 10;
+    }
+    if (!queryDto.page || queryDto.page < 1) {
+      queryDto.page = 1;
+    }
+
+    const skip = (queryDto.page - 1) * queryDto.limit;
+    const users = await this.model
+      .find({ name: { $regex: new RegExp(queryDto.name, 'i') } })
+      .skip(skip)
+      .limit(queryDto.limit);
+
+    return users;
   }
 
   async update(_id: Types.ObjectId, entity: Partial<User>): Promise<UserDocument> {

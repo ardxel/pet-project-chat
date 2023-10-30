@@ -1,8 +1,7 @@
-import { fetchMessages } from 'entities/chats/api';
-import { setIsHiddenChat, setOpenedChatId } from 'entities/chats/model';
+import { selectIsHiddenChat, selectOpenedChatId, setIsHiddenChat, setOpenedChatId } from 'entities/chats/model';
 import { IUser } from 'entities/session';
 import { FC, useState } from 'react';
-import { useAppDispatch } from 'shared/model';
+import { useAppDispatch, useAppSelector } from 'shared/model';
 import { AvatartByFirstLetter } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
 import { MenuButton } from './listButton';
@@ -13,24 +12,26 @@ interface ChatListItemProps {
 }
 
 export const ChatListItem: FC<ChatListItemProps> = ({ user, conversationId }) => {
-  const [isFirstFetch, setIsFirstFetch] = useState(true);
+  const openedChatId = useAppSelector(selectOpenedChatId);
+  const isHiddenChat = useAppSelector(selectIsHiddenChat);
   const [hover, setHover] = useState(false);
   const dispatch = useAppDispatch();
+
+  const handleOpenChat = () => {
+    if (openedChatId !== conversationId) {
+      dispatch(setOpenedChatId(conversationId));
+    }
+    if (isHiddenChat) {
+      dispatch(setIsHiddenChat(false));
+    }
+  };
 
   const hasAvatar = Boolean(user.avatar);
   const hasFullname = Boolean(user.firstName && user.lastName);
 
-  const handleOpenChat = () => {
-    if (isFirstFetch) {
-      dispatch(fetchMessages({ page: 1, limit: 25, conversationId }));
-      setIsFirstFetch(false);
-    }
-    dispatch(setOpenedChatId(conversationId));
-    dispatch(setIsHiddenChat(false));
-  };
-
   return (
     <div
+      // to={Paths.chat + '/' + conversationId}
       className='flex items-center justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900 px-4 py-3 relative'
       onClick={handleOpenChat}
       onMouseLeave={() => setHover(false)}

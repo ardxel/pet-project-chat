@@ -1,5 +1,4 @@
-import { selectFilteredContacts, useGetContactsQuery } from 'entities/contacts';
-import { ContactListItem } from 'entities/contacts/ui/item';
+import { ContactListItem, selectFilteredContacts, useGetContactsQuery } from 'entities/contacts';
 import { selectUserId } from 'entities/session';
 import { FC } from 'react';
 import { useAppSelector } from 'shared/model';

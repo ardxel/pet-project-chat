@@ -9,6 +9,9 @@ export class Conversation {
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Message' }], default: [] })
   messages?: Types.ObjectId[];
 
+  @Prop({ type: Boolean, default: true })
+  isPrivate: boolean;
+
   _id: Types.ObjectId;
 }
 

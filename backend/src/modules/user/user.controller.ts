@@ -1,7 +1,9 @@
-import { Controller, Get, HttpCode, HttpStatus, Param } from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'common/guards';
 import { Types } from 'mongoose';
 import { User } from 'schemas';
+import { FindManyQueryDto } from './dto';
 import { UserService } from './user.service';
 import { UserTestService } from './userTest.service';
 
@@ -15,6 +17,7 @@ export class UserController {
 
   @HttpCode(201)
   @Get(':id/contacts')
+  @UseGuards(JwtAuthGuard)
   @ApiParam({ type: String, name: 'id' })
   @ApiOperation({ summary: 'Get user contacts', description: 'get user contacts by user id' })
   @ApiOkResponse({ status: HttpStatus.OK, description: 'success operation' })
@@ -22,6 +25,12 @@ export class UserController {
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'invalid ID supplies' })
   async getContacts(@Param('id') id: Types.ObjectId): Promise<{ contacts: User[] }> {
     return await this.userService.getUserContactsById(id);
+  }
+
+  @Get()
+  // @UseGuards(JwtAuthGuard)
+  async findMany(@Query() query: FindManyQueryDto) {
+    return await this.userService.findMany(query);
   }
 
   @Get('clear-users')

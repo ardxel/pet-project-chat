@@ -87,7 +87,7 @@
   }
 
   .list-item-in-dropdown {
-    @apply [&>*]:text-[14px] flex gap-x-2 [&>svg]:text-lg [&>svg]:text-xl  [&>*]:hover:text-active-link;
+    @apply [&>*]:text-[14px] flex gap-x-2 [&>svg]:text-lg [&>*]:hover:text-active-link;
   }
 
   /* Dropdown menu */

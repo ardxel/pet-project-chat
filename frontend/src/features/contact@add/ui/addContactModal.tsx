@@ -3,12 +3,12 @@ import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import { FC, Fragment } from 'react';
 import { SearchInput } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
-interface AddChatModalProps {
+interface AddContactModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const AddChatModal: FC<AddChatModalProps> = ({ onClose, isOpen }) => {
+export const AddContactModal: FC<AddContactModalProps> = ({ onClose, isOpen }) => {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as='div' className='relative z-[800]' onClose={onClose}>
@@ -22,7 +22,7 @@ export const AddChatModal: FC<AddChatModalProps> = ({ onClose, isOpen }) => {
           leaveTo='opacity-0'>
           <div className='fixed inset-0 bg-black bg-opacity-25' />
         </Transition.Child>
-        <div className='fixed inset-0 overflow-y-auto'>
+        <div className='fixed inset-0'>
           <div className='flex min-h-full items-center justify-center p-4 text-center'>
             <Transition.Child
               as={Fragment}
