@@ -1,29 +1,6 @@
 import { PayloadAction, createSelector, createSlice } from '@reduxjs/toolkit';
-import { IUser } from 'entities/session';
 import { handleAddConversation, handleAddConversationArray, handleAddMessage, handleAddMessageArray } from '../lib';
-import { IConversation, IMessage } from './types';
-
-type PrivateChatsMap = Record<
-  string,
-  {
-    companion: IUser;
-    messages: IMessage[];
-    isFull: boolean;
-    page: number;
-    limit: number;
-  }
->;
-
-type PublicChatsMap = Record<
-  string,
-  {
-    companions: IUser[];
-    messages: IMessage[];
-    isFull: boolean;
-    page: number;
-    limit: number;
-  }
->;
+import { IConversation, IMessage, PrivateChatsMap, PublicChatsMap } from './types';
 
 interface ChatsState {
   privateChats: PrivateChatsMap;
@@ -55,6 +32,12 @@ export const chatsSlice = createSlice({
 
     setSearchInput: (state, action: PayloadAction<string>) => {
       state.searchInput = action.payload;
+    },
+
+    setLastScrollPoint: (state, action: PayloadAction<{ chatId: string; point: number }>) => {
+      if (state.privateChats[action.payload.chatId] && 'lastScrollPoint' in state.privateChats[action.payload.chatId]) {
+        state.privateChats[action.payload.chatId].lastScrollPoint = action.payload.point;
+      }
     },
 
     incrementPageCount: (state, action: PayloadAction<string>) => {
@@ -109,6 +92,7 @@ export const {
   setIsHiddenChat,
   setSearchInput,
   incrementPageCount,
+  setLastScrollPoint,
 } = chatsSlice.actions;
 
 export const selectIsConnected = (state: RootState) => state.chats.isConnected;
@@ -123,7 +107,11 @@ export const selectOpenedChatData = createSelector(
   (chatId, chatList) => chatList[chatId],
 );
 
-export const selectOpenedChatHasAllMessages = createSelector(selectOpenedChatData, ({ isFull }) => isFull);
+export const selectChatDataByChatId = (chatId: string) => (state: RootState) => state.chats.privateChats[chatId];
+
+export const selectOpenedChatHasAllMessages = createSelector(selectOpenedChatData, (chat) =>
+  chat ? chat.isFull : null,
+);
 
 export const selectConversationIdAndCompanionList = createSelector(selectPrivateChatList, (chats) =>
   chats ? Object.entries(chats).map(([conversationId, item]) => ({ conversationId, companion: item.companion })) : [],
@@ -139,4 +127,7 @@ export const selectOpenedChatMessages = createSelector(selectOpenedChatData, (da
 );
 
 export const selectPrivateChatLastPage = (chatId: string) => (state: RootState) =>
-  state.chats.privateChats[chatId].page;
+  state.chats.privateChats[chatId] ? state.chats.privateChats[chatId].page : null;
+
+export const selectPrivateChatLastScrollPoint = (chatId: string) => (state: RootState) =>
+  state.chats.privateChats[chatId] ? state.chats.privateChats[chatId].lastScrollPoint : null;

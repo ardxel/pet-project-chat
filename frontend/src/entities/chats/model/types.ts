@@ -14,3 +14,27 @@ export interface IConversation {
   isPrivate: boolean;
   _id: string;
 }
+
+export type PrivateChatsMap = Record<
+  string,
+  {
+    companion: IUser;
+    messages: IMessage[];
+    isFull: boolean;
+    page: number;
+    limit: number;
+    lastScrollPoint: number;
+  }
+>;
+
+export type PublicChatsMap = Record<
+  string,
+  {
+    companions: IUser[];
+    messages: IMessage[];
+    isFull: boolean;
+    page: number;
+    limit: number;
+    lastScrollPoint: number;
+  }
+>;

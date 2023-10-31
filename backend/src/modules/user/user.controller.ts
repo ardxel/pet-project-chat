@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, HttpStatus, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, HttpStatus, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'common/guards';
 import { Types } from 'mongoose';
@@ -28,27 +28,27 @@ export class UserController {
   }
 
   @Get()
+  @HttpCode(200)
   // @UseGuards(JwtAuthGuard)
   async findMany(@Query() query: FindManyQueryDto) {
     return await this.userService.findMany(query);
   }
 
-  @Get('clear-users')
-  async clearAll() {
+  @Delete('all')
+  @HttpCode(200)
+  async deleteAll() {
     return await this.userTestService.deleteAll();
   }
-  @Get('count-users')
+
+  @Get('count')
+  @HttpCode(200)
   async countUsers() {
     return await this.userTestService.countUsers();
   }
 
-  @Get('all-users')
+  @Get('all')
+  @HttpCode(200)
   async findAll() {
     return await this.userTestService.findAll();
-  }
-  @Get('mock-docks/:count')
-  async createDocuments(@Param('count') count: number) {
-    await this.userTestService.createRandomMany(count);
-    return { completed: true };
   }
 }

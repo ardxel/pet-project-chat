@@ -7,8 +7,10 @@ import { selectOpenedChatCompanion, setIsHiddenChat } from 'entities/chats';
 import { useAppDispatch, useAppSelector } from 'shared/model';
 import { AvatartByFirstLetter, IconWrapper } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
+
 export const ChatHeader = () => {
   const chatCompanion = useAppSelector(selectOpenedChatCompanion);
+
   const dispatch = useAppDispatch();
 
   if (!chatCompanion) return null;

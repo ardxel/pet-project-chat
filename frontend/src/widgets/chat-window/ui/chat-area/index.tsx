@@ -5,6 +5,8 @@ import {
   selectOpenedChatId,
   selectOpenedChatMessages,
   selectPrivateChatLastPage,
+  selectPrivateChatLastScrollPoint,
+  setLastScrollPoint,
 } from 'entities/chats';
 import { UIEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
@@ -16,28 +18,45 @@ export const ChatArea = () => {
   const openedChatId = useAppSelector(selectOpenedChatId);
   const isFull = useAppSelector(selectOpenedChatHasAllMessages);
   const page = useAppSelector(selectPrivateChatLastPage(openedChatId));
+  const lastScrollPoint = useAppSelector(selectPrivateChatLastScrollPoint(openedChatId));
 
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [prevScrollHeight, setPrevScrollHeight] = useState(undefined);
   const timeout = useRef<ReturnType<typeof setTimeout>>(null);
 
-  const FETCH_MESSAGES_DELAY = 300;
-
+  const FETCH_MESSAGES_DELAY = 500;
+  const SCROLLTOP_TRIGGER_POINT = 50;
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     const container = chatContainerRef.current;
-
-    if (prevScrollHeight) {
-      /*
-       * изменяем scrollTop на значение разницы текущего scrollHeight и прошлого,
-       * чтобы значение scrollTop не сохранялось с числом 0 после добавления новых сообщений
-       */
-      container.scrollTop = container.scrollHeight - prevScrollHeight;
+    if (lastScrollPoint === 0) {
+      if (prevScrollHeight) {
+        /*
+         * изменяем scrollTop на значение разницы текущего scrollHeight и прошлого,
+         * чтобы значение scrollTop не сохранялось с числом 0 после добавления новых сообщений
+         */
+        container.scrollTop = container.scrollHeight - prevScrollHeight;
+      } else {
+        /* При первом рендере нужно опустить скроллбар до конца. */
+        container.scrollTop = container.scrollHeight;
+      }
     } else {
-      container.scrollTop = container.scrollHeight;
+      chatContainerRef.current.scrollTop = lastScrollPoint;
     }
-  }, [messages]);
+    return () => {
+      /**
+       * Сохраняем в map объекте каждого чата последние координаты,
+       * так как при смене чата скроллбар остается на преждем месте
+       */
+      dispatch(
+        setLastScrollPoint({
+          chatId: openedChatId,
+          point: chatContainerRef.current ? chatContainerRef.current.scrollTop : 0,
+        }),
+      );
+    };
+  }, [openedChatId, messages]);
 
   const onScrollAutoFetchMessages = useCallback(
     (event: UIEvent<HTMLDivElement>) => {
@@ -47,9 +66,8 @@ export const ChatArea = () => {
        * задержка для того, чтобы не было преждевременного срабатывания
        * после первого рендеринга
        */
-      if (container.scrollTop <= 50 && !isFull) {
+      if (container.scrollTop <= SCROLLTOP_TRIGGER_POINT && !isFull) {
         timeout.current = setTimeout(() => {
-          console.log('IS FETCHING');
           dispatch(fetchMessages({ conversationId: openedChatId, page }));
           dispatch(incrementPageCount(openedChatId));
           setPrevScrollHeight(container.scrollHeight);

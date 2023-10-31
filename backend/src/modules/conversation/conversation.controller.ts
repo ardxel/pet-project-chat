@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateConversationDto, GetMessagesDto } from 'modules/conversation/dto';
 import { ConversationService } from './conversation.service';
@@ -9,21 +9,25 @@ export class ConversationController {
   constructor(private readonly conversationService: ConversationService) {}
 
   @Post()
+  @HttpCode(201)
   async create(@Body() dto: CreateConversationDto) {
     return await this.conversationService.create(dto);
   }
 
   @Get('messages')
+  @HttpCode(200)
   async findMessages(@Body() dto: GetMessagesDto) {
     return await this.conversationService.findMessages(dto);
   }
 
-  @Get('all')
+  @Get()
+  @HttpCode(200)
   async findAll() {
     return await this.conversationService.findAll();
   }
 
-  @Get('delete')
+  @Delete()
+  @HttpCode(200)
   async deleteAll() {
     return await this.conversationService.deleteAll();
   }

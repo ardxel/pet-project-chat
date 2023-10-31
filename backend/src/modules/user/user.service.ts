@@ -43,8 +43,11 @@ export class UserService {
     }
 
     const skip = (queryDto.page - 1) * queryDto.limit;
+    const regexPattern = new RegExp(queryDto.name, 'i');
+
     const users = await this.model
-      .find({ name: { $regex: new RegExp(queryDto.name, 'i') } })
+      // .aggregate([{ $match: { name: regexPattern } }])
+      .find({ name: { $regex: regexPattern } })
       .skip(skip)
       .limit(queryDto.limit);
 

@@ -31,7 +31,6 @@ export const ChatListItem: FC<ChatListItemProps> = ({ user, conversationId }) =>
 
   return (
     <div
-      // to={Paths.chat + '/' + conversationId}
       className='flex items-center justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900 px-4 py-3 relative'
       onClick={handleOpenChat}
       onMouseLeave={() => setHover(false)}

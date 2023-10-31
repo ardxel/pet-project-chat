@@ -13,7 +13,8 @@ services:
       - ./.env.backend.dev
     depends_on:
       - mongodb
-
+    networks:
+      - frontend-backend
   mongodb:
     image: mongo:7.0
     container_name: mongo
@@ -24,6 +25,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: dev
       MONGO_INITDB_ROOT_PASSWORD: 123
+    networks:
+      - frontend-backend
 
   frontend-dev:
     build:
@@ -36,5 +39,10 @@ services:
       - ../frontend:/usr/src/app/frontend
     env_file:
       - ./.env.frontend.dev
+    networks:
+      - frontend-backend
 volumes:
-  - mongodb_data
+  mongodb_data:
+networks:
+  frontend-backend:
+    external: true

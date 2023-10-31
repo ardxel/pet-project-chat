@@ -6,7 +6,9 @@ import {
 } from 'entities/chats';
 import { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import { PuffLoader } from 'react-spinners';
 import { useAppDispatch, useAppSelector } from 'shared/model';
+import { twMerge } from 'tailwind-merge';
 
 export const ChatList = () => {
   const chats = useAppSelector(selectConversationIdAndCompanionList);
@@ -36,11 +38,22 @@ export const ChatList = () => {
   }, [chats, searchInput]);
 
   return (
-    <div className='flex flex-col '>
-      {chats &&
-        filteredChatsBySearchInput.map((chat, i) => {
-          return <ChatListItem key={i} user={chat.companion} conversationId={chat.conversationId} />;
-        })}
+    <div className={twMerge('scroll')}>
+      <div className='relative w-full h-full '>
+        <div className='relative w-full h-full  min-h-[80vh]'>
+          <div className={twMerge('flex flex-col bg-bg pb-4')}>
+            {filteredChatsBySearchInput ? (
+              filteredChatsBySearchInput.map((chat, i) => {
+                return <ChatListItem key={i} user={chat.companion} conversationId={chat.conversationId} />;
+              })
+            ) : (
+              <div className='h-full w-full absolute left-0 top-0 flex justify-center items-end pb-10 h-md:pb-0 h-md:items-center'>
+                <PuffLoader />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

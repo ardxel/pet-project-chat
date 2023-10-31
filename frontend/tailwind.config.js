@@ -21,10 +21,12 @@ const config = {
   content: ['./src/**/*.{ts,tsx}', './src/app/styles.css'],
   theme: {
     screens: {
+      'h-md': { raw: '(min-height: 756px)' },
       xs3: '320px',
       xs2: '476px',
       xs1: '520px',
       xs0: '576px',
+      1400: '1400px',
       ...require('tailwindcss/defaultTheme').screens,
     },
     colors: modernColors(appColors),

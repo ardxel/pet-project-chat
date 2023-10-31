@@ -8,6 +8,7 @@ export const handleAddConversationArray = (state: RootState['chats'], payload: I
       page: 1,
       limit: 25,
       isFull: false,
+      lastScrollPoint: 0,
     };
     if (conversation.isPrivate) {
       /*
@@ -30,6 +31,7 @@ export const handleAddConversation = (state: RootState['chats'], payload: IConve
     page: 1,
     limit: 25,
     isFull: false,
+    lastScrollPoint: 0,
   };
   if (isPrivate) {
     const companion = users.find((user) => user._id !== state.userId);

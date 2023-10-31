@@ -10,13 +10,12 @@ export const ChatWindow = () => {
   const isConnected = useAppSelector(selectIsConnected);
 
   useFetchFirstPageMessages();
-
   if (!isAuthorized && !isConnected) {
     return null;
   }
 
   return (
-    <section className='flex flex-col w-full'>
+    <section className='flex flex-col w-full h-full'>
       <ChatHeader />
       <ChatArea />
       <ChatInput />

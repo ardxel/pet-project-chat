@@ -1,13 +1,11 @@
-import { ReactNode } from 'react';
-import { ChatLeftbar } from 'widgets/chat-leftbar';
-import { ChatWindow } from 'widgets/chat-window';
+import ChatLeftbar from 'widgets/chat-leftbar';
+import ChatWindow from 'widgets/chat-window';
 
-const ChatPage = ({ children }: { children?: ReactNode }) => {
+const ChatPage = () => {
   return (
-    <div className='flex h-full w-full'>
+    <div className='flex h-full w-full overflow-hidden'>
       <ChatLeftbar />
       <ChatWindow />
-      {children}
     </div>
   );
 };

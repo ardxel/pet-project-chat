@@ -14,9 +14,9 @@ export const ChatLeftbar: FC<ChatLeftbarProps> = () => {
   const dispatch = useAppDispatch();
 
   return (
-    <LeftBar className={twMerge(`${isHiddenChat ? 'block' : 'hidden'}`, 'md:block')}>
+    <LeftBar className={twMerge(`${isHiddenChat ? 'flex' : 'hidden'}`, 'md:flex flex-col  overflow-hidden relative')}>
       <LeftbarHeader />
-      <SearchBar onChange={(event) => dispatch(setSearchInput(event.target.value))} />
+      <SearchBar className='flex-shrink-0' onChange={(event) => dispatch(setSearchInput(event.target.value))} />
       <ChatList />
     </LeftBar>
   );
