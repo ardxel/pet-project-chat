@@ -1,16 +1,30 @@
+const { compilerOptions } = require('./tsconfig.json');
+const { pathsToModuleNameMapper } = require('ts-jest');
+
+const esModules = [
+  // but mainly those 4 bellow
+  'query-string',
+  'decode-uri-component',
+  'split-on-first',
+  'filter-obj',
+];
+
 /**
  * @type {import('jest').Config}
  */
 module.exports = {
   // Directory where test files are located
   roots: ['<rootDir>/src'],
-
+  preset: 'ts-jest',
   // // Transformation of TypeScript files using ts-jest
   transform: {
-    '^.+\\.jsx?$': 'babel-jest',
+    '^.+\\.(t|j)s$': 'ts-jest',
     '^.+\\.tsx?$': 'ts-jest',
+    '^.+\\.svg$': 'jest-transform-stub',
     '.+\\.(css|styl|less|sass|scss)$': 'jest-css-modules-transform',
   },
+
+  transformIgnorePatterns: esModules.length ? [`/node_modules/(?!${esModules.join('|')})`] : [],
 
   // // File extensions that Jest should consider
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
@@ -21,6 +35,9 @@ module.exports = {
 
   // Specify Jest to use jsdom as the testing environment
   testEnvironment: 'jsdom',
+
+  modulePaths: [compilerOptions.baseUrl],
+  moduleNameMapper: pathsToModuleNameMapper({}, { prefix: '<rootDir>/' }),
 
   // Additional Jest options (optional)
   // verbose: true,

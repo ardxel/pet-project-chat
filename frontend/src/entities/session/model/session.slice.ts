@@ -4,7 +4,7 @@ import { sessionApi } from '../api/session.api';
 
 type SessionSliceState = { user?: IUser; accessToken?: string; isAuthorized: boolean };
 
-const initialSessionState: SessionSliceState = {
+export const initialSessionState: SessionSliceState = {
   isAuthorized: false,
   user: undefined,
   accessToken: undefined,

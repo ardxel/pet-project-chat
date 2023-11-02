@@ -12,7 +12,7 @@ interface ChatsState {
   searchInput: string;
 }
 
-const initialChatsState: ChatsState = {
+export const initialChatsState: ChatsState = {
   userId: undefined,
   privateChats: {},
   publicChats: {},

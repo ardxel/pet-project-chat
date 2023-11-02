@@ -1,4 +1,4 @@
-import { selectIsHiddenChat, selectOpenedChatId, setIsHiddenChat, setOpenedChatId } from 'entities/chats/model';
+import { selectIsHiddenChat, selectOpenedChatId, setIsHiddenChat, setOpenedChatId } from 'entities/chats';
 import { IUser } from 'entities/session';
 import { FC, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';

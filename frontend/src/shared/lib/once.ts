@@ -13,7 +13,3 @@ export const once = <T extends Fn>(fn: T) => {
     return result;
   };
 };
-
-const onceToUpperCase = once((str: string) => str.toUpperCase());
-
-const result = onceToUpperCase('hello world');

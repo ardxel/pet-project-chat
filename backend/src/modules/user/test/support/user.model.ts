@@ -4,11 +4,17 @@ import { userStub } from '../stubs/user.stub';
 export class UserModel {
   private readonly userEntiry: () => User = userStub;
 
+  save = jest.fn().mockResolvedValue(this.userEntiry());
+  find = jest.fn().mockResolvedValue([this.userEntiry()]);
+  findOne = jest.fn().mockResolvedValue(this.userEntiry());
+
+  deleteOne = jest.fn().mockResolvedValue(true);
+
   async create() {
     return this.userEntiry();
   }
 
-  async readById() {
+  async findById() {
     return this.userEntiry();
   }
 
@@ -26,5 +32,23 @@ export class UserModel {
 
   async delete() {
     return this.userEntiry();
+  }
+
+  async saveUserAsync() {
+    return this.userEntiry();
+  }
+
+  async isExist() {
+    return false;
+  }
+
+  async isNotExist() {
+    return true;
+  }
+
+  getSafeCopy() {
+    const user = this.userEntiry();
+    delete user.password;
+    return user;
   }
 }

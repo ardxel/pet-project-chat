@@ -5,13 +5,13 @@ type ThemeSliceState = {
   currentTheme: Theme;
 };
 
-const initialState: ThemeSliceState = {
+export const initialThemeState: ThemeSliceState = {
   currentTheme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
 };
 
 export const themeSlice = createSlice({
   name: 'theme',
-  initialState: () => initialState,
+  initialState: () => initialThemeState,
   reducers: {
     changeTheme: (state, action: PayloadAction<Theme>) => {
       state.currentTheme = action.payload;

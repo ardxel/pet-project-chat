@@ -36,10 +36,9 @@ export class AuthService {
       throw new UnauthorizedException('Incorrect password');
     }
 
-    const safeUser = this.userService.getSafeCopy(user);
     const token = await this.jwtService.signAsync({ sub: user._id });
 
-    return { user: safeUser, token };
+    return { user, token };
   }
 
   public async getUserFromAccessToken(token: string) {

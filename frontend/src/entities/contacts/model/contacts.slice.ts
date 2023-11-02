@@ -10,7 +10,7 @@ interface ContactsState {
   filtered?: Contact[];
 }
 
-const initialContactsState: ContactsState = {
+export const initialContactsState: ContactsState = {
   contacts: [],
   filtered: [],
 };

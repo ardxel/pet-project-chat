@@ -5,15 +5,11 @@ import { Types } from 'mongoose';
 import { User } from 'schemas';
 import { FindManyQueryDto } from './dto';
 import { UserService } from './user.service';
-import { UserTestService } from './userTest.service';
 
 @ApiTags('User')
 @Controller('user')
 export class UserController {
-  constructor(
-    private readonly userService: UserService,
-    private readonly userTestService: UserTestService,
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
   @HttpCode(201)
   @Get(':id/contacts')
@@ -37,18 +33,12 @@ export class UserController {
   @Delete('all')
   @HttpCode(200)
   async deleteAll() {
-    return await this.userTestService.deleteAll();
-  }
-
-  @Get('count')
-  @HttpCode(200)
-  async countUsers() {
-    return await this.userTestService.countUsers();
+    return await this.userService.deleteMany();
   }
 
   @Get('all')
   @HttpCode(200)
   async findAll() {
-    return await this.userTestService.findAll();
+    return await this.userService.findAll();
   }
 }
