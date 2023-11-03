@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { DeleteMessageDto } from 'modules/message';
 import { UserService } from 'modules/user';
 import { Model, Types } from 'mongoose';
 import { Conversation, ConversationDocument, UserDocument } from 'schemas';
@@ -67,6 +68,17 @@ export class ConversationService {
       },
     });
     return messages.reverse();
+  }
+
+  async deleteMessage(dto: DeleteMessageDto) {
+    return await this.model.updateOne(
+      { _id: dto.conversationId },
+      {
+        $pull: {
+          messages: dto.messageId,
+        },
+      },
+    );
   }
 
   async findAllByUserId(userId: Types.ObjectId) {

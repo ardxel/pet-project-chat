@@ -1,4 +1,4 @@
-import { Logger, UnauthorizedException, UseFilters } from '@nestjs/common';
+import { Logger, UseFilters } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -11,34 +11,15 @@ import {
   WsException,
 } from '@nestjs/websockets';
 import { BaseWsExceptionFilter, WsExceptionWithEvent } from 'common/exceptions';
+import { UserSocket } from 'common/interfaces';
 import { ConversationService, GetMessagesDto } from 'modules/conversation';
-import { CreateMessageDto, MessageService } from 'modules/message';
+import { CreateMessageDto, DeleteMessageDto, MessageService, UpdateMessageDto } from 'modules/message';
 import { UserService } from 'modules/user';
-import { User } from 'schemas';
-import { Server, Socket } from 'socket.io';
+import { Server } from 'socket.io';
+import { ChatClientErrorEvents, ChatEvents } from './chat-events.enum';
 import { ChatService } from './chat.service';
 import { InviteUserDto } from './dto';
 
-interface UserSocket extends Socket {
-  user: User;
-}
-
-enum ChatEvents {
-  USER_INIT = 'user:init',
-  CONVERSATION_CREATE = 'conversation:create',
-  CONVERSATION_FETCH = 'conversation:fetch',
-  MESSAGE_CREATE = 'message:create',
-  MESSAGE_FETCH = 'message:fetch',
-}
-
-enum ChatClientErrorEvents {
-  CONVERSATION_CREATE = 'error:conversation-create',
-  MESSAGE_CREATE = 'error:message-create',
-  MESSAGE_FETCH = 'error:message-fetch',
-  INVALID_TOKEN = 'error:invalid-token',
-}
-
-new UnauthorizedException();
 @WebSocketGateway({ namespace: 'chat', cors: { origin: '*' } })
 @UseFilters(BaseWsExceptionFilter)
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
@@ -58,23 +39,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   }
 
   async handleConnection(@ConnectedSocket() socket: UserSocket) {
-    try {
-      await this.authenticateUserBySocket(socket)
-        .then(() => this.joinToOwnRoomByMongoId(socket))
-        .then(() => this.joinInAllConversationRooms(socket))
-        .then(() => this.sendUserData(socket));
-    } catch (error) {
-      if (error instanceof WsExceptionWithEvent) {
-        socket.emit(error.exceptionEvent, error.message);
-      }
-      this.logger.error(error);
-      socket.disconnect();
-    }
+    await this.chatService.handleConnection(socket, this.server);
   }
 
   async handleDisconnect(socket: UserSocket) {
-    // Этот метод вызывается, когда клиент отключается от сервера
-    console.log(`Client ${socket.id} disconnected`);
+    this.logger.log(`Client ${socket.id} disconnected`);
   }
 
   @SubscribeMessage(ChatEvents.CONVERSATION_CREATE)
@@ -114,10 +83,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
       dto.page = dto.page || 1;
       dto.limit = dto.limit || 25;
 
-      if (await this.conversationService.isNotExist(dto.conversationId)) {
-        throw new WsException('Conversation was no found');
-      }
-
       const messages = await this.conversationService.findMessages(dto);
       socket.emit(ChatEvents.MESSAGE_FETCH, { messages, conversationId: dto.conversationId });
     } catch (error) {
@@ -134,10 +99,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
         throw new WsException('The text must contain at least one character');
       }
 
-      if (await this.conversationService.isNotExist(conversationId)) {
-        throw new WsException('This conversation is not exist');
-      }
-
       const message = await this.messageService.create(dto);
       this.server.in(dto.conversationId.toString()).emit(ChatEvents.MESSAGE_CREATE, { conversationId, message });
     } catch (error) {
@@ -146,25 +107,25 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     }
   }
 
-  public async authenticateUserBySocket(socket: UserSocket) {
-    const user = await this.chatService.getUserFromSocket(socket);
-    if (!user) {
-      throw new WsExceptionWithEvent('Token is invalid', ChatClientErrorEvents.INVALID_TOKEN);
+  @SubscribeMessage(ChatEvents.MESSAGE_UPDATE)
+  async onMessageUpdate(@ConnectedSocket() socket: UserSocket, @MessageBody() dto: UpdateMessageDto) {
+    try {
+      const updatedMessage = await this.messageService.update(dto);
+      this.server.in(String(dto.conversationId)).emit(ChatEvents.MESSAGE_UPDATE, updatedMessage);
+    } catch (error) {
+      this.logger.error(error);
+      throw new WsExceptionWithEvent(error, ChatClientErrorEvents.MESSAGE_CREATE);
     }
-    socket.user = user;
   }
 
-  private async joinToOwnRoomByMongoId(socket: UserSocket) {
-    socket.join(socket.user._id.toString());
-  }
-
-  private async joinInAllConversationRooms(socket: UserSocket) {
-    const conversations = await this.conversationService.findAllByUserId(socket.user._id);
-    socket.join(conversations.map((conversation) => conversation._id.toString()));
-    this.logger.log(`Connection established: ${socket.user.email}`);
-  }
-
-  private async sendUserData(socket: UserSocket) {
-    this.server.in(socket.id).emit(ChatEvents.USER_INIT, socket.user);
+  @SubscribeMessage(ChatEvents.MESSAGE_DELETE)
+  async onMessageDelete(@ConnectedSocket() socket: UserSocket, @MessageBody() dto: DeleteMessageDto) {
+    try {
+      await this.messageService.delete(dto);
+      this.server.in(String(dto.conversationId)).emit(ChatEvents.MESSAGE_DELETE, dto);
+    } catch (error) {
+      this.logger.error(error);
+      throw new WsExceptionWithEvent(error, ChatClientErrorEvents.MESSAGE_DELETE);
+    }
   }
 }

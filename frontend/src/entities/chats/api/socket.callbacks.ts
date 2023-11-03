@@ -8,6 +8,7 @@ import {
   addConversation,
   addMessage,
   addMessages,
+  deletePrivateMessage,
   setUserId,
 } from '../model';
 
@@ -21,11 +22,17 @@ interface MessageDTO {
   conversationId: string;
 }
 
+interface DeleteMessageDTO {
+  messageId: string;
+  conversationId: string;
+}
+
 export const createCallbackHandlers = (dispatch: AppDispatch) => ({
   [ChatEvents.USER_INIT]: (data: IUser) => dispatch(setUserId(data._id)),
   [ChatEvents.CONVERSATION_CREATE]: (data: IConversation) => dispatch(addConversation(data)),
   [ChatEvents.CONVERSATION_FETCH]: (data: IConversation[]) => dispatch(addConversation(data)),
   [ChatEvents.MESSAGE_CREATE]: (data: MessageDTO) => dispatch(addMessage(data)),
   [ChatEvents.MESSAGE_FETCH]: (data: MessagesDTO) => dispatch(addMessages(data)),
+  [ChatEvents.MESSAGE_DELETE]: (data: DeleteMessageDTO) => dispatch(deletePrivateMessage(data)),
   [ChatClientErrorEvents.INVALID_TOKEN]: () => dispatch(logoutThunk()),
 });

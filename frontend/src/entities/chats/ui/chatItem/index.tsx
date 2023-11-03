@@ -31,7 +31,11 @@ export const ChatListItem: FC<ChatListItemProps> = ({ user, conversationId }) =>
 
   return (
     <div
-      className='flex items-center justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900 px-4 py-3 relative'
+      data-testid='ddd'
+      className={twMerge(
+        'flex items-center justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900 px-4 py-3 relative',
+        openedChatId === conversationId ? 'bg-gray-100 dark:bg-gray-900' : '',
+      )}
       onClick={handleOpenChat}
       onMouseLeave={() => setHover(false)}
       onMouseEnter={() => setHover(true)}>

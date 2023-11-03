@@ -23,7 +23,9 @@ module.exports = {
     '^.+\\.svg$': 'jest-transform-stub',
     '.+\\.(css|styl|less|sass|scss)$': 'jest-css-modules-transform',
   },
-
+  testEnvironmentOptions: {
+    customExportConditions: [''],
+  },
   transformIgnorePatterns: esModules.length ? [`/node_modules/(?!${esModules.join('|')})`] : [],
 
   // // File extensions that Jest should consider
@@ -37,7 +39,10 @@ module.exports = {
   testEnvironment: 'jsdom',
 
   modulePaths: [compilerOptions.baseUrl],
-  moduleNameMapper: pathsToModuleNameMapper({}, { prefix: '<rootDir>/' }),
+  moduleNameMapper: {
+    ...pathsToModuleNameMapper({}, { prefix: '<rootDir>/' }),
+    '\\.svg$': '<rootDir>/__mocks__/svg.js',
+  },
 
   // Additional Jest options (optional)
   // verbose: true,

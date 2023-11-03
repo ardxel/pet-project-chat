@@ -7,7 +7,7 @@ import { rootReducer } from 'app/redux/root.reducer';
 import { initialChatsState } from 'entities/chats';
 import { initialContactsState } from 'entities/contacts';
 import { initialSessionState } from 'entities/session';
-import { initialThemeState } from 'entities/theme';
+import { ThemeProvider, initialThemeState } from 'entities/theme';
 import { invalidateAccessTokenListener } from 'features/auth/invalidateAccessToken';
 import { PropsWithChildren } from 'react';
 import { Provider } from 'react-redux';
@@ -48,10 +48,13 @@ export function renderWithProviders(
   }: ExtendedRenderOptions = {},
 ) {
   function Wrapper({ children }: PropsWithChildren<any>): JSX.Element {
-    return;
-    <MemoryRouter {...memoryRouterOptions}>
-      <Provider store={store}>{children}</Provider>
-    </MemoryRouter>;
+    return (
+      <MemoryRouter {...memoryRouterOptions}>
+        <Provider store={store}>
+          <ThemeProvider>{children}</ThemeProvider>
+        </Provider>
+      </MemoryRouter>
+    );
   }
 
   // Return an object with the store and all of RTL's query functions

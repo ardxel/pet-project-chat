@@ -1,6 +1,7 @@
-import { Controller, Delete, Get, HttpCode, Param } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, Param, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Types } from 'mongoose';
+import { DeleteMessageDto } from './dto';
 import { MessageService } from './message.service';
 
 @ApiTags('Message')
@@ -14,13 +15,23 @@ export class MessageController {
     return await this.messageService.findById(id);
   }
 
+  @Put()
+  @HttpCode(200)
+  async update() {}
+
+  @Delete()
+  @HttpCode(200)
+  async delete(dto: DeleteMessageDto) {
+    return await this.messageService.delete(dto);
+  }
+
   @Get('all')
   @HttpCode(200)
   async getAll() {
     return await this.messageService.findAll();
   }
 
-  @Delete()
+  @Delete('all')
   @HttpCode(200)
   async deleteAll() {
     return await this.messageService.deleteAll();

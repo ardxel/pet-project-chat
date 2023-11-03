@@ -2,19 +2,21 @@ import { Menu } from '@headlessui/react';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import DriveFileRenameOutlineOutlinedIcon from '@mui/icons-material/DriveFileRenameOutlineOutlined';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { IMessage, selectOpenedChatCompanion } from 'entities/chats';
+import { IMessage, deletePrivateMessage, selectOpenedChatCompanion } from 'entities/chats';
 import { selectUserId } from 'entities/session';
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
-import { useAppSelector } from 'shared/model';
+import { useAppDispatch, useAppSelector } from 'shared/model';
 import { AvatartByFirstLetter, DropdownListItem, IconWrapper } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
 
 interface ChatMessageEditButtonProps {
   show: boolean;
   open: boolean;
+  onDelete: () => void;
+  onEdit: () => void;
 }
 
-const ChatMessageEditButton: FC<ChatMessageEditButtonProps> = ({ show, open }) => {
+const ChatMessageEditButton: FC<ChatMessageEditButtonProps> = ({ show, open, onDelete, onEdit }) => {
   const [menuPosition, setMenuPosition] = useState<'top' | 'bottom'>('top');
   const btnRef = useRef<HTMLButtonElement>(null);
   /**
@@ -57,8 +59,13 @@ const ChatMessageEditButton: FC<ChatMessageEditButtonProps> = ({ show, open }) =
               : 'top-9 left-1/2 -translate-x-1/2 transform',
           )}
           as='div'>
-          <DropdownListItem as='button' Icon={<DriveFileRenameOutlineOutlinedIcon />} text='Изменить' />
-          <DropdownListItem as='button' Icon={<DeleteOutlineOutlinedIcon />} text='Удалить' />
+          <DropdownListItem
+            as='button'
+            Icon={<DriveFileRenameOutlineOutlinedIcon />}
+            text='Изменить'
+            onClick={onEdit}
+          />
+          <DropdownListItem as='button' Icon={<DeleteOutlineOutlinedIcon />} text='Удалить' onClick={onDelete} />
         </Menu.Items>
       </Menu>
     );
@@ -74,12 +81,13 @@ interface ChatMessageProps {
 export const ChatMessage: FC<ChatMessageProps> = ({ message, showAvatar }) => {
   const userId = useAppSelector(selectUserId);
   const companion = useAppSelector(selectOpenedChatCompanion);
+  const dispatch = useAppDispatch();
 
   const [isHover, setIsHover] = useState(false);
   const [isPressing, setPressing] = useState(false);
   const timeout = useRef(null);
 
-  const { text, sender } = message;
+  const { text, sender, _id, conversationId } = message;
   const SHOW_MENU_DELAY = 500;
 
   const handleMouseDown = () => {
@@ -93,6 +101,13 @@ export const ChatMessage: FC<ChatMessageProps> = ({ message, showAvatar }) => {
     clearTimeout(timeout.current);
     setPressing(false);
   };
+
+  const handleDeleteMessage = () => {
+    dispatch(deletePrivateMessage({ conversationId, messageId: _id }));
+  };
+
+  // TODO
+  const handleEditMessage = () => {};
 
   const hasAvatar = Boolean(companion.avatar);
   const isUserMsg = userId === sender;
@@ -136,7 +151,12 @@ export const ChatMessage: FC<ChatMessageProps> = ({ message, showAvatar }) => {
             'w-10 h-10 flex justify-center items-center absolute',
             isUserMsg ? '-left-11' : '-right-11',
           )}>
-          <ChatMessageEditButton show={isHover} open={isPressing} />
+          <ChatMessageEditButton
+            onDelete={handleDeleteMessage}
+            onEdit={handleEditMessage}
+            show={isHover}
+            open={isPressing}
+          />
         </div>
       </div>
     </div>

@@ -1,12 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ChatEvents, chatSocket } from 'entities/chats';
 
-export interface ResponseCreateMessageBody {
+export interface EmitCreateMessageBody {
   sender: string;
   conversationId: string;
   text: string;
 }
 
-export const fetchCreateMessage = createAsyncThunk<void, ResponseCreateMessageBody>('createMessage', async (body) => {
+export const fetchCreateMessage = createAsyncThunk<void, EmitCreateMessageBody>('createMessage', async (body) => {
   await chatSocket.emit(ChatEvents.MESSAGE_CREATE, body);
 });

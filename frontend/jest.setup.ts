@@ -1,12 +1,15 @@
 import '@testing-library/jest-dom';
 import { fetch, Headers, Request, Response } from 'cross-fetch';
 import React from 'react';
+import { TextDecoder, TextEncoder } from 'util';
 
 global.fetch = fetch;
 global.Headers = Headers;
 global.Request = Request;
 global.Response = Response;
 global.React = React;
+global.TextDecoder = TextDecoder;
+global.TextEncoder = TextEncoder;
 
 export default {
   transform: {},

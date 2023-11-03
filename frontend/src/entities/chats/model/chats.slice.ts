@@ -78,6 +78,19 @@ export const chatsSlice = createSlice({
     addMessage: (state, action: PayloadAction<{ conversationId: string; message: IMessage }>) => {
       handleAddMessage(state, action.payload);
     },
+
+    deletePrivateMessage: (state, action: PayloadAction<{ conversationId: string; messageId: string }>) => {
+      const { conversationId, messageId } = action.payload;
+
+      if (conversationId in state.privateChats) {
+        const chat = state.privateChats[conversationId];
+        const msgIndex = chat.messages.findIndex((msg) => msg._id === messageId);
+
+        if (msgIndex !== -1) {
+          chat.messages.splice(msgIndex, 1);
+        }
+      }
+    },
   },
 });
 
@@ -85,6 +98,7 @@ export const {
   addConversation,
   addMessages,
   addMessage,
+  deletePrivateMessage,
   setIsConnected,
   setUserId,
   clearChatsData,
