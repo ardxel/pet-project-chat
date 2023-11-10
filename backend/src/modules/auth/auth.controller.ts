@@ -1,6 +1,6 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { responseAuthData } from 'common/swagger';
+import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AuthResponseData } from 'common/swagger';
 import { AuthService } from './auth.service';
 import { LoginUserDto, RegisterUserDto } from './dto';
 
@@ -15,9 +15,9 @@ export class AuthController {
   @ApiOkResponse({
     status: HttpStatus.CREATED,
     description: 'Get created user and token',
-    type: responseAuthData(),
+    type: AuthResponseData,
   })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'invalid request body' })
+  @ApiBadRequestResponse({ status: HttpStatus.BAD_REQUEST, description: 'invalid request body' })
   public async signUp(@Body() registerUserDto: RegisterUserDto) {
     return await this.authService.signUp(registerUserDto);
   }
@@ -28,7 +28,7 @@ export class AuthController {
   @ApiOkResponse({
     status: 200,
     description: 'User successfully signed in.',
-    type: responseAuthData(),
+    type: AuthResponseData,
   })
   @ApiBadRequestResponse({ status: 401, description: 'Invalid email or password.' })
   @ApiBody({ type: LoginUserDto })

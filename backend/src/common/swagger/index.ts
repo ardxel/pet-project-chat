@@ -1,2 +1,2 @@
-export * from './response.schema';
+export * from './schemas';
 export * from './setup.swagger';

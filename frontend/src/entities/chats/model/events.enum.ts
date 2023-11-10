@@ -3,6 +3,7 @@ export enum ChatEvents {
   CONVERSATION_CREATE = 'conversation:create',
   CONVERSATION_FETCH = 'conversation:fetch',
   MESSAGE_CREATE = 'message:create',
+  MESSAGE_UPDATE = 'message:update',
   MESSAGE_FETCH = 'message:fetch',
   MESSAGE_DELETE = 'message:delete',
 }

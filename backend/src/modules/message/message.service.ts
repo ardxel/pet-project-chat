@@ -34,15 +34,14 @@ export class MessageService {
     if (await this.isNotExist(dto.messageId)) {
       throw new NotFoundException('Message was not found');
     }
-
-    return await this.model.updateOne(
-      { _id: dto.messageId },
+    return await this.model.findByIdAndUpdate(
+      dto.messageId,
       {
         $set: {
           text: dto.text,
         },
       },
-      { returnDocument: 'after' },
+      { new: true },
     );
   }
 

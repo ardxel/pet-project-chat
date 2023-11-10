@@ -7,6 +7,6 @@ export interface EmitCreateMessageBody {
   text: string;
 }
 
-export const fetchCreateMessage = createAsyncThunk<void, EmitCreateMessageBody>('createMessage', async (body) => {
+export const createMessageThunk = createAsyncThunk<void, EmitCreateMessageBody>('createMessage', async (body) => {
   await chatSocket.emit(ChatEvents.MESSAGE_CREATE, body);
 });

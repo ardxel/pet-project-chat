@@ -13,10 +13,8 @@ import { twMerge } from 'tailwind-merge';
 export const ChatList = () => {
   const chats = useAppSelector(selectConversationIdAndCompanionList);
   const searchInput = useSelector(selectSearchInput);
-
   const dispatch = useAppDispatch();
 
-  //TODO
   useEffect(() => {
     dispatch(fetchConversations());
   }, []);

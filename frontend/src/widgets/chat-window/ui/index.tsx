@@ -1,4 +1,4 @@
-import { selectIsConnected, useFetchFirstPageMessages } from 'entities/chats';
+import { selectIsConnected } from 'entities/chats';
 import { selectIsAuthorized } from 'entities/session';
 import { useAppSelector } from 'shared/model';
 import { ChatArea } from './chat-area';
@@ -9,7 +9,6 @@ export const ChatWindow = () => {
   const isAuthorized = useAppSelector(selectIsAuthorized);
   const isConnected = useAppSelector(selectIsConnected);
 
-  useFetchFirstPageMessages();
   if (!isAuthorized && !isConnected) {
     return null;
   }

@@ -2,8 +2,9 @@ import { JwtService } from '@nestjs/jwt';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from 'modules/auth';
+import { ConversationService } from 'modules/conversation';
 import { HashService, UserService } from 'modules/user';
-import { User } from 'schemas';
+import { Conversation, User } from 'schemas';
 import { ChatService } from '../chat.service';
 
 describe('ChatService', () => {
@@ -13,10 +14,15 @@ describe('ChatService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
+        ConversationService,
+        HashService,
         ChatService,
         UserService,
-        HashService,
         JwtService,
+        {
+          provide: getModelToken(Conversation.name),
+          useValue: {},
+        },
         {
           provide: getModelToken(User.name),
           useValue: {},

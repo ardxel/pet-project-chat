@@ -1,6 +1,7 @@
 import { Menu } from '@headlessui/react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useRef } from 'react';
+import { useAdaptiveMenuPosition } from 'shared/model';
 import { IconWrapper } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
 import { ActionList } from './actionList';
@@ -11,16 +12,8 @@ interface UserListItemMenuButtonProps {
 }
 
 export const MenuButton: FC<UserListItemMenuButtonProps> = ({ show, className }) => {
-  const [menuPosition, setMenuPosition] = useState<'top' | 'bottom'>('top');
   const btnRef = useRef<HTMLButtonElement>(null);
-  const MENU_HEIGHT = 550;
-
-  useEffect(() => {
-    if (btnRef.current) {
-      const btnRect = btnRef.current.getBoundingClientRect();
-      setMenuPosition(btnRect.top <= MENU_HEIGHT ? 'bottom' : 'top');
-    }
-  }, [show]);
+  const position = useAdaptiveMenuPosition(btnRef, [show], { menuHeight: 550 });
 
   if (show) {
     return (
@@ -37,7 +30,7 @@ export const MenuButton: FC<UserListItemMenuButtonProps> = ({ show, className })
           as='div'
           className={twMerge(
             'dropdown-menu w-[300px] !mt-0 [&>*]:px-4 [&>*]:py-4',
-            menuPosition === 'top' ? 'bottom-10' : 'top-10',
+            position === 'top' ? 'bottom-10' : 'top-10',
           )}>
           <ActionList />
         </Menu.Items>

@@ -81,7 +81,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   async onFetchMessages(@ConnectedSocket() socket: UserSocket, @MessageBody() dto: GetMessagesDto) {
     try {
       dto.page = dto.page || 1;
-      dto.limit = dto.limit || 25;
 
       const messages = await this.conversationService.findMessages(dto);
       socket.emit(ChatEvents.MESSAGE_FETCH, { messages, conversationId: dto.conversationId });
@@ -111,6 +110,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   async onMessageUpdate(@ConnectedSocket() socket: UserSocket, @MessageBody() dto: UpdateMessageDto) {
     try {
       const updatedMessage = await this.messageService.update(dto);
+      console.log(updatedMessage);
       this.server.in(String(dto.conversationId)).emit(ChatEvents.MESSAGE_UPDATE, updatedMessage);
     } catch (error) {
       this.logger.error(error);

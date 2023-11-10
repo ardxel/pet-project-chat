@@ -1,33 +1,35 @@
 import { PayloadAction, createSelector, createSlice } from '@reduxjs/toolkit';
+import { editMessageThunk } from 'features/message@edit';
+import { fetchMessages } from '../api';
 import { handleAddConversation, handleAddConversationArray, handleAddMessage, handleAddMessageArray } from '../lib';
-import { IConversation, IMessage, PrivateChatsMap, PublicChatsMap } from './types';
+import { IConversation, IMessage, PrivateChatsMap } from './types';
 
 interface ChatsState {
   privateChats: PrivateChatsMap;
-  publicChats: PublicChatsMap;
   isConnected: boolean;
   userId?: string;
   openedChatId?: IMessage['conversationId'];
   isHiddenChat: boolean;
+  editableMessage: IMessage | false;
   searchInput: string;
 }
 
-export const initialChatsState: ChatsState = {
+export const initialPrivateChatsState: ChatsState = {
   userId: undefined,
   privateChats: {},
-  publicChats: {},
   isConnected: false,
   openedChatId: undefined,
   isHiddenChat: true,
+  editableMessage: false,
   searchInput: '',
 };
 
-export const chatsSlice = createSlice({
-  name: 'chats',
-  initialState: () => initialChatsState,
+export const privateChatsSlice = createSlice({
+  name: 'privateChats',
+  initialState: () => initialPrivateChatsState,
   reducers: {
     clearChatsData: () => {
-      return initialChatsState;
+      return initialPrivateChatsState;
     },
 
     setSearchInput: (state, action: PayloadAction<string>) => {
@@ -38,11 +40,6 @@ export const chatsSlice = createSlice({
       if (state.privateChats[action.payload.chatId] && 'lastScrollPoint' in state.privateChats[action.payload.chatId]) {
         state.privateChats[action.payload.chatId].lastScrollPoint = action.payload.point;
       }
-    },
-
-    incrementPageCount: (state, action: PayloadAction<string>) => {
-      const chatId = action.payload;
-      state.privateChats[chatId].page += 1;
     },
 
     setOpenedChatId: (state, action: PayloadAction<IMessage['conversationId']>) => {
@@ -59,6 +56,10 @@ export const chatsSlice = createSlice({
 
     setUserId: (state, action: PayloadAction<string>) => {
       state.userId = action.payload;
+    },
+
+    setEditableMessage: (state, action: PayloadAction<IMessage | false>) => {
+      state.editableMessage = action.payload;
     },
 
     addConversation: (state, action: PayloadAction<IConversation | IConversation[]>) => {
@@ -79,18 +80,37 @@ export const chatsSlice = createSlice({
       handleAddMessage(state, action.payload);
     },
 
-    deletePrivateMessage: (state, action: PayloadAction<{ conversationId: string; messageId: string }>) => {
+    updateMessage: (state, action: PayloadAction<IMessage>) => {
+      const { conversationId, _id } = action.payload;
+      if (conversationId in state.privateChats) {
+        const allMessages = state.privateChats[conversationId].messages;
+        const index = allMessages.findIndex((msg) => msg._id === _id);
+        if (index !== -1) {
+          allMessages[index] = action.payload;
+        }
+      }
+    },
+    deleteMessage: (state, action: PayloadAction<{ conversationId: string; messageId: string }>) => {
       const { conversationId, messageId } = action.payload;
 
       if (conversationId in state.privateChats) {
         const chat = state.privateChats[conversationId];
-        const msgIndex = chat.messages.findIndex((msg) => msg._id === messageId);
+        const index = chat.messages.findIndex((msg) => msg._id === messageId);
 
-        if (msgIndex !== -1) {
-          chat.messages.splice(msgIndex, 1);
-        }
+        chat.messages.splice(index, 1);
       }
     },
+  },
+
+  extraReducers(builder) {
+    builder.addCase(fetchMessages.fulfilled, (state, action) => {
+      const { conversationId, page } = action.payload;
+      state.privateChats[conversationId].page = page ? page + 1 : 1;
+    });
+    builder.addCase(editMessageThunk.fulfilled, (state) => {
+      console.log('CRAKA');
+      state.editableMessage = false;
+    });
   },
 });
 
@@ -98,33 +118,34 @@ export const {
   addConversation,
   addMessages,
   addMessage,
-  deletePrivateMessage,
+  updateMessage,
+  deleteMessage,
   setIsConnected,
   setUserId,
   clearChatsData,
   setOpenedChatId,
   setIsHiddenChat,
   setSearchInput,
-  incrementPageCount,
   setLastScrollPoint,
-} = chatsSlice.actions;
+  setEditableMessage,
+} = privateChatsSlice.actions;
 
-export const selectIsConnected = (state: RootState) => state.chats.isConnected;
-export const selectPrivateChatList = (state: RootState) => state.chats.privateChats;
-export const selectOpenedChatId = (state: RootState) => state.chats.openedChatId;
-export const selectIsHiddenChat = (state: RootState) => state.chats.isHiddenChat;
-export const selectSearchInput = (state: RootState) => state.chats.searchInput;
-
+export const selectIsConnected = (state: RootState) => state.privateChats.isConnected;
+export const selectPrivateChatList = (state: RootState) => state.privateChats.privateChats;
+export const selectOpenedChatId = (state: RootState) => state.privateChats.openedChatId;
+export const selectIsHiddenChat = (state: RootState) => state.privateChats.isHiddenChat;
+export const selectSearchInput = (state: RootState) => state.privateChats.searchInput;
+export const selectEditableMessage = (state: RootState) => state.privateChats.editableMessage;
 export const selectOpenedChatData = createSelector(
   selectOpenedChatId,
   selectPrivateChatList,
   (chatId, chatList) => chatList[chatId],
 );
 
-export const selectChatDataByChatId = (chatId: string) => (state: RootState) => state.chats.privateChats[chatId];
+export const selectChatDataByChatId = (chatId: string) => (state: RootState) => state.privateChats.privateChats[chatId];
 
 export const selectOpenedChatHasAllMessages = createSelector(selectOpenedChatData, (chat) =>
-  chat ? chat.isFull : null,
+  chat ? chat.isAllMessagesFetched : null,
 );
 
 export const selectConversationIdAndCompanionList = createSelector(selectPrivateChatList, (chats) =>
@@ -141,7 +162,7 @@ export const selectOpenedChatMessages = createSelector(selectOpenedChatData, (da
 );
 
 export const selectPrivateChatLastPage = (chatId: string) => (state: RootState) =>
-  state.chats.privateChats[chatId] ? state.chats.privateChats[chatId].page : null;
+  state.privateChats.privateChats[chatId] ? state.privateChats.privateChats[chatId].page : null;
 
 export const selectPrivateChatLastScrollPoint = (chatId: string) => (state: RootState) =>
-  state.chats.privateChats[chatId] ? state.chats.privateChats[chatId].lastScrollPoint : null;
+  state.privateChats.privateChats[chatId] ? state.privateChats.privateChats[chatId].lastScrollPoint : null;

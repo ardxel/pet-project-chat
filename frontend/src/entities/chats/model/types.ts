@@ -21,9 +21,9 @@ export type PrivateChatsMap = Record<
   {
     companion: IUser;
     messages: IMessage[];
-    isFull: boolean;
+
+    isAllMessagesFetched: boolean;
     page: number;
-    limit: number;
     lastScrollPoint: number;
   }
 >;

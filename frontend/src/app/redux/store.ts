@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { chatsSlice } from 'entities/chats';
+import { privateChatsSlice } from 'entities/chats';
 import { sessionSlice } from 'entities/session';
 import { themeSlice } from 'entities/theme';
 import { invalidateAccessTokenListener } from 'features/auth/invalidateAccessToken';
@@ -12,7 +12,7 @@ const persistConfig = {
   key: 'root',
   storage,
   whiteList: [sessionSlice.name, themeSlice.name],
-  blackList: [chatsSlice.name],
+  blackList: [privateChatsSlice.name],
 };
 
 export const store = configureStore({

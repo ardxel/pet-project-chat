@@ -4,10 +4,6 @@ import { Types } from 'mongoose';
 export class GetMessagesDto {
   @IsNumber()
   @IsOptional()
-  limit?: number;
-
-  @IsNumber()
-  @IsOptional()
   page?: number;
 
   @IsMongoId()

@@ -51,7 +51,7 @@ export class ConversationService {
 
   async findMessages(dto: GetMessagesDto) {
     const page = dto.page || 1;
-    const limit = dto.limit || 25;
+    const _limit = 30;
     const conversationId = dto.conversationId;
 
     const conversation = await this.model.findById(conversationId);
@@ -63,8 +63,8 @@ export class ConversationService {
       path: 'messages',
       options: {
         sort: '-createdAt',
-        skip: (page - 1) * limit,
-        limit,
+        skip: (page - 1) * _limit,
+        limit: _limit,
       },
     });
     return messages.reverse();

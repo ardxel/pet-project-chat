@@ -25,7 +25,11 @@ export class UserController {
 
   @Get()
   @HttpCode(200)
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Get users by query', description: 'get users' })
+  @ApiOkResponse({ status: HttpStatus.OK, description: 'success operation' })
+  @ApiBadRequestResponse({ status: HttpStatus.NOT_FOUND, description: 'user not found' })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'invalid query params' })
   async findMany(@Query() query: FindManyQueryDto) {
     return await this.userService.findMany(query);
   }

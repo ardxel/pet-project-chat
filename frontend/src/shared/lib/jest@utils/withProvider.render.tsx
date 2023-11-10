@@ -4,7 +4,7 @@ import type { RenderOptions } from '@testing-library/react';
 import { render } from '@testing-library/react';
 import { AppStore } from 'app/redux';
 import { rootReducer } from 'app/redux/root.reducer';
-import { initialChatsState } from 'entities/chats';
+import { initialPrivateChatsState } from 'entities/chats';
 import { initialContactsState } from 'entities/contacts';
 import { initialSessionState } from 'entities/session';
 import { ThemeProvider, initialThemeState } from 'entities/theme';
@@ -28,7 +28,7 @@ export function renderWithProviders(
   {
     preloadedState = {
       session: initialSessionState,
-      chats: initialChatsState,
+      privateChats: initialPrivateChatsState,
       contacts: initialContactsState,
       theme: initialThemeState,
     },

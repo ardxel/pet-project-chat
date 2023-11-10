@@ -1,77 +1,11 @@
-import { Menu } from '@headlessui/react';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import DriveFileRenameOutlineOutlinedIcon from '@mui/icons-material/DriveFileRenameOutlineOutlined';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { IMessage, deletePrivateMessage, selectOpenedChatCompanion } from 'entities/chats';
+import { IMessage, selectOpenedChatCompanion, setEditableMessage } from 'entities/chats';
 import { selectUserId } from 'entities/session';
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { deleteMessageThunk } from 'features/message@delete';
+import { FC, useCallback, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
-import { AvatartByFirstLetter, DropdownListItem, IconWrapper } from 'shared/ui';
+import { AvatartByFirstLetter } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
-
-interface ChatMessageEditButtonProps {
-  show: boolean;
-  open: boolean;
-  onDelete: () => void;
-  onEdit: () => void;
-}
-
-const ChatMessageEditButton: FC<ChatMessageEditButtonProps> = ({ show, open, onDelete, onEdit }) => {
-  const [menuPosition, setMenuPosition] = useState<'top' | 'bottom'>('top');
-  const btnRef = useRef<HTMLButtonElement>(null);
-  /**
-   * 130 означает высоту одного элемента DropdownListItem (приблизительно)
-   * если добавлять в меню новые элементы, то придется корректировать значение.
-   */
-  const MENU_HEIGHT = 130 * 2;
-
-  /**
-   * Если меню кнопок выходит за пределы чата сверху,
-   * то тогда отображать снизу, а если нет, то сверху
-   */
-  const calculateMenuPosition = useCallback(() => {
-    if (btnRef.current) {
-      const btnRect = btnRef.current.getBoundingClientRect();
-      setMenuPosition(btnRect.top <= MENU_HEIGHT ? 'bottom' : 'top');
-    }
-  }, []);
-
-  useEffect(() => {
-    calculateMenuPosition();
-  }, [show]);
-
-  if (show) {
-    return (
-      <Menu className='dropdown' as='div'>
-        <Menu.Button as='button' ref={btnRef}>
-          <IconWrapper className='w-8 h-8 bg-transparent !p-2'>
-            <MoreHorizIcon className='!w-4 !h-4' />
-          </IconWrapper>
-        </Menu.Button>
-        <Menu.Items
-          static={open}
-          className={twMerge(
-            'absolute bg-bg flex flex-col z-[999] min-w-[96px] border border-border rounded-md',
-            'w-[150px] gap-y-4 p-4 !mt-0',
-            `max-h-[${MENU_HEIGHT}]`,
-            menuPosition === 'top'
-              ? 'bottom-9 left-1/2 -translate-x-1/2 transform'
-              : 'top-9 left-1/2 -translate-x-1/2 transform',
-          )}
-          as='div'>
-          <DropdownListItem
-            as='button'
-            Icon={<DriveFileRenameOutlineOutlinedIcon />}
-            text='Изменить'
-            onClick={onEdit}
-          />
-          <DropdownListItem as='button' Icon={<DeleteOutlineOutlinedIcon />} text='Удалить' onClick={onDelete} />
-        </Menu.Items>
-      </Menu>
-    );
-  }
-  return null;
-};
+import { ChatMessageEditButton } from './editButton';
 
 interface ChatMessageProps {
   message: IMessage;
@@ -102,12 +36,14 @@ export const ChatMessage: FC<ChatMessageProps> = ({ message, showAvatar }) => {
     setPressing(false);
   };
 
-  const handleDeleteMessage = () => {
-    dispatch(deletePrivateMessage({ conversationId, messageId: _id }));
-  };
+  const handleDeleteMessage = useCallback(() => {
+    dispatch(deleteMessageThunk({ conversationId, messageId: _id }));
+  }, []);
 
   // TODO
-  const handleEditMessage = () => {};
+  const handleEditMessage = useCallback(() => {
+    dispatch(setEditableMessage(message));
+  }, []);
 
   const hasAvatar = Boolean(companion.avatar);
   const isUserMsg = userId === sender;

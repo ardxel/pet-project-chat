@@ -1,13 +1,13 @@
 import { IConversation, IMessage } from '../model';
 
-export const handleAddConversationArray = (state: RootState['chats'], payload: IConversation[]) => {
+export const handleAddConversationArray = (state: RootState['privateChats'], payload: IConversation[]) => {
   if (payload.length === 0) return;
   for (const conversation of payload) {
     const chat = {
       messages: [],
       page: 1,
       limit: 25,
-      isFull: false,
+      isAllMessagesFetched: false,
       lastScrollPoint: 0,
     };
     if (conversation.isPrivate) {
@@ -17,37 +17,33 @@ export const handleAddConversationArray = (state: RootState['chats'], payload: I
        */
       const companion = conversation.users.find((user) => user._id !== state.userId);
       state.privateChats[conversation._id] = { ...chat, companion };
-    } else {
-      const companions = conversation.users.filter((user) => user._id !== state.userId);
-      state.publicChats[conversation._id] = { ...chat, companions };
     }
   }
 };
 
-export const handleAddConversation = (state: RootState['chats'], payload: IConversation) => {
+export const handleAddConversation = (state: RootState['privateChats'], payload: IConversation) => {
   const { _id: conversationId, users, isPrivate } = payload;
   const chat = {
     messages: [],
     page: 1,
     limit: 25,
-    isFull: false,
+    isAllMessagesFetched: false,
     lastScrollPoint: 0,
   };
   if (isPrivate) {
     const companion = users.find((user) => user._id !== state.userId);
     state.privateChats[conversationId] = { ...chat, companion };
   } else {
-    const companions = users.filter((user) => user._id !== state.userId);
-    state.publicChats[conversationId] = { ...chat, companions };
+    throw new Error('Is not private conversation');
   }
 };
 
 export const handleAddMessageArray = (
-  state: RootState['chats'],
+  state: RootState['privateChats'],
   payload: { conversationId: string; messages: IMessage[] },
 ) => {
   if (payload.messages.length === 0) {
-    state.privateChats[payload.conversationId].isFull = true;
+    state.privateChats[payload.conversationId].isAllMessagesFetched = true;
     return;
   }
   const conversationId = payload.conversationId;
@@ -59,7 +55,10 @@ export const handleAddMessageArray = (
   }
 };
 
-export const handleAddMessage = (state: RootState['chats'], payload: { conversationId: string; message: IMessage }) => {
+export const handleAddMessage = (
+  state: RootState['privateChats'],
+  payload: { conversationId: string; message: IMessage },
+) => {
   const { conversationId, message } = payload;
   if (conversationId in state.privateChats) {
     state.privateChats[conversationId]['messages'].push(message);
