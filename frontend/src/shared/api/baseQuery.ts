@@ -11,7 +11,7 @@ export const appBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
   fetchBaseQuery({
     baseUrl: config.apiUrl,
     prepareHeaders: (headers, { getState }) => {
-      const { accessToken } = (getState() as RootState).session;
+      const { accessToken } = (getState() as any).session;
 
       if (accessToken) {
         headers.set('Authorization', `Bearer ${accessToken}`);

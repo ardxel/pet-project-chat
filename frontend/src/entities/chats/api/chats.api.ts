@@ -1,6 +1,6 @@
 import { IUser } from 'entities/session';
 import queryString from 'query-string';
-import { CHATS_TAG, DataResponse, baseApi } from 'shared/api';
+import { DataResponse, PRIVATE_CHATS_TAG, baseApi } from 'shared/api';
 import { mapUsers } from '../lib/mapUsers';
 
 interface SearchUsersByNameParams {
@@ -15,7 +15,7 @@ export const chatsApi = baseApi.injectEndpoints({
       query: (params: SearchUsersByNameParams) => ({
         url: `/user?${queryString.stringify(params)}`,
       }),
-      providesTags: [CHATS_TAG],
+      providesTags: [PRIVATE_CHATS_TAG],
       transformResponse: (response: DataResponse<IUser[]>) => mapUsers(response),
     }),
   }),

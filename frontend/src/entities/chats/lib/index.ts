@@ -1,2 +1,2 @@
-export * from './action.handlers';
 export * from './chat-socket.provider';
+export * from './privateChat.reducer';

@@ -11,7 +11,19 @@ import { MessageService } from './message.service';
 export class MessageController {
   constructor(private readonly messageService: MessageService) {}
 
-  @Get(':id')
+  @Get('all')
+  @HttpCode(200)
+  async getAll() {
+    return await this.messageService.findAll();
+  }
+
+  @Delete('all')
+  @HttpCode(200)
+  async deleteAll() {
+    return await this.messageService.deleteAll();
+  }
+
+  @Get(`:id`)
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
   @ApiParam({ type: String, name: 'id' })
@@ -35,17 +47,5 @@ export class MessageController {
   @UseGuards(JwtAuthGuard)
   async delete(dto: DeleteMessageDto) {
     return await this.messageService.delete(dto);
-  }
-
-  @Get('all')
-  @HttpCode(200)
-  async getAll() {
-    return await this.messageService.findAll();
-  }
-
-  @Delete('all')
-  @HttpCode(200)
-  async deleteAll() {
-    return await this.messageService.deleteAll();
   }
 }

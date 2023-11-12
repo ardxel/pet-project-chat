@@ -15,7 +15,7 @@ const ErrMessage = ({ name }: { name: string }) => (
   <ErrorMessage
     component='p'
     name={name}
-    className="text-xs mt-1 h-8 max-h-8 before:content-['*'] before:inline-block"
+    className="text-xs mt-1 h-8 max-h-8 before:content-['*'] text-red-400 before:inline-block"
   />
 );
 

@@ -1,4 +1,5 @@
 import ChatLeftbar from 'widgets/chat-leftbar';
+import { ChatOptions } from 'widgets/chat-options-sidebar';
 import ChatWindow from 'widgets/chat-window';
 
 const ChatPage = () => {
@@ -6,6 +7,7 @@ const ChatPage = () => {
     <div className='flex h-full w-full overflow-hidden'>
       <ChatLeftbar />
       <ChatWindow />
+      <ChatOptions />
     </div>
   );
 };

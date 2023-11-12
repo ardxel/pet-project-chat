@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC, memo, useMemo } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 interface AvatartByFirstLetterProps {
@@ -6,7 +6,7 @@ interface AvatartByFirstLetterProps {
   className?: string;
 }
 
-export const AvatartByFirstLetter: FC<AvatartByFirstLetterProps> = ({ name, className }) => {
+export const AvatartByFirstLetter: FC<AvatartByFirstLetterProps> = memo(({ name, className }) => {
   const letter = useMemo(() => {
     if (!name) return;
     for (let i = 0; i < name.length; i++) {
@@ -24,4 +24,4 @@ export const AvatartByFirstLetter: FC<AvatartByFirstLetterProps> = ({ name, clas
       </h1>
     </div>
   );
-};
+});

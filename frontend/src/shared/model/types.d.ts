@@ -21,3 +21,6 @@ declare module '*.jpg' {
   const content: string;
   export default content;
 }
+
+type RootState = import('../../app/redux/store').RootState;
+type AppDispatch = import('../../app/redux/store').AppDispatch;

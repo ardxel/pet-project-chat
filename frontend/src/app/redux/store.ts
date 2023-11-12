@@ -6,8 +6,8 @@ import { invalidateAccessTokenListener } from 'features/auth/invalidateAccessTok
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { baseApi, config } from 'shared/api';
+import { StateType } from 'typesafe-actions';
 import { rootReducer } from './root.reducer';
-
 const persistConfig = {
   key: 'root',
   storage,
@@ -15,21 +15,20 @@ const persistConfig = {
   blackList: [privateChatsSlice.name],
 };
 
-export const store = configureStore({
-  devTools: config.isDev,
-  reducer: persistReducer(persistConfig, rootReducer),
-  middleware: (getDefailtMiddleware) =>
-    getDefailtMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
-    }).concat(baseApi.middleware, invalidateAccessTokenListener.middleware),
-});
+export const buildStore = () =>
+  configureStore({
+    devTools: config.isDev,
+    reducer: persistReducer(persistConfig, rootReducer) as typeof rootReducer,
+    middleware: (getDefailtMiddleware) =>
+      getDefailtMiddleware({
+        serializableCheck: {
+          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        },
+      }).concat(baseApi.middleware, invalidateAccessTokenListener.middleware),
+  });
 
+export const store = buildStore();
 export const persistedStore = persistStore(store);
-// for renderWithProvider test util
-export type AppStore = typeof store;
-// Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof rootReducer>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatch = typeof store.dispatch;
+
+export type AppDispatch = (typeof store)['dispatch'];
+export type RootState = StateType<(typeof store)['getState']>;

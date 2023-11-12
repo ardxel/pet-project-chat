@@ -36,9 +36,9 @@ export const ChatList = () => {
   }, [chats, searchInput]);
 
   return (
-    <div className={twMerge('scroll')}>
+    <div className={twMerge('scroll', 'pr-0')}>
       <div className='relative w-full h-full '>
-        <div className='relative w-full h-full  min-h-[80vh]'>
+        <div className='relative w-full h-full  min-h-[80vh] pr-0'>
           <div className={twMerge('flex flex-col bg-bg pb-4')}>
             {filteredChatsBySearchInput ? (
               filteredChatsBySearchInput.map((chat, i) => {

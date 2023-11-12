@@ -3,20 +3,65 @@ import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
 import PhoneIcon from '@mui/icons-material/Phone';
 import SearchIcon from '@mui/icons-material/Search';
 import VideocamIcon from '@mui/icons-material/Videocam';
-import { selectOpenedChatCompanion, setIsHiddenChat } from 'entities/chats';
+import { selectIsHiddenOptions, selectOpenedChatCompanion, setIsHiddenChat, setIsHiddenOptions } from 'entities/chats';
+import { memo } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
 import { AvatartByFirstLetter, IconWrapper } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
 
+const PhoneCallButton = memo(() => {
+  return (
+    <button>
+      <IconWrapper className='header-chat-icon'>
+        <PhoneIcon />
+      </IconWrapper>
+    </button>
+  );
+});
+
+const VideoCallButton = memo(() => {
+  return (
+    <button>
+      <IconWrapper className='header-chat-icon'>
+        <VideocamIcon />
+      </IconWrapper>
+    </button>
+  );
+});
+
+const SearchButton = memo(() => {
+  return (
+    <button>
+      <IconWrapper className='header-chat-icon'>
+        <SearchIcon />
+      </IconWrapper>
+    </button>
+  );
+});
+
+const ChatOptionsButton = memo(({ onClick, focus }: { onClick: () => void; focus: boolean }) => {
+  return (
+    <button onClick={onClick}>
+      <IconWrapper focus={focus} className={twMerge('header-chat-icon')}>
+        <FormatAlignRightIcon />
+      </IconWrapper>
+    </button>
+  );
+});
+
 export const ChatHeader = () => {
   const chatCompanion = useAppSelector(selectOpenedChatCompanion);
-
+  const isHiddeOptions = useAppSelector(selectIsHiddenOptions);
   const dispatch = useAppDispatch();
 
   if (!chatCompanion) return null;
 
   const hasAvatar = Boolean(chatCompanion.avatar);
   const hasFullname = Boolean(chatCompanion.firstName && chatCompanion.lastName);
+
+  const handleOpenChatOptions = () => {
+    dispatch(setIsHiddenOptions(!isHiddeOptions));
+  };
 
   return (
     <div>
@@ -52,26 +97,10 @@ export const ChatHeader = () => {
             </div>
           </div>
           <div className='flex gap-x-4'>
-            <button>
-              <IconWrapper className='header-chat-icon'>
-                <PhoneIcon />
-              </IconWrapper>
-            </button>
-            <button>
-              <IconWrapper className='header-chat-icon'>
-                <VideocamIcon />
-              </IconWrapper>
-            </button>
-            <button>
-              <IconWrapper className='header-chat-icon'>
-                <SearchIcon />
-              </IconWrapper>
-            </button>
-            <button>
-              <IconWrapper className='header-chat-icon'>
-                <FormatAlignRightIcon />
-              </IconWrapper>
-            </button>
+            <PhoneCallButton />
+            <VideoCallButton />
+            <SearchButton />
+            <ChatOptionsButton onClick={handleOpenChatOptions} focus={!isHiddeOptions} />
           </div>
         </div>
       </div>

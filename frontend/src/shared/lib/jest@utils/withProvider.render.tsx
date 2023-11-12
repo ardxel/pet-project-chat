@@ -2,17 +2,11 @@ import type { PreloadedState } from '@reduxjs/toolkit';
 import { configureStore } from '@reduxjs/toolkit';
 import type { RenderOptions } from '@testing-library/react';
 import { render } from '@testing-library/react';
-import { AppStore } from 'app/redux';
-import { rootReducer } from 'app/redux/root.reducer';
-import { initialPrivateChatsState } from 'entities/chats';
-import { initialContactsState } from 'entities/contacts';
-import { initialSessionState } from 'entities/session';
-import { ThemeProvider, initialThemeState } from 'entities/theme';
-import { invalidateAccessTokenListener } from 'features/auth/invalidateAccessToken';
+import { buildStore } from 'app/redux';
+import { ThemeProvider } from 'entities/theme';
 import { PropsWithChildren } from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter, MemoryRouterProps } from 'react-router';
-import { baseApi } from 'shared/api';
 // As a basic setup, import your same slice reducers
 
 // This type interface extends the default options for render from RTL, as well
@@ -20,30 +14,16 @@ import { baseApi } from 'shared/api';
 interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
   memoryRouterOptions?: MemoryRouterProps;
   preloadedState?: PreloadedState<RootState>;
-  store?: ReturnType<typeof configureStore> | AppStore;
+  store?: ReturnType<typeof configureStore> | RootState;
 }
 
 export function renderWithProviders(
   ui: React.ReactElement,
   {
-    preloadedState = {
-      session: initialSessionState,
-      privateChats: initialPrivateChatsState,
-      contacts: initialContactsState,
-      theme: initialThemeState,
-    },
+    preloadedState,
     memoryRouterOptions,
     // Automatically create a store instance if no store was passed in
-    store = configureStore({
-      preloadedState: preloadedState,
-      reducer: rootReducer,
-      middleware: (getDefailtMiddleware) =>
-        getDefailtMiddleware({
-          serializableCheck: {
-            // ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-          },
-        }).concat(baseApi.middleware, invalidateAccessTokenListener.middleware),
-    }),
+    store = buildStore() as any,
     ...renderOptions
   }: ExtendedRenderOptions = {},
 ) {

@@ -104,7 +104,7 @@
 }
 
 .scroll {
-  overflow-y: scroll;
+  overflow-y: auto;
   transition: --var1 0.5s;
 }
 

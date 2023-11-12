@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { DeleteMessageDto } from 'modules/message';
 import { UserService } from 'modules/user';
 import { Model, Types } from 'mongoose';
-import { Conversation, ConversationDocument, UserDocument } from 'schemas';
+import { Conversation, ConversationDocument, User, UserDocument } from 'schemas';
 import { CreateConversationDto, GetMessagesDto } from './dto';
 
 @Injectable()
@@ -30,7 +30,7 @@ export class ConversationService {
       newConversation.users.push(userId);
 
       // Добавляем id беседы в массив чатов пользователя
-      user.conversations.push(newConversation._id);
+      user.conversations.push({ data: newConversation._id, status: 'common' });
 
       // Добавляем пользователя в массив для сохранения.
       usersToUpdate.push(user);
@@ -38,7 +38,8 @@ export class ConversationService {
     // Сохраняем пользователей и созданную беседу параллельно
     await Promise.all([newConversation.save(), usersToUpdate.map((user) => user.save())]);
 
-    return (await this.findById(newConversation._id)).populate({ path: 'users' });
+    const conversationWithPopulatedUsers = (await this.findById(newConversation._id)).populate({ path: 'users' });
+    return conversationWithPopulatedUsers;
   }
 
   async findById(conversationId: Types.ObjectId) {
@@ -83,13 +84,13 @@ export class ConversationService {
 
   async findAllByUserId(userId: Types.ObjectId) {
     const user = await this.userService.findById(userId);
-    const userWithPopulatedConversations = await user.populate<{ conversations: Conversation[] }>({
-      path: 'conversations',
+    const userWithPopulatedConversations = await user.populate<{ conversations: User['conversations'] }>({
+      path: 'conversations.data',
     });
-    const { conversations } = await userWithPopulatedConversations.populate<{ conversations: Conversation[] }>({
-      path: 'conversations.users',
+    const { conversations } = await userWithPopulatedConversations.populate<{ conversations: User['conversations'] }>({
+      path: 'conversations.data.users',
     });
-    return conversations as Conversation[];
+    return conversations;
   }
 
   // TODO

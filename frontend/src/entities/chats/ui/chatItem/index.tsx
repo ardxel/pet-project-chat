@@ -1,6 +1,6 @@
 import { selectIsHiddenChat, selectOpenedChatId, setIsHiddenChat, setOpenedChatId } from 'entities/chats';
 import { IUser } from 'entities/session';
-import { FC, useState } from 'react';
+import { FC, memo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
 import { AvatartByFirstLetter } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
@@ -11,7 +11,7 @@ interface ChatListItemProps {
   conversationId: string;
 }
 
-export const ChatListItem: FC<ChatListItemProps> = ({ user, conversationId }) => {
+export const ChatListItem: FC<ChatListItemProps> = memo(({ user, conversationId }) => {
   const openedChatId = useAppSelector(selectOpenedChatId);
   const isHiddenChat = useAppSelector(selectIsHiddenChat);
   const [hover, setHover] = useState(false);
@@ -68,4 +68,4 @@ export const ChatListItem: FC<ChatListItemProps> = ({ user, conversationId }) =>
       </div>
     </div>
   );
-};
+});

@@ -32,7 +32,6 @@ export const CreateChatModal: FC<CreateChatModalProps> = ({ onClose, isOpen }) =
   );
 
   const handleOnClose = () => {
-    users.length = 0;
     onClose();
   };
 

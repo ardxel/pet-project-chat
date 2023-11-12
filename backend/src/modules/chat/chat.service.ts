@@ -45,7 +45,7 @@ export class ChatService {
 
   private async joinInAllConversationRooms(socket: UserSocket) {
     const conversations = await this.conversationService.findAllByUserId(socket.user._id);
-    socket.join(conversations.map((conversation) => conversation._id.toString()));
+    socket.join(conversations.map(({ data }) => data._id.toString()));
     this.logger.log(`Connection established: ${socket.user.email}`);
   }
 

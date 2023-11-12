@@ -18,7 +18,7 @@ const ErrMessage = ({ name }: { name: string }) => (
   <ErrorMessage
     component='p'
     name={name}
-    className="text-xs mt-1 h-8 max-h-8 before:content-['*'] before:inline-block"
+    className="text-xs mt-1 h-8 max-h-8 before:content-['*'] text-red-400 before:inline-block"
   />
 );
 
@@ -39,7 +39,6 @@ export const RegisterForm: FC<RegisterFormProps> = ({ onSuccess }) => {
             {error && <h1 className='text-xl text-center first-letter:capitalize text-red-500 mb-2'>{error}</h1>}
             <h2 className='text-left text-lg mb-3'>Создать аккаунт</h2>
             <Formik
-              enableReinitialize
               initialValues={{
                 agree: false,
                 name: '',

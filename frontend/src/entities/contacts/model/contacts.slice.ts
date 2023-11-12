@@ -1,7 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { Contact } from 'entities/session';
 import { contactsApi } from '../api/contacts.api';
-
 export const contactFilterOptions = ['Все', 'Новые', 'Избранные'] as const;
 const SEVEN_DAYS_IN_MS = 604800000;
 

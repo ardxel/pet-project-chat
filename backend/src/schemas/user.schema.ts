@@ -34,11 +34,17 @@ export class User {
   @Prop({
     required: false,
     _id: false,
-    type: [{ type: Types.ObjectId, ref: 'Conversation' }],
+    // select: false,
+    type: [
+      {
+        data: { type: Types.ObjectId, ref: 'Conversation' },
+        status: { type: String, enum: ['common', 'archived', 'spam', 'trash'], default: 'common' },
+      },
+    ],
     default: [],
   })
   @ApiProperty()
-  conversations?: Types.ObjectId[];
+  conversations?: { data: Types.ObjectId; status: 'common' | 'archived' | 'spam' | 'trash' }[];
 
   @Prop({
     required: false,
@@ -46,14 +52,20 @@ export class User {
     type: [
       {
         user: { type: Types.ObjectId, ref: User.name },
-        isFavorite: Boolean,
+        status: {
+          type: {
+            type: String,
+            enum: ['common', 'favorite', 'blocked'],
+            default: 'common',
+          },
+        },
         createdAt: { type: Date, default: Date.now },
       },
     ],
     default: [],
   })
   @ApiProperty()
-  contacts?: { user: Types.ObjectId; isFavorite: boolean; createdAt?: Date }[];
+  contacts?: { user: Types.ObjectId; status: 'common' | 'favorite' | 'blocked'; createdAt?: Date }[];
 
   @Prop({
     required: false,

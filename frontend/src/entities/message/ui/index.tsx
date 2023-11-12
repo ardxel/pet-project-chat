@@ -23,6 +23,10 @@ export const ChatMessage: FC<ChatMessageProps> = ({ message, showAvatar }) => {
 
   const { text, sender, _id, conversationId } = message;
   const SHOW_MENU_DELAY = 500;
+  const hasAvatar = Boolean(companion.avatar);
+  const isUserMsg = userId === sender;
+  const isTextMsg = typeof text === 'string';
+  const isBgBlue = Boolean(isUserMsg && isTextMsg);
 
   const handleMouseDown = () => {
     timeout.current = setTimeout(() => {
@@ -38,22 +42,16 @@ export const ChatMessage: FC<ChatMessageProps> = ({ message, showAvatar }) => {
 
   const handleDeleteMessage = useCallback(() => {
     dispatch(deleteMessageThunk({ conversationId, messageId: _id }));
-  }, []);
+  }, [message]);
 
-  // TODO
   const handleEditMessage = useCallback(() => {
     dispatch(setEditableMessage(message));
-  }, []);
-
-  const hasAvatar = Boolean(companion.avatar);
-  const isUserMsg = userId === sender;
-  const isTextMsg = typeof text === 'string';
-  const isBgBlue = Boolean(isUserMsg && isTextMsg);
+  }, [message]);
 
   return (
     <div
       className={twMerge(
-        'w-11/12 md:w-10/12 xl:w-2/3 2xl:w-2/5 relative flex cursor-pointer ml-10',
+        'w-10/12 md:w-10/12 xl:w-2/3 2xl:w-2/5 flex relative cursor-pointer ml-10',
         isUserMsg ? 'self-end justify-end' : 'self-start',
       )}>
       <div
@@ -79,7 +77,11 @@ export const ChatMessage: FC<ChatMessageProps> = ({ message, showAvatar }) => {
             </div>
           )}
         </div>
-        <div className={twMerge('py-3 px-4  rounded-md flex break-all', isBgBlue ? 'bg-icon-active-color' : 'bg-bg')}>
+        <div
+          className={twMerge(
+            'py-3 px-4  rounded-md flex break-all break-words justify-center items-center',
+            isBgBlue ? 'bg-icon-active-color' : 'bg-bg',
+          )}>
           <p className={twMerge(isBgBlue ? 'text-white' : '')}>{text}</p>
         </div>
         <div
@@ -87,12 +89,14 @@ export const ChatMessage: FC<ChatMessageProps> = ({ message, showAvatar }) => {
             'w-10 h-10 flex justify-center items-center absolute',
             isUserMsg ? '-left-11' : '-right-11',
           )}>
-          <ChatMessageEditButton
-            onDelete={handleDeleteMessage}
-            onEdit={handleEditMessage}
-            show={isHover}
-            open={isPressing}
-          />
+          {isUserMsg ? (
+            <ChatMessageEditButton
+              onDelete={handleDeleteMessage}
+              onEdit={handleEditMessage}
+              show={isHover}
+              open={isPressing}
+            />
+          ) : null}
         </div>
       </div>
     </div>

@@ -33,6 +33,7 @@ module.exports = {
   rules: {
     'react/display-name': 'off',
     'no-useless-catch': 'off',
+    'react/prop-types': 'off',
     // suppress errors for missing 'import React' in files
     'react/react-in-jsx-scope': 'off',
     '@typescript-eslint/no-var-requires': 'off',
