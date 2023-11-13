@@ -20,17 +20,17 @@ interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
 export function renderWithProviders(
   ui: React.ReactElement,
   {
-    preloadedState,
+    // preloadedState,
     memoryRouterOptions,
     // Automatically create a store instance if no store was passed in
-    store = buildStore() as any,
+    store = buildStore(),
     ...renderOptions
   }: ExtendedRenderOptions = {},
 ) {
   function Wrapper({ children }: PropsWithChildren<any>): JSX.Element {
     return (
       <MemoryRouter {...memoryRouterOptions}>
-        <Provider store={store}>
+        <Provider store={store as any}>
           <ThemeProvider>{children}</ThemeProvider>
         </Provider>
       </MemoryRouter>
