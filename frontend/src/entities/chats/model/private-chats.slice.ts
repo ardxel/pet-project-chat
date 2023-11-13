@@ -1,10 +1,10 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
-import { editMessageThunk } from 'features/message@edit';
+import { editMessageThunk } from 'features/message/edit';
 import { privateChatReducers } from '../lib';
 import { IMessage, PrivateChatsMap } from './types';
 
 export interface PrivateChatsState {
-  privateChats: PrivateChatsMap;
+  chats?: PrivateChatsMap;
   isConnected: boolean;
   userId?: string;
   openedChatId?: IMessage['conversationId'];
@@ -16,7 +16,7 @@ export interface PrivateChatsState {
 
 export const initialPrivateChatsState: PrivateChatsState = {
   userId: undefined,
-  privateChats: {},
+  chats: {},
   isConnected: false,
   openedChatId: undefined,
   isHiddenChat: true,
@@ -45,6 +45,7 @@ export const {
   deleteMessage,
   setIsConnected,
   setUserId,
+  updateCompanionStatus,
   clearPrivateChatsData,
   setOpenedChatId,
   setIsHiddenChat,
@@ -55,16 +56,16 @@ export const {
 } = privateChatsSlice.actions;
 
 export const selectIsConnected = (state: RootState) => state.privateChats.isConnected;
-export const selectPrivateChatList = (state: RootState) => state.privateChats.privateChats;
+export const selectPrivateChatList = (state: RootState) => state.privateChats.chats;
 export const selectOpenedChatId = (state: RootState) => state.privateChats.openedChatId;
 export const selectIsHiddenChat = (state: RootState) => state.privateChats.isHiddenChat;
 export const selectIsHiddenOptions = (state: RootState) => state.privateChats.isHiddenOptions;
 export const selectSearchInput = (state: RootState) => state.privateChats.searchInput;
 export const selectEditableMessage = (state: RootState) => state.privateChats.editableMessage;
-export const selectChatDataByChatId = (chatId: string) => (state: RootState) => state.privateChats.privateChats[chatId];
+export const selectChatDataByChatId = (chatId: string) => (state: RootState) => state.privateChats.chats[chatId];
 export const selectOpenedChatMessages = (state: RootState) => {
   const openedChatId = state.privateChats.openedChatId;
-  return openedChatId ? state.privateChats.privateChats[openedChatId].messages : undefined;
+  return openedChatId ? state.privateChats.chats[openedChatId].messages : undefined;
 };
 
 export const selectOpenedChatData = createSelector(
@@ -77,6 +78,9 @@ export const selectOpenedChatHasAllMessages = createSelector(selectOpenedChatDat
   chat ? chat.isAllMessagesFetched : null,
 );
 
+export const selectChatLastMessage = (chatId: string) =>
+  createSelector(selectChatDataByChatId(chatId), ({ messages }) => (messages?.length ? messages.at(-1) : undefined));
+
 export const selectOpenedChatMessagesLength = createSelector(selectOpenedChatMessages, (messages) => messages?.length);
 
 export const selectConversationIdAndCompanionList = createSelector(selectPrivateChatList, (chats) =>
@@ -87,11 +91,16 @@ export const selectOpenedChatCompanion = createSelector(selectOpenedChatId, sele
   return chatId ? chats[chatId].companion : null;
 });
 
-export const selectOpenedChatCompanionStatus = createSelector(selectOpenedChatData, (chat) => chat.companionStatus);
+export const selectCompanionStatusByChatId = (chatId: string) =>
+  createSelector(
+    (state: RootState) => state.privateChats.chats[chatId],
+    (chat) => chat?.companionStatus,
+  );
+export const selectOpenedChatCompanionStatus = createSelector(selectOpenedChatData, (chat) => chat?.companionStatus);
 
 export const selectPrivateChatLastPage = (chatId: string) => (state: RootState) =>
-  state.privateChats.privateChats[chatId] ? state.privateChats.privateChats[chatId].page : null;
+  state.privateChats.chats[chatId] ? state.privateChats.chats[chatId].page : null;
 
-export const selectOpenedPrivateChatLastPage = createSelector(selectOpenedChatData, (chat) => chat.page);
+export const selectOpenedPrivateChatLastPage = createSelector(selectOpenedChatData, (chat) => chat?.page || 1);
 
 export const selectOpenedChatIsLoading = createSelector(selectOpenedChatData, (data) => data?.isLoading);

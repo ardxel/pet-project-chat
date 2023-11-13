@@ -12,7 +12,7 @@ export class MessageService {
     private readonly conversationService: ConversationService,
   ) {}
 
-  async create(dto: CreateMessageDto) {
+  async create(dto: CreateMessageDto): Promise<Message> {
     const newMessage = new this.model(dto);
     if (await this.conversationService.isNotExist(dto.conversationId)) {
       throw new NotFoundException('Conversation was not found');

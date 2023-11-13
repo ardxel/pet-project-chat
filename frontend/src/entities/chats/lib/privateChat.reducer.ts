@@ -1,5 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import {
+  CompanionStatus,
   ConversationStatus,
   IConversation,
   IMessage,
@@ -16,8 +17,8 @@ export const privateChatReducers = {
   setIsLoading: (state: PrivateChatsState, action: PayloadAction<{ chatId: string; isLoading: boolean }>) => {
     const { chatId, isLoading } = action.payload;
 
-    if (chatId in state.privateChats) {
-      state.privateChats[chatId].isLoading = isLoading;
+    if (chatId in state.chats) {
+      state.chats[chatId].isLoading = isLoading;
     }
   },
 
@@ -49,12 +50,24 @@ export const privateChatReducers = {
     state.editableMessage = action.payload;
   },
 
+  updateCompanionStatus: (
+    state: PrivateChatsState,
+    action: PayloadAction<{ userId: string; conversationId: string; status: CompanionStatus }>,
+  ) => {
+    const { conversationId, status, userId } = action.payload;
+    if (state.chats[conversationId] && state.chats[conversationId].companion._id === userId) {
+      state.chats[conversationId].companionStatus = status;
+    }
+  },
+
   addConversationList: (
     state: PrivateChatsState,
     action: PayloadAction<{ data: IConversation; status: ConversationStatus }[]>,
   ) => {
     if (action.payload.length === 0) return;
     for (const conversation of action.payload) {
+      if (state.chats[conversation.data._id]) continue;
+
       const chat: Omit<PrivateChatsMap[string], 'companion'> = {
         messages: [],
         page: 1,
@@ -66,11 +79,10 @@ export const privateChatReducers = {
       };
       if (conversation.data.isPrivate) {
         /*
-         * В документе хранится массив юзеров (members). Так как это приватная беседа,
-         * в массиве всего 2 элемента: сам пользователь и собеседник.
+         * В документе хранится массив состоящий из 2 юзеров (members). Так как это приватная беседа,
          */
         const companion = conversation.data.users.find((user) => user._id !== state.userId);
-        state.privateChats[conversation.data._id] = { ...chat, companion };
+        state.chats[conversation.data._id] = { ...chat, companion };
       }
     }
   },
@@ -88,7 +100,7 @@ export const privateChatReducers = {
     };
     if (isPrivate) {
       const companion = users.find((user) => user._id !== state.userId);
-      state.privateChats[conversationId] = { ...chat, companion };
+      state.chats[conversationId] = { ...chat, companion };
     } else {
       throw new Error('Is not private conversation');
     }
@@ -102,30 +114,30 @@ export const privateChatReducers = {
     const isAllMessagesFetched = messages.length === 0;
 
     if (isAllMessagesFetched) {
-      state.privateChats[conversationId].page += 1;
-      state.privateChats[conversationId].isAllMessagesFetched = true;
-      state.privateChats[conversationId].isLoading = false;
+      state.chats[conversationId].page += 1;
+      state.chats[conversationId].isAllMessagesFetched = true;
+      state.chats[conversationId].isLoading = false;
       return;
     }
 
-    state.privateChats[conversationId].page += 1;
-    state.privateChats[conversationId].messages = messages.concat(state.privateChats[conversationId].messages);
-    state.privateChats[conversationId].isLoading = false;
+    state.chats[conversationId].page += 1;
+    state.chats[conversationId].messages = messages.concat(state.chats[conversationId].messages);
+    state.chats[conversationId].isLoading = false;
   },
 
   addMessage: (state: PrivateChatsState, action: PayloadAction<{ conversationId: string; message: IMessage }>) => {
     const { conversationId, message } = action.payload;
-    if (conversationId in state.privateChats) {
-      state.privateChats[conversationId].messages.push(message);
+    if (conversationId in state.chats) {
+      state.chats[conversationId].messages.push(message);
     } else {
-      state.privateChats[conversationId].messages = [message];
+      state.chats[conversationId].messages = [message];
     }
   },
 
   updateMessage: (state: PrivateChatsState, action: PayloadAction<IMessage>) => {
     const { conversationId, _id } = action.payload;
-    if (conversationId in state.privateChats) {
-      const allMessages = state.privateChats[conversationId].messages;
+    if (conversationId in state.chats) {
+      const allMessages = state.chats[conversationId].messages;
       const index = allMessages.findIndex((msg) => msg._id === _id);
       if (index !== -1) {
         allMessages[index] = action.payload;
@@ -136,8 +148,8 @@ export const privateChatReducers = {
   deleteMessage: (state: PrivateChatsState, action: PayloadAction<{ conversationId: string; messageId: string }>) => {
     const { conversationId, messageId } = action.payload;
 
-    if (conversationId in state.privateChats) {
-      const chat = state.privateChats[conversationId];
+    if (conversationId in state.chats) {
+      const chat = state.chats[conversationId];
       const index = chat.messages.findIndex((msg) => msg._id === messageId);
       chat.messages.splice(index, 1);
     }

@@ -17,19 +17,21 @@ export interface IConversation {
 }
 
 export type ConversationStatus = 'common' | 'archived' | 'spam' | 'trash';
+export type CompanionStatus = 'online' | 'offline' | 'typing';
 
 export type PrivateChatsMap = Record<
   string,
-  {
-    companion: IUser;
-    messages: IMessage[];
-    companionStatus: 'online' | 'offline' | 'typing';
-    status: ConversationStatus;
-    isCompanionActive: boolean;
-    isAllMessagesFetched: boolean;
-    page: number;
-    isLoading: boolean;
-  }
+  | {
+      companion: IUser;
+      messages: IMessage[];
+      companionStatus: CompanionStatus;
+      status: ConversationStatus;
+      isCompanionActive: boolean;
+      isAllMessagesFetched: boolean;
+      page: number;
+      isLoading: boolean;
+    }
+  | undefined
 >;
 
 export type PublicChatsMap = Record<

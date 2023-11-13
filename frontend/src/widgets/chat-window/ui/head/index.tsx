@@ -6,7 +6,7 @@ import VideocamIcon from '@mui/icons-material/Videocam';
 import { selectIsHiddenOptions, selectOpenedChatCompanion, setIsHiddenChat, setIsHiddenOptions } from 'entities/chats';
 import { memo } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
-import { AvatartByFirstLetter, IconWrapper } from 'shared/ui';
+import { IconWrapper, UserAvatar } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
 
 const PhoneCallButton = memo(() => {
@@ -56,7 +56,6 @@ export const ChatHeader = () => {
 
   if (!chatCompanion) return null;
 
-  const hasAvatar = Boolean(chatCompanion.avatar);
   const hasFullname = Boolean(chatCompanion.firstName && chatCompanion.lastName);
 
   const handleOpenChatOptions = () => {
@@ -74,14 +73,7 @@ export const ChatHeader = () => {
               </IconWrapper>
             </button>
             <div className='relative w-[50px] h-[50px]'>
-              {hasAvatar ? (
-                <img
-                  className={twMerge('rounded-md object-cover overflow-hidden', 'absolute w-full h-full')}
-                  src={chatCompanion.avatar}
-                />
-              ) : (
-                <AvatartByFirstLetter name={chatCompanion.name} />
-              )}
+              <UserAvatar user={chatCompanion} />
             </div>
             <div>
               {hasFullname ? (

@@ -1,4 +1,4 @@
-import { ChatCreate } from 'features/chat@create';
+import { ChatCreate } from 'features/chat/create';
 import { FC } from 'react';
 import { FilterButton } from './filter.button';
 

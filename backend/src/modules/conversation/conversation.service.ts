@@ -3,8 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { DeleteMessageDto } from 'modules/message';
 import { UserService } from 'modules/user';
 import { Model, Types } from 'mongoose';
-import { Conversation, ConversationDocument, User, UserDocument } from 'schemas';
+import { Conversation, ConversationDocument, Message, User, UserDocument } from 'schemas';
 import { CreateConversationDto, GetMessagesDto } from './dto';
+
+export type ConversationStatus = User['conversations'][0]['status'];
 
 @Injectable()
 export class ConversationService {
@@ -13,7 +15,7 @@ export class ConversationService {
     private readonly userService: UserService,
   ) {}
 
-  async create(dto: CreateConversationDto) {
+  async create(dto: CreateConversationDto): Promise<Conversation> {
     const { userIds } = dto;
     const newConversation = new this.model();
     // Массив для хранения пользователей, чьи данные нужно обновить
@@ -38,11 +40,12 @@ export class ConversationService {
     // Сохраняем пользователей и созданную беседу параллельно
     await Promise.all([newConversation.save(), usersToUpdate.map((user) => user.save())]);
 
-    const conversationWithPopulatedUsers = (await this.findById(newConversation._id)).populate({ path: 'users' });
+    const conversationWithPopulatedUsers = await (await this.findById(newConversation._id)).populate({ path: 'users' });
+
     return conversationWithPopulatedUsers;
   }
 
-  async findById(conversationId: Types.ObjectId) {
+  async findById(conversationId: Types.ObjectId): Promise<ConversationDocument> {
     const conversation = await this.model.findById(conversationId);
     if (!conversation) {
       throw new NotFoundException('Conversation was not found');
@@ -60,7 +63,7 @@ export class ConversationService {
     if (!conversation) {
       throw new BadRequestException('Conversation was not found');
     }
-    const { messages } = await conversation.populate({
+    const { messages } = await conversation.populate<{ messages: Message[] }>({
       path: 'messages',
       options: {
         sort: '-createdAt',
@@ -87,7 +90,9 @@ export class ConversationService {
     const userWithPopulatedConversations = await user.populate<{ conversations: User['conversations'] }>({
       path: 'conversations.data',
     });
-    const { conversations } = await userWithPopulatedConversations.populate<{ conversations: User['conversations'] }>({
+    const { conversations } = await userWithPopulatedConversations.populate<{
+      conversations: { data: Conversation; status: ConversationStatus }[];
+    }>({
       path: 'conversations.data.users',
     });
     return conversations;

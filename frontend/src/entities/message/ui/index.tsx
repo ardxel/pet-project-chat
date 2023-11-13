@@ -1,6 +1,6 @@
 import { IMessage, selectOpenedChatCompanion, setEditableMessage } from 'entities/chats';
 import { selectUserId } from 'entities/session';
-import { deleteMessageThunk } from 'features/message@delete';
+import { deleteMessageThunk } from 'features/message/delete';
 import { FC, useCallback, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
 import { AvatartByFirstLetter } from 'shared/ui';

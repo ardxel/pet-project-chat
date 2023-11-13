@@ -2,6 +2,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { HydratedDocument, Types } from 'mongoose';
 
+export type UserStatus = 'online' | 'offline' | 'typing';
+
 export type UserDocument = HydratedDocument<User>;
 
 @Schema({ versionKey: false, strict: true })

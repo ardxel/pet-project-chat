@@ -4,11 +4,13 @@ import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import TagFacesOutlinedIcon from '@mui/icons-material/TagFacesOutlined';
-import { IMessage, selectEditableMessage, selectOpenedChatId, setEditableMessage } from 'entities/chats';
+import { selectEditableMessage, selectOpenedChatId, setEditableMessage } from 'entities/chats';
 import { selectUserId } from 'entities/session';
-import { EmitCreateMessageBody, createMessageThunk } from 'features/message@create';
-import { editMessageThunk } from 'features/message@edit';
-import { KeyboardEvent, useEffect, useState } from 'react';
+import { updateUserStatusInChat } from 'features/chat/updateStatus';
+import { createMessageThunk } from 'features/message/create';
+import { editMessageThunk } from 'features/message/edit';
+import { debounce } from 'lodash';
+import { KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
 import { IconWrapper } from 'shared/ui';
 
@@ -21,56 +23,56 @@ export const ChatInput = () => {
   const userId = useAppSelector(selectUserId);
   const [text, setText] = useState('');
   const dispatch = useAppDispatch();
+  const typingTimeout = useRef<NodeJS.Timeout>(null);
 
   useEffect(() => {
-    if (editableMessage) {
+    if (editableMessage && editableMessage.text !== text) {
       setText(editableMessage.text);
     }
   }, [editableMessage]);
 
-  const handleCreate = () => {
-    const messageBody: EmitCreateMessageBody = {
-      sender: userId,
-      conversationId,
-      text,
-    };
+  const handleSubmit = useCallback(() => {
+    if (!text.length) return;
 
-    if (text.length > 0) {
-      dispatch(createMessageThunk(messageBody));
-      setText('');
-    }
-  };
-
-  const handleEdit = () => {
     if (editableMessage) {
-      const { _id, conversationId } = editableMessage as IMessage;
-      const messageBody = {
-        conversationId,
-        messageId: _id,
-        text,
-      };
-
-      if (text.length > 0) {
-        dispatch(editMessageThunk(messageBody));
-        setText('');
-      }
+      const { _id, conversationId } = editableMessage;
+      dispatch(editMessageThunk({ conversationId, messageId: _id, text }));
+    } else {
+      dispatch(createMessageThunk({ conversationId, text, sender: userId }));
     }
-  };
 
-  const handleStopEdit = () => {
+    setText('');
+  }, [text]);
+
+  const handleStopEdit = useCallback(() => {
     dispatch(setEditableMessage(false));
     setText('');
-  };
+  }, []);
 
-  const handleOnEnterDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      if (editableMessage) {
-        handleEdit();
+  const setTypingUserStatus = useCallback(
+    debounce(() => {
+      dispatch(updateUserStatusInChat({ conversationId, status: 'typing', userId }));
+    }, 300),
+    [conversationId, userId],
+  );
+
+  const handleOnKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLInputElement>) => {
+      clearTimeout(typingTimeout.current);
+      if (event.key !== 'Enter') {
+        setTypingUserStatus();
+        typingTimeout.current = setTimeout(() => {
+          dispatch(updateUserStatusInChat({ conversationId, status: 'online', userId }));
+        }, 5000);
       } else {
-        handleCreate();
+        handleSubmit();
+
+        clearTimeout(typingTimeout.current);
+        dispatch(updateUserStatusInChat({ conversationId, status: 'online', userId }));
       }
-    }
-  };
+    },
+    [handleSubmit],
+  );
 
   return (
     <div className='w-full'>
@@ -94,7 +96,7 @@ export const ChatInput = () => {
         </div>
         <input
           onChange={(event) => setText(event.target.value)}
-          onKeyDown={handleOnEnterDown}
+          onKeyDown={handleOnKeyDown}
           value={text}
           className='w-2/3 form-input border-none h-8 md:h-10 !bg-gray-200 dark:!bg-aside-bg flex-grow'
         />
@@ -105,14 +107,14 @@ export const ChatInput = () => {
                 <CloseIcon className={icon} />
               </IconWrapper>
             </button>
-            <button onClick={handleEdit}>
+            <button onClick={handleSubmit}>
               <IconWrapper className={iconWrapper}>
                 <ModeEditOutlinedIcon className={icon} />
               </IconWrapper>
             </button>
           </div>
         ) : (
-          <button onClick={handleCreate}>
+          <button onClick={handleSubmit}>
             <IconWrapper className={iconWrapper}>
               <SendOutlinedIcon className={icon} />
             </IconWrapper>

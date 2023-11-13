@@ -1,5 +1,6 @@
 export enum ChatEvents {
   USER_INIT = 'user:init',
+  USER_STATUS = 'user:status',
   CONVERSATION_CREATE = 'conversation:create',
   CONVERSATION_FETCH = 'conversation:fetch',
   MESSAGE_CREATE = 'message:create',

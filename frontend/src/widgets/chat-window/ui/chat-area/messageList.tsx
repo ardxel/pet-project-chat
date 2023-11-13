@@ -23,8 +23,21 @@ export const MessageList: FC<MessageListProps> = memo(({ messages }) => {
         const nextMsgByUser = !messages[index + 1] || (messages[index + 1] && messages[index + 1].sender === userId);
         const showAvatar = isNotUserSender && nextMsgByUser;
 
-        const currentMsgDate = moment(msg.updatedAt);
-        const isSameDay = messages[index - 1] && currentMsgDate.isSame(messages[index - 1].updatedAt, 'day');
+        /**
+         * Лучше использовать createdAt, если использовать updatedAt, то над сообщением
+         * будет появляться новая дата, хотя сообщения старые и под этим сообщением могут быть новые сообщения с другой датой,
+         * и эта дата будет перекрывать нижние значения, допустим сообщение сверху
+         * было опубликовано (отредактировано) 13.10.2000 а сообщения снизу 12.10.2000, что может дезориентировать
+         * пользователя.
+         *
+         * @todo
+         * Лучше добавить в компоненте сообщения фичу о том
+         * когда в последний раз было отредактировано это сообщение
+         *
+         */
+
+        const currentMsgDate = moment(msg.createdAt);
+        const isSameDay = messages[index - 1] && currentMsgDate.isSame(messages[index - 1].createdAt, 'day');
 
         return (
           <Fragment key={index}>

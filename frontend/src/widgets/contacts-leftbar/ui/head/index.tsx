@@ -1,4 +1,4 @@
-import { AddContact } from 'features/contact@add';
+import { AddContact } from 'features/contact/add';
 import { FC } from 'react';
 
 interface LeftbarHeaderProps {}

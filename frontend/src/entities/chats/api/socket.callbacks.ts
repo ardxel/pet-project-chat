@@ -3,6 +3,7 @@ import { logoutThunk } from 'features/auth/logout';
 import {
   ChatClientErrorEvents,
   ChatEvents,
+  CompanionStatus,
   ConversationStatus,
   IConversation,
   IMessage,
@@ -12,6 +13,7 @@ import {
   addMessageList,
   deleteMessage,
   setUserId,
+  updateCompanionStatus,
   updateMessage,
 } from '../model';
 
@@ -32,8 +34,15 @@ interface DeleteMessageDTO {
   conversationId: string;
 }
 
+export interface UpdateCompanionStatusDto {
+  userId: string;
+  conversationId: string;
+  status: CompanionStatus;
+}
+
 export const createCallbackHandlers = (dispatch: AppDispatch) => ({
   [ChatEvents.USER_INIT]: (data: IUser) => dispatch(setUserId(data._id)),
+  [ChatEvents.USER_STATUS]: (data: UpdateCompanionStatusDto) => dispatch(updateCompanionStatus(data)),
   [ChatEvents.CONVERSATION_CREATE]: (data: IConversation) => dispatch(addConversation(data)),
   [ChatEvents.CONVERSATION_FETCH]: (data: ConversationListDTO) => dispatch(addConversationList(data)),
   [ChatEvents.MESSAGE_CREATE]: (data: MessageDTO) => dispatch(addMessage(data)),
