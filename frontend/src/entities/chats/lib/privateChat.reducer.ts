@@ -22,20 +22,12 @@ export const privateChatReducers = {
     }
   },
 
-  setSearchInput: (state: PrivateChatsState, action: PayloadAction<string>) => {
-    state.searchInput = action.payload;
+  setSearchChatInput: (state: PrivateChatsState, action: PayloadAction<string>) => {
+    state.searchChatInput = action.payload;
   },
 
   setOpenedChatId: (state: PrivateChatsState, action: PayloadAction<IMessage['conversationId']>) => {
     state.openedChatId = action.payload;
-  },
-
-  setIsHiddenChat: (state: PrivateChatsState, action: PayloadAction<boolean>) => {
-    state.isHiddenChat = action.payload;
-  },
-
-  setIsHiddenOptions: (state: PrivateChatsState, action: PayloadAction<boolean>) => {
-    state.isHiddenOptions = action.payload;
   },
 
   setUserId: (state: PrivateChatsState, action: PayloadAction<string>) => {

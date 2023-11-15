@@ -3,7 +3,7 @@ import {
   fetchConversations,
   selectConversationIdAndCompanionListSorted,
   selectPrivateChatsExist,
-  selectSearchInput,
+  selectSearchChatInput,
 } from 'entities/chats';
 import { useLayoutEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -14,7 +14,7 @@ import { twMerge } from 'tailwind-merge';
 export const ChatList = () => {
   const chats = useAppSelector(selectConversationIdAndCompanionListSorted);
   const privateChatsExist = useAppSelector(selectPrivateChatsExist);
-  const searchInput = useSelector(selectSearchInput);
+  const searchChatInput = useSelector(selectSearchChatInput);
   const dispatch = useAppDispatch();
 
   useLayoutEffect(() => {
@@ -24,9 +24,9 @@ export const ChatList = () => {
   }, []);
 
   const filteredChatsBySearchInput = useMemo(() => {
-    if (!searchInput.length) return chats;
+    if (!searchChatInput.length) return chats;
 
-    const inputLower = searchInput.toLowerCase();
+    const inputLower = searchChatInput.toLowerCase();
 
     return chats.filter((chat) => {
       const {
@@ -37,7 +37,7 @@ export const ChatList = () => {
 
       return nameLower.includes(inputLower) || (fullnameLower && fullnameLower.includes(inputLower));
     });
-  }, [chats, searchInput]);
+  }, [chats, searchChatInput]);
 
   return (
     <div className={twMerge('scroll', 'pr-0')}>

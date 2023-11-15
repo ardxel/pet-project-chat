@@ -1,12 +1,6 @@
-import {
-  IMessage,
-  selectChatLastMessage,
-  selectIsHiddenChat,
-  selectOpenedChatId,
-  setIsHiddenChat,
-  setOpenedChatId,
-} from 'entities/chats';
+import { IMessage, selectChatLastMessage, selectOpenedChatId, setOpenedChatId } from 'entities/chats';
 import { IUser } from 'entities/session';
+import { selectOpenChat, setOpenChat } from 'entities/ui-visibility';
 import { FC, memo, useEffect, useMemo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
 import { UserAvatar } from 'shared/ui';
@@ -24,7 +18,7 @@ const format = MessageTimeFormatter.getRelativeTime;
 
 export const ChatbarCard: FC<ChatbarCardProps> = memo(({ user, conversationId }) => {
   const openedChatId = useAppSelector(selectOpenedChatId);
-  const isHiddenChat = useAppSelector(selectIsHiddenChat);
+  const openChat = useAppSelector(selectOpenChat);
   const lastMessage: IMessage | undefined = useAppSelector(selectChatLastMessage(conversationId));
   const companionStatus = useChatCompanionStatus(conversationId);
 
@@ -52,8 +46,8 @@ export const ChatbarCard: FC<ChatbarCardProps> = memo(({ user, conversationId })
     if (openedChatId !== conversationId) {
       dispatch(setOpenedChatId(conversationId));
     }
-    if (isHiddenChat) {
-      dispatch(setIsHiddenChat(false));
+    if (!openChat) {
+      dispatch(setOpenChat(true));
     }
   };
 

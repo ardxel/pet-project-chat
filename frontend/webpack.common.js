@@ -133,9 +133,9 @@ const configureDevServer = () => {
       progress: true, // Prints compilation progress in percentage in the browser.
     },
     port: _constants.env.port,
-    devMiddleware: {
-      writeToDisk: true,
-    },
+    // devMiddleware: {
+    //   writeToDisk: true,
+    // },
   };
 };
 

@@ -1,4 +1,5 @@
-import { selectIsHiddenChat, setSearchInput } from 'entities/chats';
+import { setSearchChatInput } from 'entities/chats';
+import { selectOpenChat } from 'entities/ui-visibility';
 import { FC } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
 import { LeftBar } from 'shared/ui';
@@ -10,13 +11,13 @@ import { SearchBar } from './searchbar';
 interface ChatLeftbarProps {}
 
 export const ChatLeftbar: FC<ChatLeftbarProps> = () => {
-  const isHiddenChat = useAppSelector(selectIsHiddenChat);
+  const openChat = useAppSelector(selectOpenChat);
   const dispatch = useAppDispatch();
 
   return (
-    <LeftBar className={twMerge(`${isHiddenChat ? 'flex' : 'hidden'}`, 'md:flex flex-col  overflow-hidden relative')}>
+    <LeftBar className={twMerge(`${!openChat ? 'flex' : 'hidden'}`, 'md:flex flex-col  overflow-hidden relative')}>
       <LeftbarHeader />
-      <SearchBar className='flex-shrink-0' onChange={(event) => dispatch(setSearchInput(event.target.value))} />
+      <SearchBar className='flex-shrink-0' onChange={(event) => dispatch(setSearchChatInput(event.target.value))} />
       <ChatList />
     </LeftBar>
   );

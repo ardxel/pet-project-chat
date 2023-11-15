@@ -4,7 +4,14 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import SearchIcon from '@mui/icons-material/Search';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import { useChatCompanionStatus } from 'entities/chatbarCard/lib';
-import { selectIsHiddenOptions, selectOpenedChatCompanion, setIsHiddenChat, setIsHiddenOptions } from 'entities/chats';
+import { selectOpenedChatCompanion } from 'entities/chats';
+import {
+  selectOpenChatOptions,
+  selectOpenSearchMessageBar,
+  setOpenChat,
+  setOpenChatOptions,
+  setOpenSearchMessageBar,
+} from 'entities/ui-visibility';
 import { memo } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
 import { IconWrapper, UserAvatar } from 'shared/ui';
@@ -30,9 +37,9 @@ const VideoCallButton = memo(() => {
   );
 });
 
-const SearchButton = memo(() => {
+const SearchButton = memo(({ onClick }: { onClick: () => void }) => {
   return (
-    <button>
+    <button onClick={onClick}>
       <IconWrapper className='header-chat-icon'>
         <SearchIcon />
       </IconWrapper>
@@ -52,7 +59,8 @@ const ChatOptionsButton = memo(({ onClick, focus }: { onClick: () => void; focus
 
 export const ChatHeader = () => {
   const chatCompanion = useAppSelector(selectOpenedChatCompanion);
-  const isHiddeOptions = useAppSelector(selectIsHiddenOptions);
+  const openChatOptions = useAppSelector(selectOpenChatOptions);
+  const openSearchMessageBar = useAppSelector(selectOpenSearchMessageBar);
   const companionStatus = useChatCompanionStatus();
   const dispatch = useAppDispatch();
 
@@ -61,11 +69,15 @@ export const ChatHeader = () => {
   const hasFullname = Boolean(chatCompanion.firstName && chatCompanion.lastName);
 
   const handleOpenChatOptions = () => {
-    dispatch(setIsHiddenOptions(!isHiddeOptions));
+    dispatch(setOpenChatOptions(!openChatOptions));
   };
 
-  const handleOpenChat = () => {
-    dispatch(setIsHiddenChat(true));
+  const handleCloseChat = () => {
+    dispatch(setOpenChat(false));
+  };
+
+  const toggleSearchMessageBar = () => {
+    dispatch(setOpenSearchMessageBar(!openSearchMessageBar));
   };
 
   return (
@@ -73,7 +85,7 @@ export const ChatHeader = () => {
       <div className='p-5 bg-bg border-b border-border'>
         <div className='flex items-center justify-between'>
           <div className='flex gap-x-4 items-center'>
-            <button onClick={handleOpenChat} className='md:hidden'>
+            <button onClick={handleCloseChat} className='md:hidden'>
               <IconWrapper className='header-chat-icon !rounded-full'>
                 <ChevronLeftIcon />
               </IconWrapper>
@@ -95,8 +107,8 @@ export const ChatHeader = () => {
           <div className='flex gap-x-4'>
             <PhoneCallButton />
             <VideoCallButton />
-            <SearchButton />
-            <ChatOptionsButton onClick={handleOpenChatOptions} focus={!isHiddeOptions} />
+            <SearchButton onClick={toggleSearchMessageBar} />
+            <ChatOptionsButton onClick={handleOpenChatOptions} focus={openChatOptions} />
           </div>
         </div>
       </div>

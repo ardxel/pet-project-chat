@@ -1,5 +1,6 @@
 import { useChatCompanionStatus } from 'entities/chatbarCard/lib';
-import { selectIsHiddenOptions, selectOpenedChatCompanion, setIsHiddenOptions } from 'entities/chats';
+import { selectOpenedChatCompanion } from 'entities/chats';
+import { selectOpenChatOptions, setOpenChatOptions } from 'entities/ui-visibility';
 import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
 import { UserAvatar } from 'shared/ui';
@@ -9,17 +10,17 @@ import { MuteButton } from './muteModal';
 import { OptionsButton, OptionsContainer } from './options';
 
 export const ChatOptions = () => {
-  const isHiddenOptions = useAppSelector(selectIsHiddenOptions);
+  const openChatOptions = useAppSelector(selectOpenChatOptions);
   const chatCompanion = useAppSelector(selectOpenedChatCompanion);
   const chatCompanionStatus = useChatCompanionStatus();
   const [selected, setSelected] = useState<'media' | 'options'>('media');
   const dispatch = useAppDispatch();
 
-  if (isHiddenOptions) return null;
+  if (!openChatOptions) return null;
   const hasFullname = Boolean(chatCompanion.firstName && chatCompanion.lastName);
 
   const closeChatOptions = () => {
-    dispatch(setIsHiddenOptions(true));
+    dispatch(setOpenChatOptions(false));
   };
 
   const openOptionMenu = (value: typeof selected) => {
@@ -30,7 +31,7 @@ export const ChatOptions = () => {
     <>
       <aside
         className={twMerge(
-          'h-full flex flex-col flex-shrink-0 w-80 1400:!w-[360px] bg-bg border-r border-border z-[900]',
+          'h-full border-l border-border flex flex-col flex-shrink-0 w-80 1400:!w-[360px] bg-bg z-[900]',
           'absolute right-0 xl:relative',
         )}>
         <div className='full h-1/6 bg-transparent'></div>
@@ -51,7 +52,7 @@ export const ChatOptions = () => {
           {selected === 'options' ? <OptionsContainer /> : null}
         </div>
       </aside>
-      {!isHiddenOptions && (
+      {openChatOptions && (
         <div
           className='w-[calc(100%-320px)] xl:hidden 1400:w-[calc(100%-360px)] h-full z-[900] absolute left-0 bg-opacity-50 bg-black'
           onClick={closeChatOptions}></div>

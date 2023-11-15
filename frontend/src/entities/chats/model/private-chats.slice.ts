@@ -9,10 +9,8 @@ export interface PrivateChatsState {
   userId?: string;
   chatsExist: boolean;
   openedChatId?: IMessage['conversationId'];
-  isHiddenChat: boolean;
-  isHiddenOptions: boolean;
   editableMessage: IMessage | false;
-  searchInput: string;
+  searchChatInput: string;
 }
 
 export const initialPrivateChatsState: PrivateChatsState = {
@@ -20,10 +18,8 @@ export const initialPrivateChatsState: PrivateChatsState = {
   chats: {},
   chatsExist: false,
   openedChatId: undefined,
-  isHiddenChat: true,
-  isHiddenOptions: true,
   editableMessage: false,
-  searchInput: '',
+  searchChatInput: '',
 };
 
 export const privateChatsSlice = createSlice({
@@ -48,18 +44,14 @@ export const {
   updateCompanionStatus,
   clearPrivateChatsData,
   setOpenedChatId,
-  setIsHiddenChat,
-  setIsHiddenOptions,
-  setSearchInput,
+  setSearchChatInput,
   setIsLoading,
   setEditableMessage,
 } = privateChatsSlice.actions;
 
 export const selectPrivateChatList = (state: RootState) => state.privateChats.chats;
 export const selectOpenedChatId = (state: RootState) => state.privateChats.openedChatId;
-export const selectIsHiddenChat = (state: RootState) => state.privateChats.isHiddenChat;
-export const selectIsHiddenOptions = (state: RootState) => state.privateChats.isHiddenOptions;
-export const selectSearchInput = (state: RootState) => state.privateChats.searchInput;
+export const selectSearchChatInput = (state: RootState) => state.privateChats.searchChatInput;
 export const selectEditableMessage = (state: RootState) => state.privateChats.editableMessage;
 export const selectChatDataByChatId = (chatId: string) => (state: RootState) => state.privateChats.chats[chatId];
 export const selectPrivateChatsExist = (state: RootState) => state.privateChats.chatsExist;
