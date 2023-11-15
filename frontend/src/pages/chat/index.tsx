@@ -4,7 +4,7 @@ import ChatWindow from 'widgets/chat-window';
 
 const ChatPage = () => {
   return (
-    <div className='flex h-full w-full overflow-hidden'>
+    <div className='flex h-full w-full overflow-hidden relative'>
       <ChatLeftbar />
       <ChatWindow />
       <ChatOptions />

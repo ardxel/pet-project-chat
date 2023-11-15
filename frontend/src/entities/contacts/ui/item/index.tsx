@@ -1,6 +1,6 @@
 import { Contact } from 'entities/session';
 import { FC, useState } from 'react';
-import { AvatartByFirstLetter } from 'shared/ui';
+import { AvatarByFirstLetter } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
 import { ListButton as ActionListButton } from './listButton';
 
@@ -19,14 +19,14 @@ export const ContactListItem: FC<ContactsListItemProps> = ({ data }) => {
       onMouseLeave={() => setHover(false)}
       onMouseEnter={() => setHover(true)}>
       <div className='flex gap-x-3'>
-        <div className='relative w-[50px] h-[50px]'>
+        <div className='relative'>
           {hasAvatar ? (
             <img
               className={twMerge('rounded-md object-cover overflow-hidden', 'absolute w-full h-full')}
               src={user.avatar}
             />
           ) : (
-            <AvatartByFirstLetter name={user.name} />
+            <AvatarByFirstLetter name={user.name} className='w-12 h-12' />
           )}
         </div>
         <div>

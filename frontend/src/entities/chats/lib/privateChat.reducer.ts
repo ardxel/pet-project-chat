@@ -38,10 +38,6 @@ export const privateChatReducers = {
     state.isHiddenOptions = action.payload;
   },
 
-  setIsConnected: (state: PrivateChatsState, action: PayloadAction<boolean>) => {
-    state.isConnected = action.payload;
-  },
-
   setUserId: (state: PrivateChatsState, action: PayloadAction<string>) => {
     state.userId = action.payload;
   },
@@ -71,7 +67,6 @@ export const privateChatReducers = {
       const chat: Omit<PrivateChatsMap[string], 'companion'> = {
         messages: [],
         page: 1,
-        isCompanionActive: false,
         isAllMessagesFetched: false,
         isLoading: false,
         companionStatus: 'offline',
@@ -85,6 +80,7 @@ export const privateChatReducers = {
         state.chats[conversation.data._id] = { ...chat, companion };
       }
     }
+    state.chatsExist = true;
   },
 
   addConversation: (state: PrivateChatsState, action: PayloadAction<IConversation>) => {
@@ -92,7 +88,6 @@ export const privateChatReducers = {
     const chat: Omit<PrivateChatsMap[string], 'companion'> = {
       messages: [],
       page: 1,
-      isCompanionActive: false,
       isAllMessagesFetched: false,
       isLoading: false,
       companionStatus: 'offline',
@@ -111,9 +106,9 @@ export const privateChatReducers = {
     action: PayloadAction<{ conversationId: string; messages: IMessage[] }>,
   ) => {
     const { conversationId, messages } = action.payload;
-    const isAllMessagesFetched = messages.length === 0;
+    const emptyMessageArray = messages.length === 0;
 
-    if (isAllMessagesFetched) {
+    if (emptyMessageArray) {
       state.chats[conversationId].page += 1;
       state.chats[conversationId].isAllMessagesFetched = true;
       state.chats[conversationId].isLoading = false;

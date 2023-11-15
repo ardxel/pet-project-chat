@@ -1,18 +1,26 @@
 import { ChatbarCard } from 'entities/chatbarCard';
-import { fetchConversations, selectConversationIdAndCompanionList, selectSearchInput } from 'entities/chats';
-import { useEffect, useMemo } from 'react';
+import {
+  fetchConversations,
+  selectConversationIdAndCompanionListSorted,
+  selectPrivateChatsExist,
+  selectSearchInput,
+} from 'entities/chats';
+import { useLayoutEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { PuffLoader } from 'react-spinners';
 import { useAppDispatch, useAppSelector } from 'shared/model';
 import { twMerge } from 'tailwind-merge';
 
 export const ChatList = () => {
-  const chats = useAppSelector(selectConversationIdAndCompanionList);
+  const chats = useAppSelector(selectConversationIdAndCompanionListSorted);
+  const privateChatsExist = useAppSelector(selectPrivateChatsExist);
   const searchInput = useSelector(selectSearchInput);
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    dispatch(fetchConversations());
+  useLayoutEffect(() => {
+    if (!privateChatsExist) {
+      dispatch(fetchConversations());
+    }
   }, []);
 
   const filteredChatsBySearchInput = useMemo(() => {

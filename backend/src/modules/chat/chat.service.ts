@@ -20,6 +20,9 @@ export class ChatService {
   async handleConnection(@ConnectedSocket() socket: UserSocket) {
     try {
       await this.authenticateUserBySocket(socket);
+
+      this.logger.log(`Connection established: ${socket.data.user.email}`);
+
       await this.joinToOwnRoomByMongoDBId(socket);
       await this.joinInAllConversationRooms(socket);
       await this.sendUserData(socket);
@@ -30,12 +33,14 @@ export class ChatService {
         socket.emit(error.exceptionEvent, error.message);
       }
       this.logger.error(error);
-      socket.disconnect();
+      socket.disconnect(true);
     }
   }
 
   async handleDisconnect(socket: UserSocket) {
-    this.sendUserStatusToAllRooms(socket, 'offline');
+    if (this.isUserExist(socket)) {
+      await this.sendUserStatusToAllRooms(socket, 'offline');
+    }
     this.logger.log(`Client ${socket.id} disconnected`);
   }
 
@@ -51,7 +56,6 @@ export class ChatService {
         await Promise.all(
           userIds.map(async (userId) => {
             await new Promise((resolve) => {
-              // Имитация асинхронной операции
               setTimeout(() => {
                 socket.emit(ChatEvents.USER_STATUS, { userId, conversationId, status: 'online' });
                 resolve(void 1);
@@ -95,7 +99,6 @@ export class ChatService {
     const conversations = await this.conversationService.findAllByUserId(socket.data.user._id);
     const conversationIdList = conversations.map(({ data }) => String(data._id));
     socket.join(conversationIdList);
-    this.logger.log(`Connection established: ${socket.data.user.email}`);
   }
 
   private async sendUserData(socket: UserSocket) {
@@ -103,6 +106,7 @@ export class ChatService {
   }
 
   private async sendUserStatusToAllRooms(socket: UserSocket, status: UserStatus) {
+    if (!socket.data.user) throw new WsExceptionWithEvent('User not found', '123');
     for (const conversation of socket.data.user.conversations) {
       const conversationId = String(conversation.data._id);
       socket.broadcast.to(conversationId).emit(ChatEvents.USER_STATUS, {
@@ -111,5 +115,9 @@ export class ChatService {
         status: status,
       });
     }
+  }
+
+  private isUserExist(socket: UserSocket) {
+    return Boolean(socket.data?.user);
   }
 }

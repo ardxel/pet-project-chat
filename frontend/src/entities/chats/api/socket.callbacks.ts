@@ -41,6 +41,8 @@ export interface UpdateCompanionStatusDto {
 }
 
 export const createCallbackHandlers = (dispatch: AppDispatch) => ({
+  [ChatClientErrorEvents.INVALID_TOKEN]: () => dispatch(logoutThunk()),
+
   [ChatEvents.USER_INIT]: (data: IUser) => dispatch(setUserId(data._id)),
   [ChatEvents.USER_STATUS]: (data: UpdateCompanionStatusDto) => dispatch(updateCompanionStatus(data)),
   [ChatEvents.CONVERSATION_CREATE]: (data: IConversation) => dispatch(addConversation(data)),
@@ -49,5 +51,4 @@ export const createCallbackHandlers = (dispatch: AppDispatch) => ({
   [ChatEvents.MESSAGE_UPDATE]: (data: IMessage) => dispatch(updateMessage(data)),
   [ChatEvents.MESSAGE_FETCH]: (data: MessagesDTO) => dispatch(addMessageList(data)),
   [ChatEvents.MESSAGE_DELETE]: (data: DeleteMessageDTO) => dispatch(deleteMessage(data)),
-  [ChatClientErrorEvents.INVALID_TOKEN]: () => dispatch(logoutThunk()),
 });

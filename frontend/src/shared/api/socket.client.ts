@@ -5,16 +5,18 @@ export class SocketClient {
 
   connect(url: string, options: Partial<ManagerOptions & SocketOptions>) {
     if (this.socket) return;
-    this.socket = io(url, options);
-    return new Promise<void>((resolve, reject) => {
-      this.socket.on('connect', () => resolve());
-      this.socket.on('connect_error', () => reject());
+    return new Promise((resolve) => {
+      this.socket = io(url, options);
+      resolve(void 1);
     });
   }
 
   disconnect() {
-    if (!this.socket) return;
     return new Promise<void>((resolve) => {
+      if (!this.socket) {
+        // reject('No socket');
+        return;
+      }
       this.socket.disconnect();
       this.socket = null;
       resolve();
@@ -24,7 +26,8 @@ export class SocketClient {
   emit(event: string, data?: unknown) {
     return new Promise((resolve, reject) => {
       if (!this.socket || (this.socket && !this.socket.active)) {
-        return reject('No socket connection.');
+        // return reject('No socket connection.');
+        return;
       }
       return this.socket.emit(event, data, (response: unknown) => {
         if (response) {
@@ -37,9 +40,10 @@ export class SocketClient {
   }
 
   on(event: string, fun: (...args: unknown[]) => unknown) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       if (!this.socket || (this.socket && !this.socket.active)) {
-        return reject('No socket connection');
+        // return reject('No socket connection');
+        return;
       }
 
       this.socket.on(event, fun);

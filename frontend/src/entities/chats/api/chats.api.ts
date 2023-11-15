@@ -11,7 +11,7 @@ interface SearchUsersByNameParams {
 
 export const chatsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    searchUsersByName: build.query({
+    searchUsersByName: build.query<IUser[], SearchUsersByNameParams>({
       query: (params: SearchUsersByNameParams) => ({
         url: `/user?${queryString.stringify(params)}`,
       }),

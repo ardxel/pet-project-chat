@@ -3,7 +3,7 @@ import { selectPrivateChatList, setOpenedChatId } from 'entities/chats';
 import { IUser } from 'entities/session';
 import { FC, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
-import { AvatartByFirstLetter, IconWrapper } from 'shared/ui';
+import { AvatarByFirstLetter, IconWrapper } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
 import { createPrivateChat } from '../model';
 
@@ -54,7 +54,7 @@ export const UserList: FC<UserListProps> = ({ users, onClose }) => {
                 src={user.avatar}
               />
             ) : (
-              <AvatartByFirstLetter name={user.name} />
+              <AvatarByFirstLetter name={user.name} className='w-12 h-12' />
             )}
           </div>
           <div>

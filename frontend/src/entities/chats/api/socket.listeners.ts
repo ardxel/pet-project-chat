@@ -1,31 +1,30 @@
-import { ChatSocketListener, selectIsConnected } from 'entities/chats';
+import { ChatSocketListener } from 'entities/chats';
+import { selectSocketStatus } from 'entities/session';
 import { useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
 import { createCallbackHandlers } from './socket.callbacks';
 
 export const useChatSocketListeners = () => {
   const socketListener = useRef(new ChatSocketListener());
-  const isConnected = useAppSelector(selectIsConnected);
+  const connectionStatus = useAppSelector(selectSocketStatus);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (!isConnected) {
-      socketListener.current.removeAll(); // Удалить все слушатели, если не подключено
+    if (connectionStatus === 'stop') {
+      socketListener.current.removeAll(); // Удалить все слушатели, если не подклю чено
       return;
     }
 
-    const eventCallbacks = createCallbackHandlers(dispatch);
-
-    for (const event in eventCallbacks) {
-      socketListener.current.set(event, eventCallbacks[event]);
-    }
+    Object.entries(createCallbackHandlers(dispatch)).forEach(([event, cb]) => {
+      socketListener.current.set(event, cb);
+    });
 
     socketListener.current.listenAll();
 
     return () => {
       socketListener.current.removeAll(); // Удалить все слушатели при размонтировании компонента
     };
-  }, [isConnected]);
+  }, [connectionStatus]);
 
   return socketListener.current;
 };

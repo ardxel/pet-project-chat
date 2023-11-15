@@ -33,7 +33,6 @@ export const ChatInput = () => {
 
   const handleSubmit = useCallback(() => {
     if (!text.length) return;
-
     if (editableMessage) {
       const { _id, conversationId } = editableMessage;
       dispatch(editMessageThunk({ conversationId, messageId: _id, text }));
@@ -42,6 +41,8 @@ export const ChatInput = () => {
     }
 
     setText('');
+    clearTimeout(typingTimeout.current);
+    dispatch(updateUserStatusInChat({ conversationId, status: 'online', userId }));
   }, [text]);
 
   const handleStopEdit = useCallback(() => {

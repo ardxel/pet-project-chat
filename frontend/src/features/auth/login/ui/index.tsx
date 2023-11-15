@@ -37,8 +37,8 @@ export const LoginForm: FC<LoginFormProps> = ({ onSuccess }) => {
             <Formik
               enableReinitialize
               initialValues={{
-                email: '',
-                password: '',
+                email: 'test1@gmail.com',
+                password: 'Onlyonemm1!',
               }}
               validationSchema={loginValidationSchema}
               onSubmit={async (values, { resetForm }) => {

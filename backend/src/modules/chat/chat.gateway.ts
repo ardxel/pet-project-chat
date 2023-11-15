@@ -70,7 +70,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
   }
 
   async handleDisconnect(socket: UserSocket) {
-    this.chatService.handleDisconnect(socket);
+    await this.chatService.handleDisconnect(socket);
   }
 
   @SubscribeMessage(ChatEvents.USER_STATUS)

@@ -1,7 +1,6 @@
 import {
   IMessage,
   selectChatLastMessage,
-  selectCompanionStatusByChatId,
   selectIsHiddenChat,
   selectOpenedChatId,
   setIsHiddenChat,
@@ -12,6 +11,7 @@ import { FC, memo, useEffect, useMemo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
 import { UserAvatar } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
+import { useChatCompanionStatus } from '../lib';
 import { MessageTimeFormatter } from '../lib/lastMessageTime';
 import { MenuButton } from './listButton';
 
@@ -26,7 +26,7 @@ export const ChatbarCard: FC<ChatbarCardProps> = memo(({ user, conversationId })
   const openedChatId = useAppSelector(selectOpenedChatId);
   const isHiddenChat = useAppSelector(selectIsHiddenChat);
   const lastMessage: IMessage | undefined = useAppSelector(selectChatLastMessage(conversationId));
-  const chatCompanionStatus = useAppSelector(selectCompanionStatusByChatId(conversationId));
+  const companionStatus = useChatCompanionStatus(conversationId);
 
   const [hover, setHover] = useState(false);
   const [currentTime, setCurrentTime] = useState(format(lastMessage));
@@ -69,19 +69,6 @@ export const ChatbarCard: FC<ChatbarCardProps> = memo(({ user, conversationId })
     }
   }, [lastMessage]);
 
-  const companionStatus = useMemo(() => {
-    switch (chatCompanionStatus) {
-      case 'online':
-        return chatCompanionStatus;
-      case 'offline':
-        break;
-      case 'typing':
-        return chatCompanionStatus + ' ...';
-      default:
-        return;
-    }
-  }, [chatCompanionStatus]);
-
   return (
     <div
       className={twMerge(
@@ -93,7 +80,7 @@ export const ChatbarCard: FC<ChatbarCardProps> = memo(({ user, conversationId })
       onMouseEnter={() => setHover(true)}>
       <div className='flex gap-x-3'>
         <div className='relative w-[50px] h-[50px]'>
-          <UserAvatar user={user} />
+          <UserAvatar user={user} className='w-full h-full' />
         </div>
         <div className='flex flex-col justify-center gap-y-[6px]'>
           <div className='flex items-center'>

@@ -51,8 +51,8 @@ export const HorizontalTabs: FC<TabsProps> = (props) => {
                   as='button'
                   ref={(element) => (tabsRef.current[index] = element)}
                   className={twMerge(
-                    'text-sm hover:text-active-link tab-btn-0',
-                    selected === index ? 'text-active-link' : 'text-link-color',
+                    'text-sm !hover:text-active-link',
+                    selected === index ? '!text-active-link' : 'text-link-color',
                     className,
                   )}>
                   {item}

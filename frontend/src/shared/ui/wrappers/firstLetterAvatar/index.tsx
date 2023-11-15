@@ -1,14 +1,14 @@
-import { FC, memo, useMemo } from 'react';
+import { memo } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 const getFirstLetter = (str: string) => {
   if (!str) return;
   for (const char of str) {
     if (/[A-Za-z]/.test(char)) {
-      return char;
+      return char.toUpperCase();
     }
   }
-  return str[0];
+  return str[0].toUpperCase();
 };
 
 interface AvatartByFirstLetterProps {
@@ -16,14 +16,12 @@ interface AvatartByFirstLetterProps {
   className?: string;
 }
 
-export const AvatartByFirstLetter: FC<AvatartByFirstLetterProps> = memo(({ name, className }) => {
-  const letter = useMemo(() => getFirstLetter(name), [name]);
+export const AvatarByFirstLetter: React.FC<AvatartByFirstLetterProps> = memo(({ name, className }) => {
+  const letter = getFirstLetter(name);
 
   return (
-    <div className={twMerge('relative border border-border w-full h-full rounded-md ', className)}>
-      <h1 className='text-center text-2xl leading-none  absolute left-1/2 -transform translate-y-1/2 -translate-x-1/2'>
-        {letter}
-      </h1>
+    <div className={twMerge('flex items-center justify-center border border-border w-10 h-10 rounded-md', className)}>
+      <h1 className='text-center text-2xl leading-none'>{letter}</h1>
     </div>
   );
 });

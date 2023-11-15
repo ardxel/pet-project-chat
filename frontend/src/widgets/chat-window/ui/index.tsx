@@ -1,5 +1,4 @@
-import { selectIsConnected } from 'entities/chats';
-import { selectIsAuthorized } from 'entities/session';
+import { selectIsAuthorized, selectSocketStatus } from 'entities/session';
 import { useAppSelector } from 'shared/model';
 import { ChatArea } from './chat-area';
 import { ChatHeader } from './head';
@@ -7,7 +6,8 @@ import { ChatInput } from './input';
 
 export const ChatWindow = () => {
   const isAuthorized = useAppSelector(selectIsAuthorized);
-  const isConnected = useAppSelector(selectIsConnected);
+  const connectionStatus = useAppSelector(selectSocketStatus);
+  const isConnected = connectionStatus === 'connected';
 
   if (!isAuthorized && !isConnected) {
     return null;

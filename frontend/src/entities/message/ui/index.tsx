@@ -3,7 +3,7 @@ import { selectUserId } from 'entities/session';
 import { deleteMessageThunk } from 'features/message/delete';
 import { FC, useCallback, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
-import { AvatartByFirstLetter } from 'shared/ui';
+import { AvatarByFirstLetter } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
 import { ChatMessageEditButton } from './editButton';
 
@@ -69,8 +69,8 @@ export const ChatMessage: FC<ChatMessageProps> = ({ message, showAvatar }) => {
                   src={companion.avatar}
                 />
               ) : (
-                <AvatartByFirstLetter
-                  className='rounded-full [&>*]:!text-xl [&>*]:!leading-none [&>*]:-top-[11%]'
+                <AvatarByFirstLetter
+                  className='rounded-full [&>*]:!text-xl [&>*]:!leading-none [&>*]:-top-[11%] w-9 h-9'
                   name={companion.name}
                 />
               )}

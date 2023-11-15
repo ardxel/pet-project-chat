@@ -26,7 +26,6 @@ export type PrivateChatsMap = Record<
       messages: IMessage[];
       companionStatus: CompanionStatus;
       status: ConversationStatus;
-      isCompanionActive: boolean;
       isAllMessagesFetched: boolean;
       page: number;
       isLoading: boolean;

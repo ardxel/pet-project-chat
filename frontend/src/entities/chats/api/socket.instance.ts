@@ -12,10 +12,21 @@ export class ChatSocketListener {
     }
   }
 
-  public listenAll() {
+  public async listenAll(): Promise<void> {
+    const promises: Promise<void>[] = [];
+
     this.listenerMap.forEach((cb, event) => {
-      this.chatSocket.on(event, cb);
+      const promise = new Promise<void>((resolve, reject) => {
+        this.chatSocket
+          .on(event, cb)
+          .then(() => resolve())
+          .catch((reason) => reject(reason));
+      });
+
+      promises.push(promise);
     });
+
+    await Promise.all(promises);
   }
 
   public removeAll() {

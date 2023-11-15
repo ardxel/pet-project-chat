@@ -7,6 +7,7 @@ import { Conversation, ConversationDocument, Message, User, UserDocument } from 
 import { CreateConversationDto, GetMessagesDto } from './dto';
 
 export type ConversationStatus = User['conversations'][0]['status'];
+export type PopulatedUserConversation = { data: Conversation; status: ConversationStatus };
 
 @Injectable()
 export class ConversationService {
@@ -87,15 +88,17 @@ export class ConversationService {
 
   async findAllByUserId(userId: Types.ObjectId) {
     const user = await this.userService.findById(userId);
-    const userWithPopulatedConversations = await user.populate<{ conversations: User['conversations'] }>({
-      path: 'conversations.data',
-    });
-    const { conversations } = await userWithPopulatedConversations.populate<{
-      conversations: { data: Conversation; status: ConversationStatus }[];
-    }>({
-      path: 'conversations.data.users',
-    });
-    return conversations;
+    const userWithPopulatedConversations = await user
+      .populate<{ conversations: PopulatedUserConversation[] }>('conversations.data')
+      .then((data) =>
+        data.populate<{ conversations: PopulatedUserConversation[] }>('conversations.data.users').then((data) => {
+          for (const conversation of data.conversations) {
+            conversation.data.messages.length = 0;
+          }
+          return data;
+        }),
+      );
+    return userWithPopulatedConversations.conversations;
   }
 
   // TODO

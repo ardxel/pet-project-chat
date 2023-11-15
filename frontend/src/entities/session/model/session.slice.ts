@@ -1,13 +1,21 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { IUser, SessionUserDto } from '../api';
 import { sessionApi } from '../api/session.api';
 
-type SessionSliceState = { user?: IUser; accessToken?: string; isAuthorized: boolean };
+export type ChatSocketConnectionStatus = 'connected' | 'loading' | 'stop';
+
+type SessionSliceState = {
+  user?: IUser;
+  accessToken?: string;
+  isAuthorized: boolean;
+  chatSocketConnectionStatus: ChatSocketConnectionStatus;
+};
 
 export const initialSessionState: SessionSliceState = {
   isAuthorized: false,
   user: undefined,
   accessToken: undefined,
+  chatSocketConnectionStatus: 'stop',
 };
 
 export const sessionSlice = createSlice({
@@ -16,6 +24,10 @@ export const sessionSlice = createSlice({
   reducers: {
     clearSessionData: () => {
       return initialSessionState;
+    },
+
+    changeSocketStatus: (state, action: PayloadAction<ChatSocketConnectionStatus>) => {
+      state.chatSocketConnectionStatus = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -34,4 +46,6 @@ export const sessionSlice = createSlice({
 export const selectAccessToken = (state: RootState) => state.session.accessToken;
 export const selectIsAuthorized = (state: RootState) => state.session.isAuthorized;
 export const selectUserId = (state: RootState) => state.session?.user._id;
-export const { clearSessionData } = sessionSlice.actions;
+export const selectSocketStatus = (state: RootState) => state.session.chatSocketConnectionStatus;
+
+export const { clearSessionData, changeSocketStatus } = sessionSlice.actions;
