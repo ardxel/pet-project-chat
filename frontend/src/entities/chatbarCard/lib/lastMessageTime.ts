@@ -1,4 +1,4 @@
-import { IMessage } from 'entities/chats/model';
+import { IMessage } from 'entities/message';
 import moment from 'moment';
 
 export class MessageTimeFormatter {

@@ -7,6 +7,11 @@ export enum ChatEvents {
   MESSAGE_UPDATE = 'message:update',
   MESSAGE_FETCH = 'message:fetch',
   MESSAGE_DELETE = 'message:delete',
+
+  CALL_OFFER = 'call:offer',
+  CALL_ANSWER = 'call:answer',
+  CALL_END = 'call:end',
+  CALL_UPDATE = 'call:update',
 }
 
 export enum ChatClientErrorEvents {

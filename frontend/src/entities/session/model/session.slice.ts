@@ -46,6 +46,8 @@ export const sessionSlice = createSlice({
 export const selectAccessToken = (state: RootState) => state.session.accessToken;
 export const selectIsAuthorized = (state: RootState) => state.session.isAuthorized;
 export const selectUserId = (state: RootState) => state.session?.user._id;
+export const selectUserData = (state: RootState) => state.session.user;
 export const selectSocketStatus = (state: RootState) => state.session.chatSocketConnectionStatus;
-
+export const selectIsSocketConnected = (state: RootState) => state.session.chatSocketConnectionStatus === 'connected';
+export const selectIsSocketStop = (state: RootState) => state.session.chatSocketConnectionStatus === 'stop';
 export const { clearSessionData, changeSocketStatus } = sessionSlice.actions;

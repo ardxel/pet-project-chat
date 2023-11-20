@@ -1,16 +1,18 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
+import { IMessage } from 'entities/message';
 import { editMessageThunk } from 'features/message/edit';
 import moment from 'moment';
 import { privateChatReducers } from '../lib';
-import { IMessage, PrivateChatsMap } from './types';
+import { PrivateChatsMap } from './types';
 
 export interface PrivateChatsState {
   chats?: PrivateChatsMap;
   userId?: string;
-  chatsExist: boolean;
+  chatsExist: boolean; // проверка первой инициализации чатов с бекенде при входе в приложение
   openedChatId?: IMessage['conversationId'];
   editableMessage: IMessage | false;
   searchChatInput: string;
+  selectedIndex?: number; // выбранный индекс при поиске сообщения в messageSearchBar (временно удален)
 }
 
 export const initialPrivateChatsState: PrivateChatsState = {
@@ -20,7 +22,10 @@ export const initialPrivateChatsState: PrivateChatsState = {
   openedChatId: undefined,
   editableMessage: false,
   searchChatInput: '',
+  selectedIndex: undefined, //TODO временно не используется
 };
+
+export const ignoredPrivateChatsStateKeys = ['selectedIndex'];
 
 export const privateChatsSlice = createSlice({
   name: 'privateChats',
@@ -55,6 +60,7 @@ export const selectSearchChatInput = (state: RootState) => state.privateChats.se
 export const selectEditableMessage = (state: RootState) => state.privateChats.editableMessage;
 export const selectChatDataByChatId = (chatId: string) => (state: RootState) => state.privateChats.chats[chatId];
 export const selectPrivateChatsExist = (state: RootState) => state.privateChats.chatsExist;
+export const selectSelectedMessageIndex = (state: RootState) => state.privateChats.selectedIndex;
 export const selectOpenedChatMessages = (state: RootState) => {
   const openedChatId = state.privateChats.openedChatId;
   return openedChatId ? state.privateChats.chats[openedChatId].messages : undefined;

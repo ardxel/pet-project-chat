@@ -1,9 +1,9 @@
 import { PayloadAction } from '@reduxjs/toolkit';
+import { IMessage } from 'entities/message';
 import {
   CompanionStatus,
   ConversationStatus,
   IConversation,
-  IMessage,
   PrivateChatsMap,
   PrivateChatsState,
   initialPrivateChatsState,

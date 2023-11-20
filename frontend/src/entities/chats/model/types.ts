@@ -1,13 +1,5 @@
+import { IMessage } from 'entities/message';
 import { IUser } from 'entities/session';
-
-export interface IMessage {
-  conversationId: string;
-  sender: string;
-  _id: string;
-  text: string;
-  updatedAt: string;
-  createdAt: string;
-}
 
 export interface IConversation {
   users: IUser[];

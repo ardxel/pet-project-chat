@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { CallEndDto } from 'modules/chat/dto';
 import { ConversationService } from 'modules/conversation';
 import { Model, Types } from 'mongoose';
 import { Message, MessageDocument } from 'schemas';
@@ -26,6 +27,13 @@ export class MessageService {
     return newMessage;
   }
 
+  async createCallMessage(dto: CallEndDto) {
+    const conversation = await this.conversationService.findByUserIdsOrCreate([dto.to, dto.from]);
+
+    const text = `${dto.reason}.${dto.type}.${dto.seconds}`;
+    return this.create({ conversationId: conversation._id, sender: dto.caller, type: 'call', text });
+  }
+
   async findById(id: Types.ObjectId) {
     return await this.model.findById(id);
   }
@@ -34,6 +42,7 @@ export class MessageService {
     if (await this.isNotExist(dto.messageId)) {
       throw new NotFoundException('Message was not found');
     }
+
     return await this.model.findByIdAndUpdate(
       dto.messageId,
       {

@@ -14,6 +14,10 @@ export class Message {
   @Prop({ required: true, type: Types.ObjectId, ref: 'User', _id: false })
   sender: Types.ObjectId;
 
+  @ApiProperty({ enum: ['text', 'audio', 'video', 'call'] })
+  @Prop({ enum: ['text', 'audio', 'video', 'call'], default: 'text' })
+  type: 'text' | 'audio' | 'video' | 'call';
+
   @ApiProperty({ type: String })
   @Prop({ required: true, type: String })
   text: string;

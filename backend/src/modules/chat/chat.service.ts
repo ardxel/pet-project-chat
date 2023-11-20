@@ -41,6 +41,10 @@ export class ChatService {
     if (this.isUserExist(socket)) {
       await this.sendUserStatusToAllRooms(socket, 'offline');
     }
+
+    if (this.isUserExist(socket) && 'lastCallWith' in socket.data) {
+      socket.to(String(socket.data.lastCallWith)).emit(ChatEvents.CALL_END);
+    }
     this.logger.log(`Client ${socket.id} disconnected`);
   }
 

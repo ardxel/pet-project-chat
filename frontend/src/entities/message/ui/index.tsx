@@ -1,12 +1,14 @@
-import { IMessage, selectOpenedChatCompanion, setEditableMessage } from 'entities/chats';
+import { selectOpenedChatCompanion, setEditableMessage } from 'entities/chats';
 import { selectUserId } from 'entities/session';
 import { deleteMessageThunk } from 'features/message/delete';
-import moment from 'moment';
 import { FC, useCallback, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
-import { AvatarByFirstLetter } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
+import { IMessage } from '../model';
+import { CompanionAvatar } from './companionAvatar';
 import { ChatMessageEditButton } from './editButton';
+import { MessageTime } from './messageTime';
+import { MessageValue } from './messageValue';
 
 interface ChatMessageProps {
   message: IMessage;
@@ -25,11 +27,9 @@ export const ChatMessage: FC<ChatMessageProps> = ({ message, showAvatar, isSelec
 
   const { text, sender, _id, conversationId } = message;
   const SHOW_MENU_DELAY = 500;
-  const hasAvatar = Boolean(companion.avatar);
   const isUserMsg = userId === sender;
-  const isTextMsg = typeof text === 'string';
+  const isTextMsg = !message.type || message.type === 'text';
   const isBgBlue = Boolean(isUserMsg && isTextMsg);
-  const showUpdatedTime = message.updatedAt !== message.createdAt;
 
   const handleMouseDown = () => {
     timeout.current = setTimeout(() => {
@@ -69,43 +69,17 @@ export const ChatMessage: FC<ChatMessageProps> = ({ message, showAvatar, isSelec
           onTouchStart={handleMouseDown}
           onMouseEnter={() => setIsHover(true)}
           onMouseLeave={handleMouseLeave}>
-          <div className='absolute -left-11 bottom-0'>
-            {showAvatar && (
-              <div className='relative w-[35px] h-[35px]'>
-                {hasAvatar ? (
-                  <img
-                    className={twMerge('rounded-md object-cover overflow-hidden', 'absolute w-full h-full')}
-                    src={companion.avatar}
-                  />
-                ) : (
-                  <AvatarByFirstLetter
-                    className='rounded-full [&>*]:!text-xl [&>*]:!leading-none [&>*]:-top-[11%] w-9 h-9'
-                    name={companion.name}
-                  />
-                )}
-              </div>
-            )}
-          </div>
+          <div className='absolute -left-11 bottom-0'>{showAvatar && <CompanionAvatar companion={companion} />}</div>
           <div
             className={twMerge(
-              'py-3 px-4 relative',
+              'relative',
               'rounded-md flex break-all break-words justify-center items-center',
               isBgBlue ? 'bg-icon-active-color' : 'bg-bg',
             )}>
             {/* User Message */}
-            <p className={twMerge(isBgBlue ? 'text-white' : '', showUpdatedTime ? 'mr-10' : 'mr-5', 'min-w-[15px]')}>
-              {text}
-            </p>
+            <MessageValue message={message} />
             {/* Message created or updated time */}
-            <p
-              className={twMerge(
-                isBgBlue ? 'text-gray-100' : '',
-                'text-[10px] absolute bottom-[2px] right-[4px] leading-3',
-              )}>
-              {showUpdatedTime
-                ? 'ред. ' + moment(message.updatedAt).format('HH:mm')
-                : moment(message.createdAt).format('HH:mm')}
-            </p>
+            <MessageTime message={message} />
           </div>
           <div
             className={twMerge(

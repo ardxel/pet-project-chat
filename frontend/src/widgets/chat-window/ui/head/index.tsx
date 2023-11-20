@@ -3,6 +3,7 @@ import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
 import PhoneIcon from '@mui/icons-material/Phone';
 import SearchIcon from '@mui/icons-material/Search';
 import VideocamIcon from '@mui/icons-material/Videocam';
+import { useCallsContext } from 'entities/calls';
 import { useChatCompanionStatus } from 'entities/chatbarCard/lib';
 import { selectOpenedChatCompanion } from 'entities/chats';
 import {
@@ -18,18 +19,24 @@ import { IconWrapper, UserAvatar } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
 
 const PhoneCallButton = memo(() => {
+  const { _id, name } = useAppSelector(selectOpenedChatCompanion);
+  const { callUser } = useCallsContext();
   return (
-    <button>
-      <IconWrapper className='header-chat-icon'>
-        <PhoneIcon />
-      </IconWrapper>
-    </button>
+    <>
+      <button onClick={() => callUser({ userId: _id, receiverName: name, isVideoCall: false })}>
+        <IconWrapper className='header-chat-icon'>
+          <PhoneIcon />
+        </IconWrapper>
+      </button>
+    </>
   );
 });
 
 const VideoCallButton = memo(() => {
+  const { _id, name } = useAppSelector(selectOpenedChatCompanion);
+  const { callUser } = useCallsContext();
   return (
-    <button>
+    <button onClick={() => callUser({ userId: _id, recieverName: name, isVideoCall: true })}>
       <IconWrapper className='header-chat-icon'>
         <VideocamIcon />
       </IconWrapper>

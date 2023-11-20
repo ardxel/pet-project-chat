@@ -57,12 +57,13 @@ export const OptionsContainer = () => {
 
 interface Props {
   onClick: () => void;
+  focus?: boolean;
 }
 
-export const OptionsButton: FC<Props> = ({ onClick }) => {
+export const OptionsButton: FC<Props> = ({ onClick, focus }) => {
   return (
     <button className='w-20 h-24' onClick={onClick}>
-      <IconWrapper className='flex flex-col !rounded-md'>
+      <IconWrapper focus={focus} className='flex flex-col !rounded-md'>
         <TuneOutlinedIcon className='!w-7 !h-7' />
         <p className='text-xs'>Опции</p>
       </IconWrapper>

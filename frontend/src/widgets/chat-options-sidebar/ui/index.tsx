@@ -44,8 +44,8 @@ export const ChatOptions = () => {
         </div>
         <div className='flex justify-between mx-5'>
           <MuteButton />
-          <MediaButton onClick={() => openOptionMenu('media')} />
-          <OptionsButton onClick={() => openOptionMenu('options')} />
+          <MediaButton focus={selected === 'media'} onClick={() => openOptionMenu('media')} />
+          <OptionsButton focus={selected === 'options'} onClick={() => openOptionMenu('options')} />
         </div>
         <div className='mx-5 mt-4'>
           {selected === 'media' ? <MediaContainer /> : null}

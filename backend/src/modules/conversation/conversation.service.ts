@@ -54,6 +54,19 @@ export class ConversationService {
     return conversation;
   }
 
+  async findByUserIdsOrCreate(userIds: Types.ObjectId[]) {
+    const matchedConversation = await this.model.findOne({
+      users: { $all: userIds },
+    });
+
+    if (matchedConversation) {
+      return matchedConversation;
+    } else {
+      const newConversation = await this.create({ userIds });
+      return newConversation;
+    }
+  }
+
   async findMessages(dto: GetMessagesDto) {
     const page = dto.page || 1;
     const _limit = 30;

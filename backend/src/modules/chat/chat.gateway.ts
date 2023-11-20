@@ -20,31 +20,41 @@ import { Conversation, Message, User, UserStatus } from 'schemas';
 import { Server } from 'socket.io';
 import { ChatClientErrorEvents, ChatEvents } from './chat-events.enum';
 import { ChatService } from './chat.service';
-import { InviteUserDto } from './dto';
+import { CallAnswerDto, CallEndDto, CallOfferDto, CallUpdateDto, InviteUserDto } from './dto';
 import { ChangeUserStatusDto } from './dto/change-user-status.dto';
 
+type EventData<T> = (data: T) => void;
+
 interface ClientToServerEvents {
-  [ChatEvents.USER_STATUS]: (data: {
+  [ChatEvents.USER_STATUS]: EventData<{
     userId: Types.ObjectId;
     conversationId: Types.ObjectId;
     status: UserStatus;
-  }) => void;
+  }>;
 }
 
 interface ServerToClientEvents {
-  [ChatEvents.USER_INIT]: (user: User) => void;
-  [ChatEvents.USER_STATUS]: (data: {
+  [ChatClientErrorEvents.INVALID_TOKEN]: EventData<{
+    message: string;
+    status: string;
+    stack?: any;
+  }>;
+  [ChatEvents.USER_INIT]: EventData<User>;
+  [ChatEvents.USER_STATUS]: EventData<{
     userId: Types.ObjectId;
     conversationId: Types.ObjectId;
     status: UserStatus;
-  }) => void;
-  [ChatEvents.CONVERSATION_CREATE]: (conversation: Conversation) => void;
-  [ChatEvents.CONVERSATION_FETCH]: (conversations: { data: Conversation; status: ConversationStatus }[]) => void;
-  [ChatEvents.MESSAGE_FETCH]: (data: { conversationId: Types.ObjectId; messages: Message[] }) => void;
-  [ChatEvents.MESSAGE_CREATE]: (data: { conversationId: Types.ObjectId; message: Message }) => void;
-  [ChatEvents.MESSAGE_UPDATE]: (message: Message) => void;
-  [ChatEvents.MESSAGE_DELETE]: (dto: DeleteMessageDto) => void;
-  [ChatClientErrorEvents.INVALID_TOKEN]: (error: { message: string; status: string; stack?: any }) => void;
+  }>;
+  [ChatEvents.CONVERSATION_CREATE]: EventData<Conversation>;
+  [ChatEvents.CONVERSATION_FETCH]: EventData<{ data: Conversation; status: ConversationStatus }[]>;
+  [ChatEvents.MESSAGE_FETCH]: EventData<{ conversationId: Types.ObjectId; messages: Message[] }>;
+  [ChatEvents.MESSAGE_CREATE]: EventData<{ conversationId: Types.ObjectId; message: Message }>;
+  [ChatEvents.MESSAGE_UPDATE]: EventData<Message>;
+  [ChatEvents.MESSAGE_DELETE]: EventData<DeleteMessageDto>;
+  [ChatEvents.CALL_OFFER]: EventData<CallOfferDto>;
+  [ChatEvents.CALL_ANSWER]: EventData<Omit<CallAnswerDto, 'to'>>;
+  [ChatEvents.CALL_END]: EventData<CallEndDto>;
+  [ChatEvents.CALL_UPDATE]: EventData<CallUpdateDto>;
 }
 
 @WebSocketGateway({ namespace: 'chat', cors: { origin: '*' } })
@@ -149,7 +159,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
       this.server.in(String(dto.conversationId)).emit(ChatEvents.MESSAGE_UPDATE, updatedMessage);
     } catch (error) {
       this.logger.error(error);
-      throw new WsExceptionWithEvent(error, ChatClientErrorEvents.MESSAGE_CREATE);
+      throw new WsExceptionWithEvent(error, ChatClientErrorEvents.MESSAGE_UPDATE);
     }
   }
 
@@ -162,5 +172,39 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
       this.logger.error(error);
       throw new WsExceptionWithEvent(error, ChatClientErrorEvents.MESSAGE_DELETE);
     }
+  }
+
+  @SubscribeMessage(ChatEvents.CALL_OFFER)
+  async onCallOffer(@ConnectedSocket() socket: UserSocket, @MessageBody() dto: CallOfferDto) {
+    console.log(ChatEvents.CALL_OFFER);
+    this.server.to(String(dto.to)).emit(ChatEvents.CALL_OFFER, dto);
+  }
+
+  @SubscribeMessage(ChatEvents.CALL_ANSWER)
+  async onCallAnswer(@ConnectedSocket() socket: UserSocket, @MessageBody() dto: CallAnswerDto) {
+    console.log(ChatEvents.CALL_ANSWER);
+    if (dto.verdict === 'accept') {
+      socket.data.lastCallWith = dto.to;
+    }
+    this.server.to(String(dto.to)).emit(ChatEvents.CALL_ANSWER, { signal: dto.signal, verdict: dto.verdict });
+  }
+
+  @SubscribeMessage(ChatEvents.CALL_UPDATE)
+  async onCallupdate(@ConnectedSocket() socket: UserSocket, @MessageBody() dto: CallUpdateDto) {
+    console.log(ChatEvents.CALL_UPDATE);
+    this.server.to(String(dto.to)).emit(ChatEvents.CALL_UPDATE, dto);
+  }
+
+  @SubscribeMessage(ChatEvents.CALL_END)
+  async onCallEnd(@ConnectedSocket() socket: UserSocket, @MessageBody() dto: CallEndDto) {
+    console.log(ChatEvents.CALL_END);
+    socket.to(String(dto.to)).emit(ChatEvents.CALL_END);
+    socket.data.lastCallWith = null;
+
+    const callMessage = await this.messageService.createCallMessage(dto);
+
+    this.server
+      .in(String(callMessage.conversationId))
+      .emit(ChatEvents.MESSAGE_CREATE, { conversationId: callMessage.conversationId, message: callMessage });
   }
 }

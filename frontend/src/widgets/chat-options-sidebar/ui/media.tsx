@@ -4,12 +4,13 @@ import { HorizontalTabs, IconWrapper } from 'shared/ui';
 
 interface Props {
   onClick: () => void;
+  focus?: boolean;
 }
 
-export const MediaButton: FC<Props> = ({ onClick }) => {
+export const MediaButton: FC<Props> = ({ onClick, focus }) => {
   return (
     <button className='w-20 h-24' onClick={onClick}>
-      <IconWrapper className='flex flex-col !rounded-md'>
+      <IconWrapper focus={focus} className='flex flex-col !rounded-md'>
         <PermMediaOutlinedIcon className='!w-7 !h-7' />
         <p className='text-xs'>Медиа</p>
       </IconWrapper>

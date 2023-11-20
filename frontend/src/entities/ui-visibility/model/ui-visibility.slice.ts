@@ -12,23 +12,39 @@ const initialUIVisibilityState: UIVisibilityState = {
   openSearchMessageBar: false,
 };
 
-export const uiVisitibilySlice = createSlice({
+const getIgnoredUIVisibilityStateKeys = <T extends Record<string, any>>(initialState: T): (keyof T)[] => {
+  const keyList = [];
+  for (const key in initialState) {
+    keyList.push(key as keyof T);
+  }
+  return keyList;
+};
+
+export const ignoredUIVisibilityStateKeys = getIgnoredUIVisibilityStateKeys(initialUIVisibilityState);
+
+export const uiVisibilitySlice = createSlice({
   name: 'uiVisibility',
   initialState: initialUIVisibilityState,
   reducers: {
     setOpenChat: (state, action: PayloadAction<boolean>) => {
-        state.openChat = action.payload;
+      state.openChat = action.payload;
     },
     setOpenChatOptions: (state, action: PayloadAction<boolean>) => {
-        state.openChatOptions = action.payload;
+      state.openChatOptions = action.payload;
     },
     setOpenSearchMessageBar: (state, action: PayloadAction<boolean>) => {
-        state.openSearchMessageBar = action.payload;
-    }
+      state.openSearchMessageBar = action.payload;
+    },
   },
+  // extraReducers(builder) {
+  //   builder.addMatcher(
+  //     (action) => action === REHYDRATE,
+  //     () => initialUIVisibilityState,
+  //   );
+  // },
 });
 
-export const {setOpenChat, setOpenChatOptions, setOpenSearchMessageBar} = uiVisitibilySlice.actions;
+export const { setOpenChat, setOpenChatOptions, setOpenSearchMessageBar } = uiVisibilitySlice.actions;
 
 export const selectOpenChat = (state: RootState) => state.uiVisibility.openChat;
 export const selectOpenChatOptions = (state: RootState) => state.uiVisibility.openChatOptions;
