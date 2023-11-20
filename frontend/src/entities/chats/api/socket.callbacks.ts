@@ -1,3 +1,4 @@
+import { IMessage } from 'entities/message';
 import { IUser } from 'entities/session';
 import { logoutThunk } from 'features/auth/logout';
 import {
@@ -6,7 +7,6 @@ import {
   CompanionStatus,
   ConversationStatus,
   IConversation,
-  IMessage,
   addConversation,
   addConversationList,
   addMessage,

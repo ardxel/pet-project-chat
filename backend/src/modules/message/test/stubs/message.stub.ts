@@ -7,4 +7,5 @@ export const messageStub: () => Message = () => ({
   _id: new Types.ObjectId('654292628e5fe4401fc3e3f2'),
   text: 'Hello world',
   sender: new Types.ObjectId(userStub()._id),
+  type: 'text',
 });

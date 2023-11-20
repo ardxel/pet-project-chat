@@ -1,5 +1,3 @@
 export const VideoCall = () => {
-    return (
-        <div>Video Call</div>
-    )
-}
+  return <div>Video Call</div>;
+};
