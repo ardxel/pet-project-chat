@@ -16,8 +16,12 @@ export class UserService {
     return user;
   }
 
-  async findById(_id: Types.ObjectId): Promise<UserDocument | null> {
-    return await this.model.findById(_id);
+  async findById(_id: Types.ObjectId) {
+    const user = await this.model.findById(_id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
   }
 
   async findByEmail(email: string, withPassword = false): Promise<UserDocument | null> {
@@ -40,7 +44,6 @@ export class UserService {
     const regexPattern = new RegExp(queryDto.name, 'i');
 
     const users = await this.model
-      // .aggregate([{ $match: { name: regexPattern } }])
       .find({ name: { $regex: regexPattern } })
       .skip(skip)
       .limit(queryDto.limit);
@@ -61,25 +64,15 @@ export class UserService {
     return await this.model.deleteMany({});
   }
 
-  async getUserContactsById(_id: Types.ObjectId): Promise<{ contacts: User[] }> {
-    if (await this.isNotExist({ _id })) throw new NotFoundException('There is no user with this ID');
-
-    const { contacts } = await this.model
-      .findById(_id)
-      .select('contacts')
-      .populate<{ contacts: User[] }>({ path: 'contacts.user', select: '-password -contacts' })
-      .select('contacts');
-
-    return { contacts };
-  }
-
   async isExist({ email, _id }: EmailOrId) {
-    const count = await this.model.countDocuments(email ? { email } : { _id });
-    return count > 0;
+    return Boolean(await this.model.exists(email ? { email } : { _id }));
   }
 
   async isNotExist({ email, _id }: EmailOrId) {
-    const count = await this.model.countDocuments(email ? { email } : { _id });
-    return count === 0;
+    return !Boolean(await this.model.exists(email ? { email } : { _id }));
+  }
+
+  public _externalModel() {
+    return this.model;
   }
 }

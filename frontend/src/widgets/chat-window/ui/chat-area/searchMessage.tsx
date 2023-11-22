@@ -2,45 +2,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { selectOpenSearchMessageBar, setOpenSearchMessageBar } from 'entities/ui-visibility';
-import { FC, memo } from 'react';
+import { FC, PureComponent, ReactNode } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
 import { IconWrapper, SearchInput } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
 import { useMessageNavigation } from 'widgets/chat-window/lib';
-
-interface BtnMessageBarProps {
-  onClick: () => void;
-  disabled?: boolean;
-}
-
-const DecreaseIndexButton: FC<BtnMessageBarProps> = memo(({ onClick, disabled }) => {
-  return (
-    <button onClick={onClick} disabled={disabled}>
-      <IconWrapper className='w-8 h-8 bg-transparent hover:bg-icon-active-bg rounded-md'>
-        <ExpandLessIcon className='!w-6 !h-6' />
-      </IconWrapper>
-    </button>
-  );
-});
-const IncreaseIndexButton: FC<BtnMessageBarProps> = memo(({ onClick, disabled }) => {
-  return (
-    <button onClick={onClick} disabled={disabled}>
-      <IconWrapper className='w-8 h-8 bg-transparent hover:bg-icon-active-bg rounded-md'>
-        <ExpandMoreIcon className='!w-6 !h-6' />
-      </IconWrapper>
-    </button>
-  );
-});
-
-const CloseMessageBarButton: FC<BtnMessageBarProps> = memo(({ onClick }) => {
-  return (
-    <button className='ml-2' onClick={onClick}>
-      <IconWrapper className='w-9 h-9 rounded-md'>
-        <CloseIcon className='!w-6 !h-6' />
-      </IconWrapper>
-    </button>
-  );
-});
 
 interface SearchMessageBarProps
   extends FC<{
@@ -79,3 +45,44 @@ export const SearchMessageBar: SearchMessageBarProps = ({ onSelectIndex }) => {
     </div>
   );
 };
+
+interface BtnMessageBarProps {
+  onClick: () => void;
+  disabled?: boolean;
+}
+
+class DecreaseIndexButton extends PureComponent<BtnMessageBarProps> {
+  render() {
+    return (
+      <button onClick={this.props.onClick} disabled={this.props.disabled}>
+        <IconWrapper className='w-8 h-8 bg-transparent hover:bg-icon-active-bg rounded-md'>
+          <ExpandLessIcon className='!w-6 !h-6' />
+        </IconWrapper>
+      </button>
+    );
+  }
+}
+
+class IncreaseIndexButton extends PureComponent<BtnMessageBarProps> {
+  render(): ReactNode {
+    return (
+      <button onClick={this.props.onClick} disabled={this.props.disabled}>
+        <IconWrapper className='w-8 h-8 bg-transparent hover:bg-icon-active-bg rounded-md'>
+          <ExpandMoreIcon className='!w-6 !h-6' />
+        </IconWrapper>
+      </button>
+    );
+  }
+}
+
+class CloseMessageBarButton extends PureComponent<BtnMessageBarProps> {
+  render() {
+    return (
+      <button className='ml-2' onClick={this.props.onClick}>
+        <IconWrapper className='w-9 h-9 rounded-md'>
+          <CloseIcon className='!w-6 !h-6' />
+        </IconWrapper>
+      </button>
+    );
+  }
+}

@@ -8,9 +8,9 @@ import { ChatList } from './chatlist';
 import { LeftbarHeader } from './head';
 import { SearchBar } from './searchbar';
 
-interface ChatLeftbarProps {}
+interface ChatLeftBarProps {}
 
-export const ChatLeftbar: FC<ChatLeftbarProps> = () => {
+export const ChatLeftBar: FC<ChatLeftBarProps> = () => {
   const openChat = useAppSelector(selectOpenChat);
   const dispatch = useAppDispatch();
 

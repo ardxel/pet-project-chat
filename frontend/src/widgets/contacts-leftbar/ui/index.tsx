@@ -2,15 +2,15 @@ import { contactFilterOptions, filterBy, search } from 'entities/contacts';
 import { useAppDispatch } from 'shared/model';
 import { HorizontalTabs, LeftBar } from 'shared/ui';
 import { ContactList } from './contactList';
-import { LeftbarHeader } from './head';
+import { LeftBarHeader } from './head';
 import { SearchBar } from './searchbar';
 
-export const ContactsLeftbar = () => {
+export const ContactsLeftBar = () => {
   const dispatch = useAppDispatch();
 
   return (
     <LeftBar>
-      <LeftbarHeader />
+      <LeftBarHeader />
       <div className='px-6 border-b border-border pb-2'>
         <HorizontalTabs
           onSelect={(index) => dispatch(filterBy(index))}

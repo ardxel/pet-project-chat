@@ -1,6 +1,6 @@
-import { useChatCompanionStatus } from 'entities/chatbarCard/lib';
 import { selectOpenedChatCompanion } from 'entities/chats';
 import { selectOpenChatOptions, setOpenChatOptions } from 'entities/ui-visibility';
+import { useChatCompanionStatus } from 'features/chatbarCard/lib';
 import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
 import { UserAvatar } from 'shared/ui';

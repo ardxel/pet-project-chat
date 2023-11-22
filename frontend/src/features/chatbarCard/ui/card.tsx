@@ -1,4 +1,5 @@
-import { IMessage, selectChatLastMessage, selectOpenedChatId, setOpenedChatId } from 'entities/chats';
+import { selectChatLastMessage, selectOpenedChatId, setOpenedChatId } from 'entities/chats';
+import { IMessage } from 'entities/message';
 import { IUser } from 'entities/session';
 import { selectOpenChat, setOpenChat } from 'entities/ui-visibility';
 import { FC, memo, useEffect, useMemo, useState } from 'react';
@@ -9,14 +10,14 @@ import { useChatCompanionStatus } from '../lib';
 import { MessageTimeFormatter } from '../lib/lastMessageTime';
 import { MenuButton } from './listButton';
 
-interface ChatbarCardProps {
+interface ChatBarCardProps {
   user?: Partial<IUser>;
   conversationId: string;
 }
 
 const format = MessageTimeFormatter.getRelativeTime;
 
-export const ChatbarCard: FC<ChatbarCardProps> = memo(({ user, conversationId }) => {
+export const ChatBarCard: FC<ChatBarCardProps> = memo(({ user, conversationId }) => {
   const openedChatId = useAppSelector(selectOpenedChatId);
   const openChat = useAppSelector(selectOpenChat);
   const lastMessage: IMessage | undefined = useAppSelector(selectChatLastMessage(conversationId));
@@ -99,7 +100,7 @@ export const ChatbarCard: FC<ChatbarCardProps> = memo(({ user, conversationId })
         </div>
       </div>
       <div>
-        <MenuButton show={hover} />
+        <MenuButton chatId={conversationId} show={hover} />
       </div>
     </div>
   );

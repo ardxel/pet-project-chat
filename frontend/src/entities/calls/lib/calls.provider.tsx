@@ -26,6 +26,8 @@ interface CallsContextType {
   callUser: Async<(options: { userId: string; receiverName: string; isVideoCall: boolean }) => void>;
   callAnswer: Async<(verdict: 'accept' | 'cancel') => Promise<void>>;
   callEnd: Async<() => void>;
+  //TODO реализовать проверку - занят ли пользователь другим разговором.
+  //TODO реализовать проверку перед началом звонка - находится ли пользователь в сети.
 }
 
 export const CallsContext = createContext<CallsContextType | null>(null);
@@ -61,7 +63,7 @@ export const CallsProvider: FC<CallsProviderProps> = ({ children }) => {
 
   const {
     receiverId,
-    setRecieverId,
+    setReceiverId,
     receiverName,
     setReceiverName,
     resetReceiverState,
@@ -163,11 +165,11 @@ export const CallsProvider: FC<CallsProviderProps> = ({ children }) => {
 
   const callUser = async (options: { userId: string; receiverName: string; isVideoCall: boolean }) => {
     try {
-      const { isVideoCall, receiverName, userId: recieverUserId } = options;
+      const { isVideoCall, receiverName, userId: receiverUserId } = options;
       setOpen(true);
       setCallerIsMe(true);
       setReceiverName(receiverName);
-      setRecieverId(recieverUserId);
+      setReceiverId(receiverUserId);
       setCallWithVideo(isVideoCall);
       const stream = await getStream(isVideoCall);
 
@@ -179,7 +181,7 @@ export const CallsProvider: FC<CallsProviderProps> = ({ children }) => {
 
       peer.on('signal', (signalData) => {
         chatSocket.emit(ChatEvents.CALL_OFFER, {
-          to: recieverUserId,
+          to: receiverUserId,
           from: user._id,
           signal: signalData,
           isVideoCall,

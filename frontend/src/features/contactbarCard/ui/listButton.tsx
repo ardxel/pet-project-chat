@@ -1,5 +1,6 @@
 import { Menu } from '@headlessui/react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import { IUser } from 'entities/session';
 import { FC } from 'react';
 import { IconWrapper } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
@@ -7,9 +8,10 @@ import { ActionList } from './actionList';
 
 interface UserActionListButtonProps {
   show: boolean;
+  user: IUser;
   className?: string;
 }
-export const ListButton: FC<UserActionListButtonProps> = ({ show, className }) => {
+export const ListButton: FC<UserActionListButtonProps> = ({ show, className, user }) => {
   if (show) {
     return (
       <Menu as='div' className='dropdown'>
@@ -19,7 +21,7 @@ export const ListButton: FC<UserActionListButtonProps> = ({ show, className }) =
           </IconWrapper>
         </Menu.Button>
         <Menu.Items as='div' className='dropdown-menu w-[300px] !mt-0 [&>*]:px-4 [&>*]:py-4'>
-          <ActionList />
+          <ActionList user={user} />
         </Menu.Items>
       </Menu>
     );

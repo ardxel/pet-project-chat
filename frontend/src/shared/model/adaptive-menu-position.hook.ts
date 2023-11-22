@@ -22,7 +22,7 @@ export const useAdaptiveMenuPosition = (
 ) => {
   const [menuPosition, setMenuPosition] = useState<'top' | 'bottom'>('top');
   /**
-   * В среднем высота выпадющего меню около 400 пикселей, но это не точно.
+   * В среднем высота выпадающего меню около 400 пикселей, но это не точно.
    */
   const HEIGHT = options.menuHeight || 400;
   /**

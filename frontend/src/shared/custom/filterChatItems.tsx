@@ -1,4 +1,5 @@
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
+import DomainVerificationOutlinedIcon from '@mui/icons-material/DomainVerificationOutlined';
 import FolderDeleteOutlinedIcon from '@mui/icons-material/FolderDeleteOutlined';
 import SentimentSatisfiedAltOutlinedIcon from '@mui/icons-material/SentimentSatisfiedAltOutlined';
 import TextsmsOutlinedIcon from '@mui/icons-material/TextsmsOutlined';
@@ -7,27 +8,38 @@ import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
 export const filterChatItems = [
   {
     id: 0,
-    text: 'Все чаты',
+    label: 'Все чаты',
+    text: 'allChats',
     Icon: TextsmsOutlinedIcon,
   },
   {
     id: 1,
-    text: 'Активные',
-    Icon: SentimentSatisfiedAltOutlinedIcon,
+    label: 'Основные',
+    text: 'general',
+    Icon: DomainVerificationOutlinedIcon,
   },
   {
     id: 2,
-    text: 'Архив',
-    Icon: FolderDeleteOutlinedIcon,
+    label: 'Активные',
+    text: 'active',
+    Icon: SentimentSatisfiedAltOutlinedIcon,
   },
   {
     id: 3,
-    text: 'Спам',
-    Icon: TopicOutlinedIcon,
+    label: 'Архив',
+    text: 'archive',
+    Icon: FolderDeleteOutlinedIcon,
   },
   {
     id: 4,
-    text: 'Корзина',
+    label: 'Спам',
+    text: 'spam',
+    Icon: TopicOutlinedIcon,
+  },
+  {
+    id: 5,
+    label: 'Корзина',
+    text: 'trash',
     Icon: DeleteForeverOutlinedIcon,
   },
 ];

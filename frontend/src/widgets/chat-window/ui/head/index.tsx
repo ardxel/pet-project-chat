@@ -4,7 +4,6 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import SearchIcon from '@mui/icons-material/Search';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import { useCallsContext } from 'entities/calls';
-import { useChatCompanionStatus } from 'entities/chatbarCard/lib';
 import { selectOpenedChatCompanion } from 'entities/chats';
 import {
   selectOpenChatOptions,
@@ -13,6 +12,7 @@ import {
   setOpenChatOptions,
   setOpenSearchMessageBar,
 } from 'entities/ui-visibility';
+import { useChatCompanionStatus } from 'features/chatbarCard/lib';
 import { memo } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
 import { IconWrapper, UserAvatar } from 'shared/ui';
@@ -36,7 +36,7 @@ const VideoCallButton = memo(() => {
   const { _id, name } = useAppSelector(selectOpenedChatCompanion);
   const { callUser } = useCallsContext();
   return (
-    <button onClick={() => callUser({ userId: _id, recieverName: name, isVideoCall: true })}>
+    <button onClick={() => callUser({ userId: _id, receiverName: name, isVideoCall: true })}>
       <IconWrapper className='header-chat-icon'>
         <VideocamIcon />
       </IconWrapper>

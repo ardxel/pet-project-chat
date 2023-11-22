@@ -3,7 +3,7 @@ import queryString from 'query-string';
 import { DataResponse, PRIVATE_CHATS_TAG, baseApi } from 'shared/api';
 import { mapUsers } from '../lib/mapUsers';
 
-interface SearchUsersByNameParams {
+export interface SearchUsersByNameParams {
   limit?: number;
   page?: number;
   name: string;

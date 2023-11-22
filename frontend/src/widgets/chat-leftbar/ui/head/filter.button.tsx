@@ -10,7 +10,7 @@ interface FilterButtonProps {
 }
 
 export const FilterButton: FC<FilterButtonProps> = ({ onSelect }) => {
-  const [selected, setSelected] = useState(filterChatItems[0].text);
+  const [selected, setSelected] = useState(filterChatItems[1].text);
 
   const select = (value: string) => {
     setSelected(value);
@@ -32,7 +32,7 @@ export const FilterButton: FC<FilterButtonProps> = ({ onSelect }) => {
         {filterChatItems.map((item) => (
           <DropdownListItem
             Icon={<item.Icon />}
-            text={item.text}
+            text={item.label}
             as='button'
             key={item.text}
             onClick={() => select(item.text)}

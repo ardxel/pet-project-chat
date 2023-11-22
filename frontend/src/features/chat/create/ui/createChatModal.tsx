@@ -1,9 +1,8 @@
 import { Dialog, Transition } from '@headlessui/react';
-import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import { useLazySearchUsersByNameQuery } from 'entities/chats';
 import { selectUserId } from 'entities/session';
-import { ChangeEvent, FC, Fragment, useCallback, useMemo, useState } from 'react';
+import { ChangeEvent, FC, Fragment, useCallback, useMemo } from 'react';
 import { ScaleLoader } from 'react-spinners';
 import { debounce } from 'shared/lib';
 import { useAppSelector } from 'shared/model';
@@ -16,7 +15,7 @@ interface CreateChatModalProps {
   onClose: () => void;
 }
 
-const CreateChatModal: FC<CreateChatModalProps> = ({ onClose, isOpen }) => {
+export const CreateChatModal: FC<CreateChatModalProps> = ({ onClose, isOpen }) => {
   const userId = useAppSelector(selectUserId);
   const [fetchUsers, { data: users = [], isLoading }] = useLazySearchUsersByNameQuery();
   const showUsers = !isLoading && users.length > 0;
@@ -37,6 +36,7 @@ const CreateChatModal: FC<CreateChatModalProps> = ({ onClose, isOpen }) => {
   };
 
   const filteredUsers = useMemo(() => users.filter((user) => user._id !== userId), [users]);
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as='div' className='relative z-[800]' onClose={handleOnClose}>
@@ -85,23 +85,5 @@ const CreateChatModal: FC<CreateChatModalProps> = ({ onClose, isOpen }) => {
         </div>
       </Dialog>
     </Transition>
-  );
-};
-
-export const NewChatButton = () => {
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <button
-        onClick={() => setOpen(true)}
-        className={twMerge(
-          '[&>*]:text-form-color [&>*]:!transition-colors [&>*]:!duration-300 [&>*]:hover:text-active-link',
-          'text-xs flex items-center gap-x-1',
-        )}>
-        <AddOutlinedIcon className='!w-4 !h-4' />
-        <p className='text-xs'>Новый</p>
-      </button>
-      <CreateChatModal isOpen={open} onClose={() => setOpen(false)} />
-    </>
   );
 };

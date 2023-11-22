@@ -1,9 +1,9 @@
 import { AddContact } from 'features/contact/add';
 import { FC } from 'react';
 
-interface LeftbarHeaderProps {}
+interface LeftBarHeaderProps {}
 
-export const LeftbarHeader: FC<LeftbarHeaderProps> = () => {
+export const LeftBarHeader: FC<LeftBarHeaderProps> = () => {
   return (
     <div className='pt-5 pb-2 px-6'>
       <div className='w-full flex items-center justify-between mb-7'>

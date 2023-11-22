@@ -1,16 +1,19 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSelector, createSlice } from '@reduxjs/toolkit';
 import { Contact } from 'entities/session';
+import moment from 'moment';
 import { contactsApi } from '../api/contacts.api';
 export const contactFilterOptions = ['Все', 'Новые', 'Избранные'] as const;
 const SEVEN_DAYS_IN_MS = 604800000;
 
 interface ContactsState {
   contacts?: Contact[];
+  contactsIsExists: boolean;
   filtered?: Contact[];
 }
 
 export const initialContactsState: ContactsState = {
   contacts: [],
+  contactsIsExists: false,
   filtered: [],
 };
 
@@ -21,6 +24,11 @@ export const contactsSlice = createSlice({
     clearsContactsData() {
       return initialContactsState;
     },
+
+    updateFilteredData(state, action: PayloadAction<Contact[]>) {
+      state.filtered = action.payload;
+    },
+
     search(state, action: PayloadAction<string>) {
       const inputLower = action.payload.toLowerCase();
       state.filtered = state.contacts.filter((contact) => {
@@ -43,7 +51,7 @@ export const contactsSlice = createSlice({
         // Новые
         case 1:
           state.filtered = state.contacts.filter(
-            (contact) => Number(new Date()) - Number(new Date(contact.createdAt)) <= SEVEN_DAYS_IN_MS,
+            (contact) => moment(new Date()).diff(contact.createdAt) <= SEVEN_DAYS_IN_MS,
           );
           break;
         // Избранные
@@ -58,11 +66,25 @@ export const contactsSlice = createSlice({
   extraReducers: (builder) => {
     builder.addMatcher(contactsApi.endpoints.getContacts.matchFulfilled, (state, { payload }) => {
       state.contacts = payload;
-      state.filtered = payload;
+      state.filtered = [...payload];
+      state.contactsIsExists = true;
+    });
+    builder.addMatcher(contactsApi.endpoints.addContact.matchFulfilled, (state, { payload }) => {
+      state.contacts.push(payload.new_contact);
+      state.filtered.push(payload.new_contact);
+    });
+    builder.addMatcher(contactsApi.endpoints.deleteContact.matchFulfilled, (state, { payload }) => {
+      const contactsWithoutDeleted = state.contacts.filter((contact) => contact.user._id !== payload.deletedId);
+      state.contacts = contactsWithoutDeleted;
+      state.filtered = [...contactsWithoutDeleted];
     });
   },
 });
 
-export const selectContactList = (state: RootState) => state.contacts.contacts;
-export const selectFilteredContacts = (state: RootState) => state.contacts.filtered;
-export const { search, filterBy, clearsContactsData } = contactsSlice.actions;
+export const { search, filterBy, clearsContactsData, updateFilteredData } = contactsSlice.actions;
+
+const selectSelf = (state: RootState) => state;
+
+export const selectContactList = createSelector(selectSelf, (state) => state.contacts.contacts);
+export const selectFilteredContacts = createSelector(selectSelf, (state) => state.contacts.filtered);
+export const selectContactsIsExists = (state: RootState) => state.contacts.contactsIsExists;

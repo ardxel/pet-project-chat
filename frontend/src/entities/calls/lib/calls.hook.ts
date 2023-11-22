@@ -66,12 +66,12 @@ export const useCallerState = () => {
 export const useReceiverState = () => {
   const [receiverIsMe, setReceiverIsMe] = useState(false);
   const [receiverName, setReceiverName] = useState<string>();
-  const [receiverId, setRecieverId] = useState<string>();
+  const [receiverId, setReceiverId] = useState<string>();
 
   const resetReceiverState = useCallback(() => {
     setReceiverIsMe(false);
     setReceiverName(undefined);
-    setRecieverId(undefined);
+    setReceiverId(undefined);
   }, []);
 
   return {
@@ -80,7 +80,7 @@ export const useReceiverState = () => {
     receiverName,
     setReceiverName,
     receiverId,
-    setRecieverId,
+    setReceiverId,
     resetReceiverState,
   };
 };

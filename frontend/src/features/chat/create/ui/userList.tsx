@@ -3,8 +3,7 @@ import { selectPrivateChatList, setOpenedChatId } from 'entities/chats';
 import { IUser } from 'entities/session';
 import { FC, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
-import { AvatarByFirstLetter, IconWrapper } from 'shared/ui';
-import { twMerge } from 'tailwind-merge';
+import { IconWrapper, UserAvatar } from 'shared/ui';
 import { createPrivateChat } from '../model';
 
 interface UserListProps {
@@ -32,30 +31,21 @@ export const UserList: FC<UserListProps> = ({ users, onClose }) => {
       const existedChatId = findPrivateChatIdByCompanionId(userId);
       if (existedChatId) {
         dispatch(setOpenedChatId(existedChatId));
-        onClose();
       } else {
         dispatch(createPrivateChat(userId));
-        onClose();
       }
+      onClose();
     },
     [users],
   );
 
   return users.map((user) => {
-    const hasAvatar = !!user.avatar;
     const hasFullname = !!user.firstName && !!user.lastName;
     return (
       <div key={user._id} className='flex items-center justify-between cursor-pointer px-4 py-3 relative'>
         <div className='flex gap-x-3'>
           <div className='relative w-[50px] h-[50px]'>
-            {hasAvatar ? (
-              <img
-                className={twMerge('rounded-md object-cover overflow-hidden', 'absolute w-full h-full')}
-                src={user.avatar}
-              />
-            ) : (
-              <AvatarByFirstLetter name={user.name} className='w-12 h-12' />
-            )}
+            <UserAvatar user={user} className='w-full h-full' />
           </div>
           <div>
             {hasFullname ? (

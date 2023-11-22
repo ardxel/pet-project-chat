@@ -1,10 +1,10 @@
-import { ChatbarCard } from 'entities/chatbarCard';
 import {
   fetchConversations,
   selectConversationIdAndCompanionListSorted,
   selectPrivateChatsExist,
   selectSearchChatInput,
 } from 'entities/chats';
+import { ChatBarCard } from 'features/chatbarCard';
 import { useLayoutEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { PuffLoader } from 'react-spinners';
@@ -46,7 +46,7 @@ export const ChatList = () => {
           <div className={twMerge('flex flex-col bg-bg pb-4')}>
             {filteredChatsBySearchInput ? (
               filteredChatsBySearchInput.map((chat, i) => {
-                return <ChatbarCard key={i} user={chat.companion} conversationId={chat.conversationId} />;
+                return <ChatBarCard key={i} user={chat.companion} conversationId={chat.conversationId} />;
               })
             ) : (
               <div className='h-full w-full absolute left-0 top-0 flex justify-center items-end pb-10 h-md:pb-0 h-md:items-center'>

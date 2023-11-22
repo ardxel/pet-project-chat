@@ -3,15 +3,15 @@ import { IsEmail, IsString, IsStrongPassword } from 'class-validator';
 import { GenericDto } from 'common/interfaces';
 
 export class RegisterUserDto implements GenericDto {
-  @ApiProperty({ example: 'string' })
+  @ApiProperty({ type: String, example: 'abcde@gmail.com' })
   @IsEmail()
   email: string;
 
-  @ApiProperty({ example: 'strongpassword' })
+  @ApiProperty({ type: String, example: 'strongpassword' })
   @IsStrongPassword()
   password: string;
 
-  @ApiProperty({ example: 'string' })
+  @ApiProperty({ type: String, example: 'string' })
   @IsString()
   name: string;
 }
