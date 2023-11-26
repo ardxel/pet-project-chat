@@ -59,27 +59,27 @@ const configurePlugins = () => {
 const configureRules = () => {
   return [
     // --- JS | TS USING BABEL
-    {
-      test: /\.[jt]sx?$/,
-      exclude: /node_modules/,
-      use: {
-        loader: 'babel-loader',
-        options: {
-          cacheDirectory: true, // Using a cache to avoid of recompilation
-        },
-      },
-    },
-    // --- JS | TS USING ESBUILD
     // {
     //   test: /\.[jt]sx?$/,
     //   exclude: /node_modules/,
     //   use: {
-    //     loader: "esbuild-loader",
+    //     loader: 'babel-loader',
     //     options: {
-    //       tsconfig: "./tsconfig.json",
+    //       cacheDirectory: true, // Using a cache to avoid of recompilation
     //     },
     //   },
     // },
+    // --- JS | TS USING ESBUILD
+    {
+      test: /\.[jt]sx?$/,
+      exclude: [/node_modules/, /test\.[jt]sx?$/],
+      use: {
+        loader: 'esbuild-loader',
+        options: {
+          tsconfig: './tsconfig.json',
+        },
+      },
+    },
     // --- HTML
     {
       test: /\.(html)$/,

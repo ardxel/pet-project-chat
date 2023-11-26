@@ -1,59 +1,40 @@
 import { selectChatLastMessage, selectOpenedChatId, setOpenedChatId } from 'entities/chats';
 import { IMessage } from 'entities/message';
-import { IUser } from 'entities/session';
+import { IUser, userUtils } from 'entities/session';
 import { selectOpenChat, setOpenChat } from 'entities/ui-visibility';
-import { FC, memo, useEffect, useMemo, useState } from 'react';
+import { ActionButtonGroup } from 'features/actionButtonGroup';
+import { FC, memo, useMemo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
 import { UserAvatar } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
-import { useChatCompanionStatus } from '../lib';
-import { MessageTimeFormatter } from '../lib/lastMessageTime';
-import { MenuButton } from './listButton';
+import { useChatCompanionStatus, useLastMessageIntervalTime } from '../lib';
 
 interface ChatBarCardProps {
-  user?: Partial<IUser>;
-  conversationId: string;
+  user: IUser;
+  chatId: string;
 }
 
-const format = MessageTimeFormatter.getRelativeTime;
-
-export const ChatBarCard: FC<ChatBarCardProps> = memo(({ user, conversationId }) => {
+export const ChatBarCard: FC<ChatBarCardProps> = memo(({ user, chatId }) => {
   const openedChatId = useAppSelector(selectOpenedChatId);
   const openChat = useAppSelector(selectOpenChat);
-  const lastMessage: IMessage | undefined = useAppSelector(selectChatLastMessage(conversationId));
-  const companionStatus = useChatCompanionStatus(conversationId);
+  const companionStatus = useChatCompanionStatus(chatId);
+  const lastMessage: IMessage | undefined = useAppSelector(selectChatLastMessage(chatId));
+
+  const lastMessageCreatedAt = useLastMessageIntervalTime(chatId);
 
   const [hover, setHover] = useState(false);
-  const [currentTime, setCurrentTime] = useState(format(lastMessage));
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (!lastMessage) return;
-    setCurrentTime(format(lastMessage));
-    const MINUTE_IN_MS = 60000;
-    /**
-     * Изменение времени создания последнего сообщения с интервалом в 1 минуту
-     */
-    const intervalId = setInterval(() => {
-      setCurrentTime(format(lastMessage));
-    }, MINUTE_IN_MS);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [lastMessage]);
-
   const handleOpenChat = () => {
-    if (openedChatId !== conversationId) {
-      dispatch(setOpenedChatId(conversationId));
+    if (openedChatId !== chatId) {
+      dispatch(setOpenedChatId(chatId));
     }
     if (!openChat) {
       dispatch(setOpenChat(true));
     }
   };
 
-  const LAST_MESSAGE_MAX_LENGTH = 25;
-  const hasFullname = Boolean(user.firstName && user.lastName);
+  const LAST_MESSAGE_MAX_LENGTH = 23;
 
   const lastMessageText = useMemo(() => {
     if (!lastMessage || !lastMessage.text) return;
@@ -68,7 +49,7 @@ export const ChatBarCard: FC<ChatBarCardProps> = memo(({ user, conversationId })
     <div
       className={twMerge(
         'flex items-center justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900 px-4 py-3 relative',
-        openedChatId === conversationId ? 'bg-gray-100 dark:bg-gray-900' : '',
+        openedChatId === chatId ? 'bg-gray-100 dark:bg-gray-900' : '',
       )}
       onClick={handleOpenChat}
       onMouseLeave={() => setHover(false)}
@@ -80,7 +61,7 @@ export const ChatBarCard: FC<ChatBarCardProps> = memo(({ user, conversationId })
         <div className='flex flex-col justify-center gap-y-[6px]'>
           <div className='flex items-center'>
             <div className='flex items-center h-full'>
-              <h4 className='text-left text-sm'>{hasFullname ? user.firstName + ' ' + user.lastName : user.name}</h4>
+              <h4 className='text-left text-sm'>{userUtils.getName(user)}</h4>
             </div>
 
             <div>
@@ -93,14 +74,27 @@ export const ChatBarCard: FC<ChatBarCardProps> = memo(({ user, conversationId })
               <p className='text-sm leading-none m-0'>
                 {lastMessageText}
                 <span className='align-middle text-xl mx-[6px] text-form-color '>•</span>
-                <span className='text-xs align-middle text-form-color m-0'>{currentTime || ''}</span>
+                <span className='text-xs align-middle text-form-color m-0'>{lastMessageCreatedAt}</span>
               </p>
             ) : null}
           </div>
         </div>
       </div>
       <div>
-        <MenuButton chatId={conversationId} show={hover} />
+        <ActionButtonGroup
+          show={hover}
+          targetUser={user}
+          menuClassName={twMerge('w-[275px]')}
+          options={{
+            markAsRead: true,
+            disableNotifications: true,
+            viewProfile: { hr: true },
+            audioCall: true,
+            videoCall: { hr: true },
+            saveToArchive: true,
+            report: true,
+          }}
+        />
       </div>
     </div>
   );

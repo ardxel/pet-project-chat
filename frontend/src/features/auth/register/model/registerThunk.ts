@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { RequestRegisterBody, sessionApi } from 'entities/session/api';
+import { RequestRegisterBody, sessionApi } from 'entities/session';
 import { isRegisteredError } from 'shared/api';
 import { ClientError, ServerError } from 'shared/exceptions';
 

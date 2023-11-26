@@ -1,6 +1,7 @@
 import { selectOpenedChatCompanion } from 'entities/chats';
+import { userUtils } from 'entities/session';
 import { selectOpenChatOptions, setOpenChatOptions } from 'entities/ui-visibility';
-import { useChatCompanionStatus } from 'features/chatbarCard/lib';
+import { useChatCompanionStatus } from 'features/chatBarCard/lib';
 import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
 import { UserAvatar } from 'shared/ui';
@@ -17,8 +18,8 @@ export const ChatOptions = () => {
   const dispatch = useAppDispatch();
 
   if (!openChatOptions) return null;
-  const hasFullname = Boolean(chatCompanion.firstName && chatCompanion.lastName);
 
+  const username = userUtils.getName(chatCompanion);
   const closeChatOptions = () => {
     dispatch(setOpenChatOptions(false));
   };
@@ -37,9 +38,7 @@ export const ChatOptions = () => {
         <div className='full h-1/6 bg-transparent'></div>
         <div className='w-full'>
           <UserAvatar user={chatCompanion} className='w-14 h-14 mx-auto' />
-          <h4 className='w-full text-center mt-3'>
-            {hasFullname ? chatCompanion.firstName + ' ' + chatCompanion.lastName : chatCompanion.name}
-          </h4>
+          <h4 className='w-full text-center mt-3'>{username}</h4>
           <p className='w-full text-center mt-2 text-xs h-2 text-gray-400 dark:text-gray-500'>{chatCompanionStatus}</p>
         </div>
         <div className='flex justify-between mx-5'>

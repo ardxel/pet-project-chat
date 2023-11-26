@@ -1,22 +1,25 @@
 import { Menu, Switch } from '@headlessui/react';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import { selectUserData, userUtils } from 'entities/session';
 import { changeTheme, selectCurrentTheme } from 'entities/theme';
 import { LogoutButton } from 'features/auth/logout';
+import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { profileLinks } from 'shared/custom';
 import { useAppDispatch, useAppSelector } from 'shared/model';
-import { DropdownListItem } from 'shared/ui';
-import { twMerge } from 'tailwind-merge';
+import { DropdownListItem, UserAvatar } from 'shared/ui';
 
 const ProfileTitle = () => {
+  const user = useAppSelector(selectUserData);
+
   return (
     <div className='flex items-center gap-x-2'>
-      <div>
-        <img src='https://connectme-html.themeyn.com/images/avatar/3.jpg' className='rounded-xl w-12 h-12' />
+      <div className='w-10 h-10'>
+        <UserAvatar user={user} className='w-full h-full rounded-md' />
       </div>
       <div>
-        <h5 className='text-sm'>Vasily Bobnev</h5>
-        <p>description</p>
+        <h5 className='text-sm'>{userUtils.getName(user)}</h5>
+        {user.about && <p>{user.about?.substring(0, 25)}</p>}
       </div>
     </div>
   );
@@ -27,15 +30,15 @@ const ProfileDarkModeSwitcher = () => {
   const enabledDarkTheme = theme === 'dark';
   const dispatch = useAppDispatch();
 
-  const switchTheme = () => {
+  const switchTheme = useCallback(() => {
     dispatch(changeTheme(enabledDarkTheme ? 'light' : 'dark'));
-  };
+  }, [theme]);
 
   return (
     <div className='flex gap-x-1'>
       <DarkModeIcon className='align-middle' />
       <div className=' ml-1'>
-        <h3 className='leading-6 text-base mb-1'>Darkmode</h3>
+        <h3 className='leading-6 text-base mb-1 font-semibold'>Dark mode</h3>
         <Switch
           checked={enabledDarkTheme}
           onChange={switchTheme}
@@ -68,16 +71,11 @@ const ProfileLinks = () => {
 };
 
 const HeaderProfile = () => {
+  const user = useAppSelector(selectUserData);
   return (
     <Menu as='div' className='dropdown'>
       <Menu.Button className='w-11 h-11 md:w-12 md:h-12 relative'>
-        <img
-          className={twMerge(
-            'absolute top-1/2 z-50 left-1/2 transform -translate-x-1/2 -translate-y-1/2',
-            'rounded-full object-cover overflow-hidden',
-          )}
-          src='https://connectme-html.themeyn.com/images/avatar/3.jpg'
-        />
+        <UserAvatar user={user} className='w-full h-full rounded-full' />
       </Menu.Button>
       <Menu.Items
         as='div'

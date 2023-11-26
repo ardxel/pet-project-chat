@@ -1,15 +1,19 @@
 import { contactFilterOptions, filterBy, search } from 'entities/contacts';
-import { useAppDispatch } from 'shared/model';
+import { selectOpenContactPage } from 'entities/ui-visibility';
+import { useAppDispatch, useAppSelector } from 'shared/model';
 import { HorizontalTabs, LeftBar } from 'shared/ui';
+import { twMerge } from 'tailwind-merge';
 import { ContactList } from './contactList';
 import { LeftBarHeader } from './head';
 import { SearchBar } from './searchbar';
 
 export const ContactsLeftBar = () => {
+  const openContactPage = useAppSelector(selectOpenContactPage);
   const dispatch = useAppDispatch();
 
   return (
-    <LeftBar>
+    <LeftBar
+      className={twMerge(`${!openContactPage ? 'flex' : 'hidden'}`, 'md:flex flex-col  overflow-hidden relative')}>
       <LeftBarHeader />
       <div className='px-6 border-b border-border pb-2'>
         <HorizontalTabs

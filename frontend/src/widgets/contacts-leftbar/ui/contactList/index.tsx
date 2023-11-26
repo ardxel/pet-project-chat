@@ -1,5 +1,5 @@
 import { selectFilteredContacts, useGetContactsQuery } from 'entities/contacts';
-import { ContactBarCard } from 'features/contactbarCard';
+import { ContactBarCard } from 'features/contactBarCard';
 import { FC } from 'react';
 import { useAppSelector } from 'shared/model';
 

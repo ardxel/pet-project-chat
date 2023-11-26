@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from 'shared/model';
 import { LeftBar } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
 import { ChatList } from './chatlist';
-import { LeftbarHeader } from './head';
+import { LeftbarHeader as Header } from './head';
 import { SearchBar } from './searchbar';
 
 interface ChatLeftBarProps {}
@@ -16,7 +16,7 @@ export const ChatLeftBar: FC<ChatLeftBarProps> = () => {
 
   return (
     <LeftBar className={twMerge(`${!openChat ? 'flex' : 'hidden'}`, 'md:flex flex-col  overflow-hidden relative')}>
-      <LeftbarHeader />
+      <Header />
       <SearchBar className='flex-shrink-0' onChange={(event) => dispatch(setSearchChatInput(event.target.value))} />
       <ChatList />
     </LeftBar>

@@ -165,6 +165,7 @@ export const CallsProvider: FC<CallsProviderProps> = ({ children }) => {
 
   const callUser = async (options: { userId: string; receiverName: string; isVideoCall: boolean }) => {
     try {
+      console.log(options);
       const { isVideoCall, receiverName, userId: receiverUserId } = options;
       setOpen(true);
       setCallerIsMe(true);

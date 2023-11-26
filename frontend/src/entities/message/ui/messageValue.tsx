@@ -3,11 +3,13 @@ import PhoneMissedOutlinedIcon from '@mui/icons-material/PhoneMissedOutlined';
 import { selectUserId } from 'entities/session';
 import { duration, utc } from 'moment';
 import { FC, memo } from 'react';
+import Linkify from 'react-linkify';
 import { useAppSelector } from 'shared/model';
 import { IconWrapper } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
 import { messageUtil as msgUtils } from '../lib';
 import { IMessage } from '../model';
+
 interface MessageValueProps {
   message: IMessage;
 }
@@ -35,9 +37,16 @@ export const MessageValue: FC<MessageValueProps> = memo(({ message }) => {
   if (type === 'text') {
     return (
       <div className='py-3 px-4'>
-        <p className={twMerge(isBgBlue ? 'text-white' : '', showUpdatedTime ? 'mr-10' : 'mr-5', 'min-w-[15px]')}>
-          {message.text}
-        </p>
+        <Linkify
+          componentDecorator={(decoratedHref, decoratedText, key) => (
+            <a key={key} href={decoratedHref} className='underline text-link-color'>
+              {decoratedText}
+            </a>
+          )}>
+          <p className={twMerge(isBgBlue ? 'text-white' : '', showUpdatedTime ? 'mr-10' : 'mr-5', 'min-w-[15px]')}>
+            {message.text}
+          </p>
+        </Linkify>
       </div>
     );
   }

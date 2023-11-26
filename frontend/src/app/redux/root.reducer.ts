@@ -14,21 +14,31 @@ const rootPersistConfig = {
   blacklist: [uiVisibilitySlice.name, privateChatsSlice.name],
 };
 
-const uiVIsibilityPersistConfig = {
-  key: uiVisibilitySlice.name,
-  storage,
-  blacklist: ignoredUIVisibilityStateKeys,
+const uiVisibilityPersistedReducer = {
+  [uiVisibilitySlice.name]: persistReducer(
+    {
+      key: uiVisibilitySlice.name,
+      storage,
+      blacklist: ignoredUIVisibilityStateKeys,
+    },
+    uiVisibilitySlice.reducer,
+  ),
 };
 
-const privateChatsPersistConfig = {
-  key: privateChatsSlice.name,
-  storage,
-  blacklist: ignoredPrivateChatsStateKeys,
+const privateChatsPersistedReducer = {
+  [privateChatsSlice.name]: persistReducer(
+    {
+      key: privateChatsSlice.name,
+      storage,
+      blacklist: ignoredPrivateChatsStateKeys,
+    },
+    privateChatsSlice.reducer,
+  ),
 };
 
 const reducers = combineReducers({
-  [uiVisibilitySlice.name]: persistReducer(uiVIsibilityPersistConfig, uiVisibilitySlice.reducer),
-  [privateChatsSlice.name]: persistReducer(privateChatsPersistConfig, privateChatsSlice.reducer),
+  ...uiVisibilityPersistedReducer,
+  ...privateChatsPersistedReducer,
   [contactsSlice.name]: contactsSlice.reducer,
   [sessionSlice.name]: sessionSlice.reducer,
   [themeSlice.name]: themeSlice.reducer,

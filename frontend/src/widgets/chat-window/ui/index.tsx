@@ -1,17 +1,12 @@
-import { selectIsAuthorized, selectSocketStatus } from 'entities/session';
-import { useAppSelector } from 'shared/model';
+import { useChatGuard } from '../lib';
 import { ChatArea } from './chat-area';
 import { ChatHeader } from './head';
 import { ChatInput } from './input';
 
 export const ChatWindow = () => {
-  const isAuthorized = useAppSelector(selectIsAuthorized);
-  const connectionStatus = useAppSelector(selectSocketStatus);
-  const isConnected = connectionStatus === 'connected';
+  const access = useChatGuard();
 
-  if (!isAuthorized && !isConnected) {
-    return null;
-  }
+  if (!access) return null;
 
   return (
     <section className='flex flex-col w-full h-full'>

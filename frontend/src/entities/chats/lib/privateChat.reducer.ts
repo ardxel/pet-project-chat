@@ -26,7 +26,7 @@ export const privateChatReducers = {
     state.searchChatInput = action.payload;
   },
 
-  setOpenedChatId: (state: PrivateChatsState, action: PayloadAction<IMessage['conversationId']>) => {
+  setOpenedChatId: (state: PrivateChatsState, action: PayloadAction<IMessage['conversationId'] | undefined>) => {
     state.openedChatId = action.payload;
   },
 

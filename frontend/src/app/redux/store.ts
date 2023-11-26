@@ -9,8 +9,8 @@ export const buildStore = () =>
   configureStore({
     devTools: config.isDev,
     reducer: rootReducer,
-    middleware: (getDefailtMiddleware) =>
-      getDefailtMiddleware({
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
         serializableCheck: {
           ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         },

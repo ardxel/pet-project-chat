@@ -15,7 +15,7 @@ export class ContactService {
 
     const { contacts } = await user.populate<{ contacts: User[] }>({
       path: 'contacts.user',
-      select: '-password -contacts',
+      select: '-password',
     });
 
     return { contacts };
@@ -51,13 +51,19 @@ export class ContactService {
   }
 
   async deleteContact(dto: DeleteContactDto) {
-    await this.userService._externalModel().findByIdAndUpdate(dto.initiatorId, {
-      $pull: {
-        contacts: { user: dto.deletedId },
+    const user = await this.userService._externalModel().findByIdAndUpdate(
+      dto.initiatorId,
+      {
+        $pull: {
+          contacts: { user: dto.deletedId },
+        },
       },
-    });
+      {
+        new: dto.returnUserAfter,
+      },
+    );
+
     if (dto.returnUserAfter) {
-      const user = await this.userService.findById(dto.initiatorId);
       return { user, deletedId: dto.deletedId };
     }
     return { deletedId: dto.deletedId };

@@ -2,6 +2,7 @@ export enum Paths {
   home = '/',
   band = '*',
   chat = '/chat',
+  profile = '/profile',
   chatId = '/chat/:id',
   login = '/login',
   registration = '/registration',

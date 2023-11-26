@@ -4,7 +4,7 @@ import DownloadDoneOutlinedIcon from '@mui/icons-material/DownloadDoneOutlined';
 import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined';
 import { useLazySearchUsersByNameQuery } from 'entities/chats';
 import { AddContactDto, selectContactList } from 'entities/contacts';
-import { selectUserId } from 'entities/session';
+import { selectUserId, userUtils } from 'entities/session';
 import { ChangeEvent, FC, Fragment, useCallback, useMemo } from 'react';
 import { ScaleLoader } from 'react-spinners';
 import { debounce } from 'shared/lib';
@@ -90,7 +90,7 @@ export const AddContactModal: FC<AddContactModalProps> = ({ onClose, isOpen }) =
                     ) : (
                       filteredUsers.map((user) => {
                         const isExist = contactIsExist(user._id);
-                        const hasFullname = !!user.firstName && !!user.lastName;
+                        const hasFullname = userUtils.hasFullname(user);
                         return (
                           <div
                             key={user._id}

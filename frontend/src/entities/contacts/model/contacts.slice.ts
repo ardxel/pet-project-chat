@@ -6,15 +6,17 @@ export const contactFilterOptions = ['Все', 'Новые', 'Избранные
 const SEVEN_DAYS_IN_MS = 604800000;
 
 interface ContactsState {
-  contacts?: Contact[];
+  contacts?: Contact<true>[];
+  filtered?: Contact<true>[];
   contactsIsExists: boolean;
-  filtered?: Contact[];
+  openedContactPageUserId: string | false;
 }
 
 export const initialContactsState: ContactsState = {
   contacts: [],
-  contactsIsExists: false,
   filtered: [],
+  contactsIsExists: false,
+  openedContactPageUserId: false,
 };
 
 export const contactsSlice = createSlice({
@@ -25,7 +27,11 @@ export const contactsSlice = createSlice({
       return initialContactsState;
     },
 
-    updateFilteredData(state, action: PayloadAction<Contact[]>) {
+    openContactPageById(state, action: PayloadAction<string | false>) {
+      state.openedContactPageUserId = action.payload;
+    },
+
+    updateFilteredData(state, action: PayloadAction<Contact<true>[]>) {
       state.filtered = action.payload;
     },
 
@@ -56,7 +62,7 @@ export const contactsSlice = createSlice({
           break;
         // Избранные
         case 2:
-          state.filtered = state.contacts.filter((contact) => contact.isFavorite);
+          state.filtered = state.contacts.filter((contact) => contact.status === 'favorite');
           break;
         default:
           break;
@@ -81,10 +87,39 @@ export const contactsSlice = createSlice({
   },
 });
 
-export const { search, filterBy, clearsContactsData, updateFilteredData } = contactsSlice.actions;
+export const { search, filterBy, clearsContactsData, updateFilteredData, openContactPageById } = contactsSlice.actions;
+
+type Selector<S> = (state: RootState) => S;
 
 const selectSelf = (state: RootState) => state;
 
-export const selectContactList = createSelector(selectSelf, (state) => state.contacts.contacts);
-export const selectFilteredContacts = createSelector(selectSelf, (state) => state.contacts.filtered);
-export const selectContactsIsExists = (state: RootState) => state.contacts.contactsIsExists;
+export const selectContactList: Selector<ContactsState['contacts']> = createSelector(
+  selectSelf,
+  (state) => state.contacts.contacts,
+);
+
+export const selectFilteredContacts: Selector<ContactsState['contacts']> = createSelector(
+  selectSelf,
+  (state) => state.contacts.filtered,
+);
+
+export const selectContactsIsExists: Selector<ContactsState['contactsIsExists']> = createSelector(
+  selectSelf,
+  (state) => state.contacts.contactsIsExists,
+);
+
+export const selectOpenedContactPageUserId: Selector<ContactsState['openedContactPageUserId']> = createSelector(
+  selectSelf,
+  (state) => state.contacts.openedContactPageUserId,
+);
+
+export const selectOpenedPageContactData: Selector<Contact<true>> = createSelector(selectSelf, (state) => {
+  const id = state.contacts.openedContactPageUserId;
+  if (!state.contacts.contacts) return;
+  return { ...state.contacts.contacts.find((contact) => contact.user._id === id) };
+});
+
+export const selectContactByUserId = (userId: string): Selector<Contact<true> | undefined> =>
+  createSelector(selectSelf, (state) => {
+    return state.contacts.contacts.find((contact) => contact.user._id === userId);
+  });

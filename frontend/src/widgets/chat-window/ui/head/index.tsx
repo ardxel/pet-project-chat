@@ -4,7 +4,8 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import SearchIcon from '@mui/icons-material/Search';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import { useCallsContext } from 'entities/calls';
-import { selectOpenedChatCompanion } from 'entities/chats';
+import { selectOpenedChatCompanion, selectOpenedChatId, setOpenedChatId } from 'entities/chats';
+import { userUtils } from 'entities/session';
 import {
   selectOpenChatOptions,
   selectOpenSearchMessageBar,
@@ -12,7 +13,7 @@ import {
   setOpenChatOptions,
   setOpenSearchMessageBar,
 } from 'entities/ui-visibility';
-import { useChatCompanionStatus } from 'features/chatbarCard/lib';
+import { useChatCompanionStatus } from 'features/chatBarCard/lib';
 import { memo } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
 import { IconWrapper, UserAvatar } from 'shared/ui';
@@ -65,6 +66,7 @@ const ChatOptionsButton = memo(({ onClick, focus }: { onClick: () => void; focus
 });
 
 export const ChatHeader = () => {
+  const chatId = useAppSelector(selectOpenedChatId);
   const chatCompanion = useAppSelector(selectOpenedChatCompanion);
   const openChatOptions = useAppSelector(selectOpenChatOptions);
   const openSearchMessageBar = useAppSelector(selectOpenSearchMessageBar);
@@ -73,13 +75,14 @@ export const ChatHeader = () => {
 
   if (!chatCompanion) return null;
 
-  const hasFullname = Boolean(chatCompanion.firstName && chatCompanion.lastName);
+  const username = userUtils.getName(chatCompanion);
 
   const handleOpenChatOptions = () => {
     dispatch(setOpenChatOptions(!openChatOptions));
   };
 
   const handleCloseChat = () => {
+    dispatch(setOpenedChatId(null));
     dispatch(setOpenChat(false));
   };
 
@@ -102,9 +105,7 @@ export const ChatHeader = () => {
             </div>
             <div>
               <div className='flex items-center h-full'>
-                <h4 className='text-left text-sm'>
-                  {hasFullname ? chatCompanion.firstName + ' ' + chatCompanion.lastName : chatCompanion.name}
-                </h4>
+                <h4 className='text-left text-sm'>{username}</h4>
               </div>
               <div>
                 <p className='text-xs text-gray-400 dark:text-gray-500 mt-1'>{companionStatus}</p>

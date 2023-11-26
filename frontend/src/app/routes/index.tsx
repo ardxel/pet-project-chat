@@ -10,6 +10,7 @@ const LoginPage = lazy(() => import('pages/login'));
 const RegistrationPage = lazy(() => import('pages/register'));
 const ChatPage = lazy(() => import('pages/chat'));
 const ContactsPage = lazy(() => import('pages/contacts'));
+const ProfilePage = lazy(() => import('pages/profile'));
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: Paths.contacts,
         element: withGuestGuard(<ContactsPage />),
+      },
+      {
+        path: Paths.profile,
+        element: withGuestGuard(<ProfilePage />),
       },
       {
         path: Paths.stories,

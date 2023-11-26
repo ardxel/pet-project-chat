@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { IUser, SessionUserDto } from '../api';
+import { IUser } from '../api';
 import { sessionApi } from '../api/session.api';
+import { SessionUserDto } from './api';
 
 export type ChatSocketConnectionStatus = 'connected' | 'loading' | 'stop';
 
@@ -8,6 +9,7 @@ type SessionSliceState = {
   user?: IUser;
   accessToken?: string;
   isAuthorized: boolean;
+  _app_v: number;
   chatSocketConnectionStatus: ChatSocketConnectionStatus;
 };
 
@@ -15,6 +17,7 @@ export const initialSessionState: SessionSliceState = {
   isAuthorized: false,
   user: undefined,
   accessToken: undefined,
+  _app_v: 1,
   chatSocketConnectionStatus: 'stop',
 };
 

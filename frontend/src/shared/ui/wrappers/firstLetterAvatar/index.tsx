@@ -11,12 +11,12 @@ const getFirstLetter = (str: string) => {
   return str[0].toUpperCase();
 };
 
-interface AvatartByFirstLetterProps {
+interface AvatarByFirstLetterProps {
   name: string;
   className?: string;
 }
 
-export const AvatarByFirstLetter: React.FC<AvatartByFirstLetterProps> = memo(({ name, className }) => {
+export const AvatarByFirstLetter: React.FC<AvatarByFirstLetterProps> = memo(({ name, className }) => {
   const letter = getFirstLetter(name);
 
   return (

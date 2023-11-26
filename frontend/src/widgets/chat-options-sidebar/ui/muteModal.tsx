@@ -25,7 +25,6 @@ export const MuteModal = ({ isOpen, onClose }: MuteModalProps) => {
   };
   // TODO
   const onSubmit = () => {
-    console.log(muteTimeMap[time]);
     onClose();
   };
 

@@ -9,6 +9,7 @@
     "allowJs": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
+    "isolatedModules": true,
     "allowUmdGlobalAccess": true,
     "skipLibCheck": true,
     "baseUrl": "./src"

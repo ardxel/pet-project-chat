@@ -1,4 +1,4 @@
-import { FC, Fragment, HTMLProps, ReactNode, createElement } from 'react';
+import { FC, Fragment, HTMLProps, ReactNode, createElement, memo } from 'react';
 
 export interface DropdownListItemProps extends HTMLProps<unknown> {
   as?: keyof JSX.IntrinsicElements;
@@ -6,7 +6,7 @@ export interface DropdownListItemProps extends HTMLProps<unknown> {
   text: string;
 }
 
-export const DropdownListItem: FC<DropdownListItemProps> = ({ Icon, as = 'div', text, className, ...rest }) => {
+export const DropdownListItem: FC<DropdownListItemProps> = memo(({ Icon, as = 'div', text, className, ...rest }) => {
   return createElement(
     as,
     { className: 'flex list-item-in-dropdown ' + className, ...rest },
@@ -15,4 +15,4 @@ export const DropdownListItem: FC<DropdownListItemProps> = ({ Icon, as = 'div', 
       <p className='first-letter:capitalize'>{text}</p>
     </Fragment>,
   );
-};
+});

@@ -1,3 +1,3 @@
 import { Contact } from 'entities/session';
 
-export type ContactsDto = { contacts: Contact[] };
+export type ContactsDto = { contacts: Contact<true>[] };

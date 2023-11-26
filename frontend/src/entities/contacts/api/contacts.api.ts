@@ -37,7 +37,8 @@ export const contactsApi = baseApi.injectEndpoints({
         body,
       }),
       invalidatesTags: [CONTACTS_TAG],
-      transformResponse: (response: DataResponse<{ user?: IUser; new_contact: Contact }>) => mapNewContact(response),
+      transformResponse: (response: DataResponse<{ user?: IUser; new_contact: Contact<true> }>) =>
+        mapNewContact(response),
     }),
     deleteContact: build.mutation({
       query: (body: DeleteContactDto) => ({

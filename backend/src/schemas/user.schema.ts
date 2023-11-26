@@ -55,11 +55,9 @@ export class User {
       {
         user: { type: Types.ObjectId, ref: User.name },
         status: {
-          type: {
-            type: String,
-            enum: ['common', 'favorite', 'blocked'],
-            default: 'common',
-          },
+          type: String,
+          enum: ['common', 'favorite', 'blocked'],
+          default: 'common',
         },
         createdAt: { type: Date, default: Date.now },
       },

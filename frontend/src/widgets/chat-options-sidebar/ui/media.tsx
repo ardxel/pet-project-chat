@@ -18,7 +18,7 @@ export const MediaButton: FC<Props> = ({ onClick, focus }) => {
   );
 };
 
-const items = ['Изобажения', 'Видео', 'Файлы', 'Ссылки'];
+const items = ['Изображения', 'Видео', 'Файлы', 'Ссылки'];
 
 export const MediaContainer = () => {
   return <HorizontalTabs className='font-semibold text-xs text-gray-400' items={items} />;
