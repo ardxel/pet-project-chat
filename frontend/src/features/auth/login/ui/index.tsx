@@ -56,7 +56,7 @@ export const LoginForm: FC<LoginFormProps> = ({ onSuccess }) => {
                     <div className='flex flex-col'>
                       <label htmlFor='email'>Почтовый адрес:</label>
                       <Field
-                        className='form-input mt-3'
+                        className='form-input mt-3 focus:border-blue-500 duration-300'
                         name='email'
                         id='email'
                         type='text'
@@ -66,14 +66,19 @@ export const LoginForm: FC<LoginFormProps> = ({ onSuccess }) => {
                     </div>
                     <div className='flex flex-col'>
                       <label htmlFor='password'>Пароль:</label>
-                      <PasswordInput className='mt-3' name='password' id='password' placeholder='пароль' />
+                      <PasswordInput
+                        className='mt-3 focus:border-blue-500 duration-300'
+                        name='password'
+                        id='password'
+                        placeholder='пароль'
+                      />
                       <ErrMessage name='password' />
                     </div>
                   </div>
                   <button
                     disabled={isSubmitting}
                     type='submit'
-                    className='w-full text-center text-whie rounded-md mt-5 font-bold py-3 bg-btn-bg'>
+                    className='w-full text-center text-white rounded-md mt-5 font-bold py-3 bg-btn-bg'>
                     Войти
                   </button>
                 </Form>

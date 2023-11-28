@@ -1,5 +1,5 @@
 import ClearIcon from '@mui/icons-material/Clear';
-import { openContactPageById, selectOpenedPageContactData } from 'entities/contacts';
+import { formatContactWord, openContactPageById, selectOpenedPageContactData } from 'entities/contacts';
 import { selectUserData, userUtils } from 'entities/session';
 import { setOpenContactPage } from 'entities/ui-visibility';
 import { useMemo } from 'react';
@@ -16,6 +16,7 @@ export const ContactsWindowHeader = () => {
     dispatch(setOpenContactPage(false));
   };
 
+  const contactsLength = contact.user.contacts?.length || 0;
   const mutualContactsLength = useMemo<number>(() => {
     return userUtils.getMutualContactIds(contact.user, me).length;
   }, [contact, me]);
@@ -39,7 +40,7 @@ export const ContactsWindowHeader = () => {
             </div>
             <div className='inline-block leading-4 h-4'>
               <p className='text-[0.8rem] text-form-color'>
-                {`${userUtils.getUserContactsLength(contact.user)} Контактов`}
+                {`${contactsLength} ${formatContactWord(contactsLength)}`}
                 <span className='align-middle text-xl mx-[0.2rem] text-gray-400 dark:text-gray-500'>•</span>
                 <span className='text-[0.7rem] align-middle  text-gray-400 dark:text-gray-500'>{`${mutualContactsLength} Общих`}</span>
               </p>

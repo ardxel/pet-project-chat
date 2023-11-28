@@ -1,11 +1,23 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'common/guards';
 import { ContactsResponseData } from 'common/swagger';
 import { Types } from 'mongoose';
 import { User } from 'schemas';
 import { ContactService } from './contact.service';
-import { AddContactDto, DeleteContactDto, FindManyQueryDto } from './dto';
+import { AddContactDto, ChangePasswordDto, DeleteContactDto, FindManyQueryDto, UpdateUserDto } from './dto';
 import { UserService } from './user.service';
 
 @ApiTags('User')
@@ -61,6 +73,20 @@ export class UserController {
   @ApiBadRequestResponse({ status: HttpStatus.NOT_FOUND, description: 'user not found' })
   async deleteContact(@Body() dto: DeleteContactDto) {
     return await this.contactService.deleteContact(dto);
+  }
+
+  @Put()
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  async update(@Body() dto: UpdateUserDto) {
+    return await this.userService.update(dto);
+  }
+
+  @Put('password')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  async changePassword(@Body() dto: ChangePasswordDto) {
+    return await this.userService.changePassword(dto);
   }
 
   @Delete('all')

@@ -75,7 +75,7 @@ const HeaderProfile = () => {
   return (
     <Menu as='div' className='dropdown'>
       <Menu.Button className='w-11 h-11 md:w-12 md:h-12 relative'>
-        <UserAvatar user={user} className='w-full h-full rounded-full' />
+        <UserAvatar user={user} className='w-full h-full rounded-full transition-all duration-200 hover:border-4' />
       </Menu.Button>
       <Menu.Items
         as='div'

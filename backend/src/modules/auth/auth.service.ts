@@ -26,7 +26,7 @@ export class AuthService {
   }
 
   public async signIn(loginUserDto: LoginUserDto) {
-    const user = await this.userService.findByEmail(loginUserDto.email, true);
+    const user = await this.userService.findByEmail(loginUserDto.email, { selectPassword: true });
 
     if (!user) {
       throw new BadRequestException('user with this email is not exist');

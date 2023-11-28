@@ -18,11 +18,11 @@ export class UserModel {
     return this.userEntiry();
   }
 
-  async readByEmail() {
+  async findByEmail() {
     return this.userEntiry();
   }
 
-  async readManyByIds() {
+  async findManyBiIds() {
     return [this.userEntiry()];
   }
 

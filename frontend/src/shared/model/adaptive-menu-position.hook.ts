@@ -15,7 +15,7 @@ import { MutableRefObject, useEffect, useState } from 'react';
  */
 export const useAdaptiveMenuPosition = (
   ref: MutableRefObject<HTMLElement>,
-  deps: any[],
+  deps?: any[],
   options?: {
     menuHeight?: number;
   },
@@ -24,7 +24,7 @@ export const useAdaptiveMenuPosition = (
   /**
    * В среднем высота выпадающего меню около 400 пикселей, но это не точно.
    */
-  const HEIGHT = options.menuHeight || 400;
+  const HEIGHT = options?.menuHeight || 400;
   /**
    * Если меню кнопок выходит за пределы чата сверху,
    * то тогда отображать снизу, а если нет, то сверху.

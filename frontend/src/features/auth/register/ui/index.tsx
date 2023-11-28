@@ -67,7 +67,7 @@ export const RegisterForm: FC<RegisterFormProps> = ({ onSuccess }) => {
                     <div className='flex flex-col'>
                       <label htmlFor='email'>Почтовый адрес:</label>
                       <Field
-                        className='form-input mt-3'
+                        className='form-input mt-3 focus:border-blue-500 duration-300'
                         name='email'
                         id='email'
                         type='text'
@@ -77,13 +77,18 @@ export const RegisterForm: FC<RegisterFormProps> = ({ onSuccess }) => {
                     </div>
                     <div className='flex flex-col'>
                       <label htmlFor='password'>Пароль:</label>
-                      <PasswordInput className='mt-3' name='password' id='password' placeholder='пароль' />
+                      <PasswordInput
+                        className='mt-3 focus:border-blue-500 duration-300'
+                        name='password'
+                        id='password'
+                        placeholder='пароль'
+                      />
                       <ErrMessage name='password' />
                     </div>
                     <div className='flex flex-col'>
                       <label htmlFor='repeatPassword'>Повторите пароль:</label>
                       <PasswordInput
-                        className=' mt-3'
+                        className=' mt-3 focus:border-blue-500 duration-300'
                         name='repeatPassword'
                         id='repeatPassword'
                         placeholder='пароль снова'
@@ -91,9 +96,9 @@ export const RegisterForm: FC<RegisterFormProps> = ({ onSuccess }) => {
                       <ErrMessage name='repeatPassword' />
                     </div>
                   </div>
-                  <div className='mt-4'>
+                  <div className='mt-4 '>
                     <label className={'w-full inline-block'}>
-                      <Field type='checkbox' name='agree' className='mr-2 w-4 h-4' />
+                      <Field type='checkbox' name='agree' className='mr-2 w-4 h-4 focus:border-blue-500 duration-300' />
                       {'Я согласен с политикой конфиденциальности и условиями'}
                       <ErrMessage name='agree' />
                     </label>

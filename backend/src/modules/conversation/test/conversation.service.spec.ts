@@ -1,6 +1,6 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserService } from 'modules/user';
+import { HashService, UserService } from 'modules/user';
 import { Conversation, User } from 'schemas';
 import { ConversationService } from '../conversation.service';
 
@@ -12,6 +12,7 @@ describe('ConversationService', () => {
       providers: [
         ConversationService,
         UserService,
+        HashService,
         {
           provide: getModelToken(Conversation.name),
           useValue: {},

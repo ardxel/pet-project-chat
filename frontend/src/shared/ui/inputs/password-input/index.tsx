@@ -17,17 +17,17 @@ export const PasswordInput: FC<PasswordInputProps> = ({ className, ...rest }) =>
   const [field] = useField({ name: rest.name });
   const [show, setShow] = useState(false);
   return (
-    <div className={'relative ' + className}>
+    <div className={'relative ' + (className || '')}>
       <input
         {...field}
         {...rest}
         type={show ? 'text' : 'password'}
-        className='bg-bg border-border border w-full h-full text-sm outline-none px-4 py-3 leading-4 rounded-md'
+        className='h-full w-full rounded-md border border-border  bg-bg px-4 py-3 text-sm leading-4 outline-none duration-300 focus:border-blue-500'
       />
       <button
         onClick={() => setShow(!show)}
         type='button'
-        className='absolute z-30 right-3 top-1/2 transform -translate-y-1/2'>
+        className='absolute right-3 top-1/2 z-30 -translate-y-1/2 transform'>
         {show ? <RemoveRedEyeOutlinedIcon /> : <VisibilityOffOutlinedIcon />}
       </button>
     </div>

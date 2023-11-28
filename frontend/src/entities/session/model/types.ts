@@ -15,7 +15,7 @@ export interface IUser {
   birthday?: Date;
   gender?: string;
   language?: string[];
-  hometown?: string;
+  country?: string;
   phoneNumber?: string;
   about?: string;
 }

@@ -14,7 +14,7 @@ export const UserAvatar: FC<UserAvatarProps> = memo(({ user, className }) => {
   if (hasAvatar) {
     return (
       <img
-        className={twMerge('rounded-md object-cover overflow-hidden', 'absolute w-full h-full', className)}
+        className={twMerge('overflow-hidden rounded-md object-cover', 'absolute h-full w-full', className)}
         src={user.avatar}
       />
     );

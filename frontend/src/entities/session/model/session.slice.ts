@@ -43,6 +43,18 @@ export const sessionSlice = createSlice({
         state.user = payload.user;
       },
     );
+    builder.addMatcher(
+      (action) => sessionApi.endpoints.update.matchFulfilled(action),
+      (state: SessionSliceState, { payload }) => {
+        state.user = payload as IUser;
+      },
+    );
+    builder.addMatcher(
+      (action) => sessionApi.endpoints.changePassword.matchFulfilled(action),
+      (state: SessionSliceState, { payload }) => {
+        // state.user = payload as IUser;
+      },
+    );
   },
 });
 

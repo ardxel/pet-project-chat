@@ -93,7 +93,7 @@ export class User {
     type: String,
   })
   @ApiProperty()
-  hometown?: string;
+  country?: string;
 
   @Prop({
     required: false,

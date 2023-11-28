@@ -5,6 +5,7 @@ import { useAppSelector } from 'shared/model';
 import { HorizontalTabs } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
 import { ContactsWindowAboutTab } from './about.tab';
+
 const tabOptions = ['Информация', 'Общие контакты', 'Галерея'] as const;
 
 export const ContactWindowDescription = function () {
