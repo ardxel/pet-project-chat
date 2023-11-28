@@ -13,22 +13,22 @@ interface SearchInputProps {
 export const SearchInput: FC<SearchInputProps> = memo(
   ({ onChange, placeholder, wrapperClassName, className, value }) => {
     return (
-      <div className={twMerge('relative w-auto h-10', wrapperClassName)}>
+      <div className={twMerge('relative h-10 w-auto', wrapperClassName)}>
         <input
           type='text'
           className={twMerge(
-            'w-full h-full py-3 pl-10 leading-4 rounded-full',
-            'bg-icon-bg dark:bg-bg border-border border text-sm outline-none',
+            'h-full w-full rounded-full py-3 pl-10 leading-4',
+            'border border-border bg-icon-bg text-sm outline-none dark:bg-bg',
             'transition-all duration-[400]',
-            'dark:focus:bg-gray-900 dark:focus:border-gray-900',
-            'focus:bg-blue-100 focus:border-blue-100',
+            'dark:focus:border-gray-900 dark:focus:bg-gray-900',
+            'focus:border-blue-100 focus:bg-blue-100',
             className,
           )}
           placeholder={placeholder}
           onChange={onChange}
           value={value}
         />
-        <SearchOutlinedIcon className='text-form-color !text-[20px] absolute top-1/2 transform -translate-y-1/2 left-3' />
+        <SearchOutlinedIcon className='absolute left-3 top-1/2 -translate-y-1/2 transform !text-[20px] text-form-color' />
       </div>
     );
   },

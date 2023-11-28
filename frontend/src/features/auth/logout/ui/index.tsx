@@ -21,7 +21,7 @@ export const LogoutButton = () => {
           <Link
             to={Paths.login}
             onClick={onLogout}
-            className='flex items-center gap-x-2 [&>svg]:text-xl  [&>*]:hover:text-active-link '>
+            className='flex items-center gap-x-2 [&>*]:hover:text-active-link  [&>svg]:text-xl '>
             <PowerSettingsNewOutlinedIcon />
             <p>Выйти</p>
           </Link>

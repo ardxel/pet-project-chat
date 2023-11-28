@@ -73,18 +73,18 @@ export const AddContactModal: FC<AddContactModalProps> = ({ onClose, isOpen }) =
               leave='ease-in duration-200'
               leaveFrom='opacity-100 scale-100'
               leaveTo='opacity-0 scale-95'>
-              <Dialog.Panel className={twMerge('w-full xs1:w-80 bg-bg rounded-md transition-all')}>
+              <Dialog.Panel className={twMerge('w-full rounded-md bg-bg transition-all xs1:w-80')}>
                 <button
                   onClick={onClose}
-                  className='absolute -right-3 -top-3 bg-bg p-5 w-5 h-5 rounded-full transition-colors hover:bg-icon-active-bg  [&>*]:hover:text-icon-active-color'>
-                  <ClearOutlinedIcon className='!text-lg absolute left-1/2 top-1/2 transform -translate-y-1/2 -translate-x-1/2 w-full h-full' />
+                  className='absolute -right-3 -top-3 h-5 w-5 rounded-full bg-bg p-5 transition-colors hover:bg-icon-active-bg  [&>*]:hover:text-icon-active-color'>
+                  <ClearOutlinedIcon className='absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 transform !text-lg' />
                 </button>
-                <div className='flex flex-col w-full h-full p-6 gap-y-6'>
+                <div className='flex h-full w-full flex-col gap-y-6 p-6'>
                   <h2 className='text-left'>Найти по имени</h2>
                   <SearchInput onChange={handleSearch} placeholder='Найти контакт / чат' className='rounded-md' />
-                  <div className='h-full w-full scroll'>
+                  <div className='scroll h-full w-full'>
                     {isLoading ? (
-                      <div className='w-full h-full flex justify-center items-center'>
+                      <div className='flex h-full w-full items-center justify-center'>
                         <ScaleLoader className='[&>span]:!bg-blue-500' />
                       </div>
                     ) : (
@@ -94,33 +94,33 @@ export const AddContactModal: FC<AddContactModalProps> = ({ onClose, isOpen }) =
                         return (
                           <div
                             key={user._id}
-                            className='flex items-center justify-between cursor-pointer px-4 py-3 relative'>
+                            className='relative flex cursor-pointer items-center justify-between px-4 py-3'>
                             <div className='flex gap-x-3'>
-                              <div className='relative w-[50px] h-[50px]'>
-                                <UserAvatar user={user} className='w-full h-full' />
+                              <div className='relative h-[50px] w-[50px]'>
+                                <UserAvatar user={user} className='h-full w-full' />
                               </div>
                               <div>
                                 {hasFullname ? (
                                   <>
                                     <h4 className='text-left text-sm'>{`${user.firstName} ${user.lastName}`}</h4>
-                                    <p className='text-xs mt-1'>{user.name}</p>
+                                    <p className='mt-1 text-xs'>{user.name}</p>
                                   </>
                                 ) : (
-                                  <div className='flex items-center h-full'>
+                                  <div className='flex h-full items-center'>
                                     <h4 className='text-left text-sm'>{user.name}</h4>
                                   </div>
                                 )}
                               </div>
                             </div>
                             <button
-                              className='absolute z-50 right-5'
+                              className='absolute right-5 z-50'
                               disabled={isExist}
                               onClick={isExist ? undefined : () => handleAddContact(user._id)}>
-                              <IconWrapper className='w-10 h-10'>
+                              <IconWrapper className='h-10 w-10'>
                                 {isExist ? (
-                                  <DownloadDoneOutlinedIcon className='!w-5 !h-5' />
+                                  <DownloadDoneOutlinedIcon className='!h-5 !w-5' />
                                 ) : (
-                                  <PersonAddAlt1OutlinedIcon className='!w-5 !h-5' />
+                                  <PersonAddAlt1OutlinedIcon className='!h-5 !w-5' />
                                 )}
                               </IconWrapper>
                             </button>

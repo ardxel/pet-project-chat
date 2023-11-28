@@ -5,7 +5,7 @@ import { ContactsWindow } from 'widgets/contacts-window';
 class ContactsPage extends Component {
   render() {
     return (
-      <div className='flex h-full w-full overflow-hidden relative'>
+      <div className='relative flex h-full w-full overflow-hidden'>
         <ContactsLeftBar />
         <ContactsWindow />
       </div>

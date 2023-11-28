@@ -14,11 +14,11 @@ export const ContactWindowDescription = function () {
 
   return (
     <div className='flex flex-col'>
-      <div className='w-full flex items-center justify-between mt-5'>
+      <div className='mt-5 flex w-full items-center justify-between'>
         <HorizontalTabs
           items={tabOptions}
           onSelect={(index) => setSelectedTab(index)}
-          className='font-semibold text-[0.7rem] xs1:text-xs text-gray-500 dark:text-gray-400'
+          className='text-[0.7rem] font-semibold text-gray-500 dark:text-gray-400 xs1:text-xs'
         />
         <ActionButtonGroup
           targetUser={contact.user}
@@ -33,7 +33,7 @@ export const ContactWindowDescription = function () {
           }}
         />
       </div>
-      <div className='w-full p-7 bg-bg rounded-b-2xl'>
+      <div className='w-full rounded-b-2xl bg-bg p-7'>
         {selectedTab === 0 && <ContactsWindowAboutTab contact={contact} />}
       </div>
     </div>

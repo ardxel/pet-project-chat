@@ -36,10 +36,10 @@ export const MessageValue: FC<MessageValueProps> = memo(({ message }) => {
 
   if (type === 'text') {
     return (
-      <div className='py-3 px-4'>
+      <div className='px-4 py-3'>
         <Linkify
           componentDecorator={(decoratedHref, decoratedText, key) => (
-            <a key={key} href={decoratedHref} className='underline text-link-color'>
+            <a key={key} href={decoratedHref} className='text-link-color underline'>
               {decoratedText}
             </a>
           )}>
@@ -58,14 +58,14 @@ export const MessageValue: FC<MessageValueProps> = memo(({ message }) => {
       <div className='flex items-center p-1'>
         <IconWrapper
           className={twMerge(
-            'h-12 w-12 !rounded-md dark:!bg-gray-100 hover:dark:!bg-gray-100  [&>*]:dark:!text-gray-800 [&>*]hover:dark:!text-gray-800 ',
-            '[&>*]:hover:text-icon-color hover:bg-icon-bg',
+            '[&>*]hover:dark:!text-gray-800 h-12 w-12 !rounded-md dark:!bg-gray-100  hover:dark:!bg-gray-100 [&>*]:dark:!text-gray-800 ',
+            'hover:bg-icon-bg [&>*]:hover:text-icon-color',
           )}>
           {reason === 'outgoing' ? <PhoneForwardedOutlinedIcon /> : null}
           {reason === 'missed' ? <PhoneMissedOutlinedIcon /> : null}
         </IconWrapper>
-        <div className='px-3 flex flex-col'>
-          <h4 className='capitalize h-6'>{`${reason} ${callType} call`}</h4>
+        <div className='flex flex-col px-3'>
+          <h4 className='h-6 capitalize'>{`${reason} ${callType} call`}</h4>
           <p className='h-4'>{secondsToHHmmss(seconds)}</p>
         </div>
       </div>

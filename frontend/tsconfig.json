@@ -13,5 +13,5 @@
     "allowUmdGlobalAccess": true,
     "skipLibCheck": true,
     "baseUrl": "./src"
-  },
+  }
 }

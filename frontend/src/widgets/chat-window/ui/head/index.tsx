@@ -92,23 +92,23 @@ export const ChatHeader = () => {
 
   return (
     <div>
-      <div className='p-5 bg-bg border-b border-border'>
+      <div className='border-b border-border bg-bg p-5'>
         <div className='flex items-center justify-between'>
-          <div className='flex gap-x-4 items-center'>
+          <div className='flex items-center gap-x-4'>
             <button onClick={handleCloseChat} className='md:hidden'>
               <IconWrapper className='header-chat-icon !rounded-full'>
                 <ChevronLeftIcon />
               </IconWrapper>
             </button>
-            <div className='relative w-[50px] h-[50px]'>
-              <UserAvatar user={chatCompanion} className='w-full h-full' />
+            <div className='relative h-[50px] w-[50px]'>
+              <UserAvatar user={chatCompanion} className='h-full w-full' />
             </div>
             <div>
-              <div className='flex items-center h-full'>
+              <div className='flex h-full items-center'>
                 <h4 className='text-left text-sm'>{username}</h4>
               </div>
               <div>
-                <p className='text-xs text-gray-400 dark:text-gray-500 mt-1'>{companionStatus}</p>
+                <p className='mt-1 text-xs text-gray-400 dark:text-gray-500'>{companionStatus}</p>
               </div>
             </div>
           </div>

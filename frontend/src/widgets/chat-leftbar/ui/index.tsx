@@ -15,7 +15,7 @@ export const ChatLeftBar: FC<ChatLeftBarProps> = () => {
   const dispatch = useAppDispatch();
 
   return (
-    <LeftBar className={twMerge(`${!openChat ? 'flex' : 'hidden'}`, 'md:flex flex-col  overflow-hidden relative')}>
+    <LeftBar className={twMerge(`${!openChat ? 'flex' : 'hidden'}`, 'relative flex-col  overflow-hidden md:flex')}>
       <Header />
       <SearchBar className='flex-shrink-0' onChange={(event) => dispatch(setSearchChatInput(event.target.value))} />
       <ChatList />

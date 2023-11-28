@@ -42,7 +42,7 @@ export const HorizontalTabs: FC<TabsProps> = (props) => {
   return (
     <Tab.Group>
       <Tab.Group selectedIndex={selected} onChange={setTabPosition}>
-        <Tab.List className='flex gap-x-4 relative'>
+        <Tab.List className='relative flex gap-x-4'>
           {items &&
             items.map((item, index) => {
               return (
@@ -51,7 +51,7 @@ export const HorizontalTabs: FC<TabsProps> = (props) => {
                   as='button'
                   ref={(element) => (tabsRef.current[index] = element)}
                   className={twMerge(
-                    'text-sm !hover:text-active-link',
+                    '!hover:text-active-link text-sm',
                     selected === index ? '!text-active-link' : 'text-link-color',
                     className,
                   )}>

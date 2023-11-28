@@ -8,7 +8,7 @@ interface SearchBarProps {
 
 export const SearchBar: FC<SearchBarProps> = ({ onChange, className }) => {
   return (
-    <div className={'px-5 mb-4 ' + className}>
+    <div className={'mb-4 px-5 ' + className}>
       <SearchInput onChange={onChange} placeholder='Найти контакт / чат' />
     </div>
   );

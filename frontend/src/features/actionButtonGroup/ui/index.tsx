@@ -83,12 +83,12 @@ export const ActionButtonGroup: FC<ActionButtonGroupProps> = ({
     <Menu as='div' className='dropdown'>
       {({ close }) => (
         <>
-          <Menu.Button className={twMerge('w-10 h-10', btnClassName)}>
+          <Menu.Button className={twMerge('h-10 w-10', btnClassName)}>
             <IconWrapper className='bg-white dark:bg-bg dark:hover:bg-icon-active-bg'>
               <MoreHorizIcon />
             </IconWrapper>
           </Menu.Button>
-          <Menu.Items onClick={close} as='div' className={twMerge('dropdown-menu !mt-0 p-2 w-[300px]', menuClassName)}>
+          <Menu.Items onClick={close} as='div' className={twMerge('dropdown-menu !mt-0 w-[300px] p-2', menuClassName)}>
             {targetUser
               ? optionKeys.map((key, i) => {
                   const item = userActionItems[key];
@@ -110,13 +110,13 @@ export const ActionButtonGroup: FC<ActionButtonGroupProps> = ({
                       <DropdownListItem
                         as='button'
                         type='button'
-                        className='!p-2 w-full h-full'
+                        className='h-full w-full !p-2'
                         Icon={<item.Icon />}
                         text={item.text}
                         onClick={handler}
                       />
                       {option?.hr && i !== optionKeys.length - 1 ? (
-                        <hr className='my-2 !p-0 !bg-border h-[1px] border-none' />
+                        <hr className='my-2 h-[1px] border-none !bg-border !p-0' />
                       ) : null}
                     </Menu.Item>
                   );

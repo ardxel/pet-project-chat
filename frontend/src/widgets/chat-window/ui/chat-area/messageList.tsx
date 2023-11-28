@@ -59,7 +59,7 @@ export const MessageList: FC<MessageListProps> = () => {
           <Fragment key={index}>
             <div ref={isSelectedIndex ? msgRef : undefined} />
             {!prevMessageCreatedAtTheSameDay ? (
-              <div className='w-full my-4 mx-auto'>
+              <div className='mx-auto my-4 w-full'>
                 <p className='text-center text-xs'>{currentMsgDate.format('MMM DD, YYYY, hh:mm A')}</p>
               </div>
             ) : null}

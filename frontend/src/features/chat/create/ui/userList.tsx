@@ -42,27 +42,27 @@ export const UserList: FC<UserListProps> = ({ users, onClose }) => {
   return users.map((user) => {
     const hasFullname = userUtils.hasFullname(user);
     return (
-      <div key={user._id} className='flex items-center justify-between cursor-pointer px-4 py-3 relative'>
+      <div key={user._id} className='relative flex cursor-pointer items-center justify-between px-4 py-3'>
         <div className='flex gap-x-3'>
-          <div className='relative w-[50px] h-[50px]'>
-            <UserAvatar user={user} className='w-full h-full' />
+          <div className='relative h-[50px] w-[50px]'>
+            <UserAvatar user={user} className='h-full w-full' />
           </div>
           <div>
             {hasFullname ? (
               <>
                 <h4 className='text-left text-sm'>{`${user.firstName} ${user.lastName}`}</h4>
-                <p className='text-xs mt-1'>{user.name}</p>
+                <p className='mt-1 text-xs'>{user.name}</p>
               </>
             ) : (
-              <div className='flex items-center h-full'>
+              <div className='flex h-full items-center'>
                 <h4 className='text-left text-sm'>{user.name}</h4>
               </div>
             )}
           </div>
         </div>
-        <button className='absolute z-50 right-5' onClick={() => onCreateChat(user._id)}>
-          <IconWrapper className='w-10 h-10'>
-            <TextsmsOutlinedIcon className='!w-5 !h-5' />
+        <button className='absolute right-5 z-50' onClick={() => onCreateChat(user._id)}>
+          <IconWrapper className='h-10 w-10'>
+            <TextsmsOutlinedIcon className='!h-5 !w-5' />
           </IconWrapper>
         </button>
       </div>

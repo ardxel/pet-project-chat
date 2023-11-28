@@ -10,7 +10,7 @@ export const LeftBar: FC<LeftBarProps> = ({ children, className }) => {
   return (
     <aside
       className={twMerge(
-        'w-full h-full flex-shrink-0 md:w-80 1400:!w-[360px] bg-bg border-r border-border ' + className,
+        'h-full w-full flex-shrink-0 border-r border-border bg-bg 1400:!w-[360px] md:w-80 ' + className,
       )}>
       {children}
     </aside>

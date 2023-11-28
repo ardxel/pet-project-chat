@@ -20,7 +20,7 @@ const QuickNavigation = () => {
               return (
                 <Menu.Item as='ul' key={title} className='w-full'>
                   <li>
-                    <h3 className='font-bold py-3 px-5'>{title}</h3>
+                    <h3 className='px-5 py-3 font-bold'>{title}</h3>
                     <ul className='pb-2'>
                       {links.map((link) => (
                         <li key={link.href} className='px-5 py-2'>

@@ -5,8 +5,8 @@ interface LeftBarHeaderProps {}
 
 export const LeftBarHeader: FC<LeftBarHeaderProps> = () => {
   return (
-    <div className='pt-5 pb-2 px-6'>
-      <div className='w-full flex items-center justify-between mb-7'>
+    <div className='px-6 pb-2 pt-5'>
+      <div className='mb-7 flex w-full items-center justify-between'>
         <div>
           <h1 className='text-xl'>Контакты</h1>
           <p className='mt-2 text-xs'>127 контактов</p>

@@ -12,9 +12,9 @@ export const CreateChatButton: FC<CreateChatButtonProps> = ({ setOpen }) => {
       onClick={setOpen}
       className={twMerge(
         '[&>*]:text-form-color [&>*]:!transition-colors [&>*]:!duration-300 [&>*]:hover:text-active-link',
-        'text-xs flex items-center gap-x-1',
+        'flex items-center gap-x-1 text-xs',
       )}>
-      <AddOutlinedIcon className='!w-4 !h-4' />
+      <AddOutlinedIcon className='!h-4 !w-4' />
       <p className='text-xs'>Новый</p>
     </button>
   );

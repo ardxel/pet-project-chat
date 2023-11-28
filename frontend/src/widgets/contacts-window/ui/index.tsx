@@ -8,8 +8,8 @@ export const ContactsWindow = () => {
   if (!access) return null;
 
   return (
-    <div className='p-7 w-full h-full bg-aside-bg scroll'>
-      <div className='max-w-[64rem] mx-auto h-full rounded-md'>
+    <div className='scroll h-full w-full bg-aside-bg p-7'>
+      <div className='mx-auto h-full max-w-[64rem] rounded-md'>
         <Header />
         <Description />
       </div>

@@ -9,9 +9,9 @@ interface Props {
 
 export const MediaButton: FC<Props> = ({ onClick, focus }) => {
   return (
-    <button className='w-20 h-24' onClick={onClick}>
+    <button className='h-24 w-20' onClick={onClick}>
       <IconWrapper focus={focus} className='flex flex-col !rounded-md'>
-        <PermMediaOutlinedIcon className='!w-7 !h-7' />
+        <PermMediaOutlinedIcon className='!h-7 !w-7' />
         <p className='text-xs'>Медиа</p>
       </IconWrapper>
     </button>
@@ -21,5 +21,5 @@ export const MediaButton: FC<Props> = ({ onClick, focus }) => {
 const items = ['Изображения', 'Видео', 'Файлы', 'Ссылки'];
 
 export const MediaContainer = () => {
-  return <HorizontalTabs className='font-semibold text-xs text-gray-400' items={items} />;
+  return <HorizontalTabs className='text-xs font-semibold text-gray-400' items={items} />;
 };

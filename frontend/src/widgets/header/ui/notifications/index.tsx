@@ -10,8 +10,8 @@ const Notifications = () => {
           <NotificationsIcon />
         </IconWrapper>
       </Menu.Button>
-      <Menu.Items as='div' className='dropdown-menu w-[19rem] bg-bg h-[20rem]'>
-        <div className='w-full h-12 flex justify-between items-center px-5 py-4 border-border border'>
+      <Menu.Items as='div' className='dropdown-menu h-[20rem] w-[19rem] bg-bg'>
+        <div className='flex h-12 w-full items-center justify-between border border-border px-5 py-4'>
           <h2 className=' text-left'>Оповещения</h2>
           <HorizontalTabs items={['Новые', 'Все']} />
         </div>

@@ -15,16 +15,16 @@ export const ChatArea = () => {
   useKeepScrollBar(chatContainerRef);
 
   return (
-    <div className='w-full h-full items-center relative bg-aside-bg' id='message-area'>
-      <div className={twMerge('w-full h-full bg-blue-100 dark:bg-aside-bg', 'absolute top-0 z-20 block max-w-full')}>
-        <div className='w-full h-full flex items-end pb-5 relative'>
+    <div className='relative h-full w-full items-center bg-aside-bg' id='message-area'>
+      <div className={twMerge('h-full w-full bg-blue-100 dark:bg-aside-bg', 'absolute top-0 z-20 block max-w-full')}>
+        <div className='relative flex h-full w-full items-end pb-5'>
           <div
             ref={chatContainerRef}
             onScroll={(e) => {
               onAutoFetchScroll(e);
               onAdaptiveScroll(e);
             }}
-            className='flex flex-col w-full h-full scroll pt-4 px-4 gap-y-2'>
+            className='scroll flex h-full w-full flex-col gap-y-2 px-4 pt-4'>
             <MessageList />
           </div>
         </div>

@@ -5,8 +5,8 @@ import { ProfileHeader } from './header';
 export default class Profile extends Component {
   render() {
     return (
-      <div className='p-7 w-full h-full bg-aside-bg scroll'>
-        <div className='max-w-[70rem] mx-auto h-full rounded-md'>
+      <div className='scroll h-full w-full bg-aside-bg p-7'>
+        <div className='mx-auto h-full max-w-[70rem] rounded-md'>
           <ProfileHeader />;
           <ProfileDetails />
         </div>

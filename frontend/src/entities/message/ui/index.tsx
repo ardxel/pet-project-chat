@@ -60,11 +60,11 @@ export const ChatMessage: FC<ChatMessageProps> = ({ message, showAvatar, isSelec
       )}>
       <div
         className={twMerge(
-          'w-10/12 md:w-10/12 xl:w-2/3 2xl:w-2/5 flex relative cursor-pointer ml-10',
-          isUserMsg ? 'self-end justify-end' : 'self-start',
+          'relative ml-10 flex w-10/12 cursor-pointer md:w-10/12 xl:w-2/3 2xl:w-2/5',
+          isUserMsg ? 'justify-end self-end' : 'self-start',
         )}>
         <div
-          className='inline-flex items-center relative gap-x-3'
+          className='relative inline-flex items-center gap-x-3'
           onMouseDown={handleMouseDown}
           onTouchStart={handleMouseDown}
           onMouseEnter={() => setIsHover(true)}
@@ -73,7 +73,7 @@ export const ChatMessage: FC<ChatMessageProps> = ({ message, showAvatar, isSelec
           <div
             className={twMerge(
               'relative',
-              'rounded-md flex break-all break-words justify-center items-center',
+              'flex items-center justify-center break-words break-all rounded-md',
               isBgBlue ? 'bg-icon-active-color' : 'bg-bg',
             )}>
             {/* User Message */}
@@ -83,7 +83,7 @@ export const ChatMessage: FC<ChatMessageProps> = ({ message, showAvatar, isSelec
           </div>
           <div
             className={twMerge(
-              'w-10 h-10 flex justify-center items-center absolute',
+              'absolute flex h-10 w-10 items-center justify-center',
               isUserMsg ? '-left-11' : '-right-11',
             )}>
             {isUserMsg ? (

@@ -77,7 +77,7 @@ export const ChatInput = () => {
 
   return (
     <div className='w-full'>
-      <div className='bg-bg border-t border-border flex items-center px-4 py-5  md:px-6 md:py-7 gap-x-3 md:gap-x-4'>
+      <div className='flex items-center gap-x-3 border-t border-border bg-bg px-4  py-5 md:gap-x-4 md:px-6 md:py-7'>
         <div className='flex gap-x-5'>
           <button>
             <IconWrapper className={iconWrapper}>
@@ -99,7 +99,7 @@ export const ChatInput = () => {
           onChange={(event) => setText(event.target.value)}
           onKeyDown={handleOnKeyDown}
           value={text}
-          className='w-2/3 form-input border-none h-8 md:h-10 !bg-gray-200 dark:!bg-aside-bg flex-grow'
+          className='form-input h-8 w-2/3 flex-grow border-none !bg-gray-200 dark:!bg-aside-bg md:h-10'
         />
         {editableMessage ? (
           <div className='flex gap-x-4'>

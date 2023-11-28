@@ -13,9 +13,9 @@ export const ContactsLeftBar = () => {
 
   return (
     <LeftBar
-      className={twMerge(`${!openContactPage ? 'flex' : 'hidden'}`, 'md:flex flex-col  overflow-hidden relative')}>
+      className={twMerge(`${!openContactPage ? 'flex' : 'hidden'}`, 'relative flex-col  overflow-hidden md:flex')}>
       <LeftBarHeader />
-      <div className='px-6 border-b border-border pb-2'>
+      <div className='border-b border-border px-6 pb-2'>
         <HorizontalTabs
           onSelect={(index) => dispatch(filterBy(index))}
           className='text-xs'

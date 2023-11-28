@@ -6,7 +6,7 @@ import ChatWindow from 'widgets/chat-window';
 class ChatPage extends Component {
   render(): ReactNode {
     return (
-      <div className='flex h-full w-full overflow-hidden relative'>
+      <div className='relative flex h-full w-full overflow-hidden'>
         <ChatLeftBar />
         <ChatWindow />
         <ChatOptions />

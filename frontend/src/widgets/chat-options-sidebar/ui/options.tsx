@@ -16,36 +16,36 @@ export const OptionsContainer = () => {
 
   return (
     <>
-      <HorizontalTabs className='font-semibold text-xs text-gray-400' onSelect={setSelected} items={items} />
-      <div className='w-full flex flex-col mt-8'>
+      <HorizontalTabs className='text-xs font-semibold text-gray-400' onSelect={setSelected} items={items} />
+      <div className='mt-8 flex w-full flex-col'>
         {selected === 1 ? (
-          <div className='flex flex-col gap-y-6 w-full'>
-            <button className='h-10 w-full flex items-center gap-x-3'>
+          <div className='flex w-full flex-col gap-y-6'>
+            <button className='flex h-10 w-full items-center gap-x-3'>
               <IconWrapper
                 className={twMerge(
-                  'h-12 w-12 !rounded-md dark:!bg-gray-100 hover:dark:!bg-gray-100  [&>*]:dark:!text-gray-800 [&>*]hover:dark:!text-gray-800 ',
-                  '[&>*]:hover:text-icon-color hover:bg-icon-bg',
+                  '[&>*]hover:dark:!text-gray-800 h-12 w-12 !rounded-md dark:!bg-gray-100  hover:dark:!bg-gray-100 [&>*]:dark:!text-gray-800 ',
+                  'hover:bg-icon-bg [&>*]:hover:text-icon-color',
                 )}>
                 <PersonRemoveIcon className='!h-7 !w-7' />
               </IconWrapper>
 
-              <div className='flex flex-col items-start h-full'>
+              <div className='flex h-full flex-col items-start'>
                 <h6 className='text-sm font-normal'>Заблокировать</h6>
-                <p className='text-xs mt-1'>{displayedName} не будет в ваших контактах</p>
+                <p className='mt-1 text-xs'>{displayedName} не будет в ваших контактах</p>
               </div>
             </button>
-            <button className='h-10 w-full flex items-center gap-x-3'>
+            <button className='flex h-10 w-full items-center gap-x-3'>
               <IconWrapper
                 className={twMerge(
-                  'h-12 w-12 !rounded-md dark:!bg-gray-100 hover:dark:!bg-gray-100  [&>*]:dark:!text-gray-800 [&>*]hover:dark:!text-gray-800 ',
-                  '[&>*]:hover:text-icon-color hover:bg-icon-bg',
+                  '[&>*]hover:dark:!text-gray-800 h-12 w-12 !rounded-md dark:!bg-gray-100  hover:dark:!bg-gray-100 [&>*]:dark:!text-gray-800 ',
+                  'hover:bg-icon-bg [&>*]:hover:text-icon-color',
                 )}>
                 <ReportProblemIcon className='!h-7 !w-7' />
               </IconWrapper>
 
-              <div className='flex flex-col items-start h-full'>
+              <div className='flex h-full flex-col items-start'>
                 <h6 className='text-sm font-normal'>Пожаловаться</h6>
-                <p className='text-xs mt-1'>Оставить заявку в обратной связи</p>
+                <p className='mt-1 text-xs'>Оставить заявку в обратной связи</p>
               </div>
             </button>
           </div>
@@ -62,9 +62,9 @@ interface Props {
 
 export const OptionsButton: FC<Props> = ({ onClick, focus }) => {
   return (
-    <button className='w-20 h-24' onClick={onClick}>
+    <button className='h-24 w-20' onClick={onClick}>
       <IconWrapper focus={focus} className='flex flex-col !rounded-md'>
-        <TuneOutlinedIcon className='!w-7 !h-7' />
+        <TuneOutlinedIcon className='!h-7 !w-7' />
         <p className='text-xs'>Опции</p>
       </IconWrapper>
     </button>

@@ -10,7 +10,7 @@ export const AddContactButton: FC<AddContactButtonProps> = ({ onClick }) => {
   return (
     <>
       <button onClick={onClick}>
-        <IconWrapper className='w-8 h-8 p-2'>
+        <IconWrapper className='h-8 w-8 p-2'>
           <AddOutlinedIcon />
         </IconWrapper>
       </button>

@@ -23,12 +23,12 @@ export const FilterButton: FC<FilterButtonProps> = ({ onSelect }) => {
       <Menu.Button
         className={twMerge(
           '[&>*]:text-form-color [&>*]:!transition-colors [&>*]:!duration-300 [&>*]:hover:text-active-link',
-          'text-xs flex items-center gap-x-1 relative',
+          'relative flex items-center gap-x-1 text-xs',
         )}>
-        <FilterListOutlinedIcon className='!w-4 !h-4' />
+        <FilterListOutlinedIcon className='!h-4 !w-4' />
         <p className='text-xs'>Фильтр</p>
       </Menu.Button>
-      <Menu.Items as={'div'} className='dropdown-menu gap-y-3 px-6 py-4 w-44'>
+      <Menu.Items as={'div'} className='dropdown-menu w-44 gap-y-3 px-6 py-4'>
         {filterChatItems.map((item) => (
           <DropdownListItem
             Icon={<item.Icon />}
@@ -37,7 +37,7 @@ export const FilterButton: FC<FilterButtonProps> = ({ onSelect }) => {
             key={item.text}
             onClick={() => select(item.text)}
             className={twMerge(
-              'flex items-center gap-x-2 [&>svg]:text-lg [&>*]:hover:text-active-link',
+              'flex items-center gap-x-2 [&>*]:hover:text-active-link [&>svg]:text-lg',
               selected === item.text ? '[&>*]:text-active-link' : '',
             )}></DropdownListItem>
         ))}

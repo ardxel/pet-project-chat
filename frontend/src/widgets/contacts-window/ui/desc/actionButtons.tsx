@@ -63,7 +63,7 @@ export const ContactWindowActionButtons: FC<ContactWindowActionButtonsProps> = (
 
   return (
     <>
-      <div className='border-b border-border flex flex-col gap-y-3'>
+      <div className='flex flex-col gap-y-3 border-b border-border'>
         <DropdownListButton Icon={<audioCall.Icon />} text={audioCall.text} onClick={() => handleCallUser(false)} />
         <DropdownListButton Icon={<videoCall.Icon />} text={videoCall.text} onClick={() => handleCallUser(true)} />
         <DropdownListButton Icon={<sendMessage.Icon />} text={sendMessage.text} onClick={handleSendMessage} />

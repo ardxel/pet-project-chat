@@ -19,7 +19,7 @@ export const MessageTime: FC<MessageTimeProps> = memo(({ message }) => {
     <p
       className={twMerge(
         isUserMsg && isTextMsg ? 'text-gray-100' : '',
-        'text-[10px] absolute bottom-[2px] right-[4px] leading-3',
+        'absolute bottom-[2px] right-[4px] text-[10px] leading-3',
       )}>
       {showUpdatedTime
         ? 'ред. ' + moment(message.updatedAt).format('HH:mm')

@@ -48,33 +48,33 @@ export const ChatBarCard: FC<ChatBarCardProps> = memo(({ user, chatId }) => {
   return (
     <div
       className={twMerge(
-        'flex items-center justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-900 px-4 py-3 relative',
+        'relative flex cursor-pointer items-center justify-between px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-900',
         openedChatId === chatId ? 'bg-gray-100 dark:bg-gray-900' : '',
       )}
       onClick={handleOpenChat}
       onMouseLeave={() => setHover(false)}
       onMouseEnter={() => setHover(true)}>
       <div className='flex gap-x-3'>
-        <div className='relative w-[50px] h-[50px]'>
-          <UserAvatar user={user} className='w-full h-full' />
+        <div className='relative h-[50px] w-[50px]'>
+          <UserAvatar user={user} className='h-full w-full' />
         </div>
         <div className='flex flex-col justify-center gap-y-[6px]'>
           <div className='flex items-center'>
-            <div className='flex items-center h-full'>
+            <div className='flex h-full items-center'>
               <h4 className='text-left text-sm'>{userUtils.getName(user)}</h4>
             </div>
 
             <div>
-              <p className='text-xs text-gray-400 dark:text-gray-500 ml-2'>{companionStatus}</p>
+              <p className='ml-2 text-xs text-gray-400 dark:text-gray-500'>{companionStatus}</p>
             </div>
           </div>
 
-          <div className='flex items-center text-sm h-[15px]'>
+          <div className='flex h-[15px] items-center text-sm'>
             {lastMessageText ? (
-              <p className='text-sm leading-none m-0'>
+              <p className='m-0 text-sm leading-none'>
                 {lastMessageText}
-                <span className='align-middle text-xl mx-[6px] text-form-color '>•</span>
-                <span className='text-xs align-middle text-form-color m-0'>{lastMessageCreatedAt}</span>
+                <span className='mx-[6px] align-middle text-xl text-form-color '>•</span>
+                <span className='m-0 align-middle text-xs text-form-color'>{lastMessageCreatedAt}</span>
               </p>
             ) : null}
           </div>

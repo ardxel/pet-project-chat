@@ -8,10 +8,10 @@ interface CompanionAvatarProps {
 
 export const CompanionAvatar: FC<CompanionAvatarProps> = ({ companion }) => {
   return (
-    <div className='relative w-[35px] h-[35px]'>
+    <div className='relative h-[35px] w-[35px]'>
       <UserAvatar
         user={companion}
-        className='rounded-full [&>*]:!text-xl [&>*]:!leading-none [&>*]:-top-[11%] w-9 h-9 border-bg'
+        className='h-9 w-9 rounded-full border-bg [&>*]:-top-[11%] [&>*]:!text-xl [&>*]:!leading-none'
       />
     </div>
   );

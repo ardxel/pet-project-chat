@@ -43,15 +43,15 @@ export const ChatList = () => {
 
   return (
     <div className={twMerge('scroll', 'pr-0')}>
-      <div className='relative w-full h-full '>
-        <div className='relative w-full h-full  min-h-[80vh] pr-0'>
+      <div className='relative h-full w-full '>
+        <div className='relative h-full min-h-[80vh]  w-full pr-0'>
           <div className={twMerge('flex flex-col bg-bg pb-4')}>
             {filteredChatsBySearchInput ? (
               filteredChatsBySearchInput.map((chat, i) => {
                 return <ChatBarCard key={i} user={chat.companion} chatId={chat.conversationId} />;
               })
             ) : (
-              <div className='h-full w-full absolute left-0 top-0 flex justify-center items-end pb-10 h-md:pb-0 h-md:items-center'>
+              <div className='absolute left-0 top-0 flex h-full w-full items-end justify-center pb-10 h-md:items-center h-md:pb-0'>
                 <PuffLoader />
               </div>
             )}

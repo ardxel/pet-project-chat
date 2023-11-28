@@ -22,18 +22,18 @@ export const ChatMessageEditButton: FC<ChatMessageEditButtonProps> = ({ show, op
     return (
       <Menu className='dropdown' as='div'>
         <Menu.Button as='button' ref={btnRef}>
-          <IconWrapper className='w-8 h-8 bg-transparent !p-2'>
-            <MoreHorizIcon className='!w-4 !h-4' />
+          <IconWrapper className='h-8 w-8 bg-transparent !p-2'>
+            <MoreHorizIcon className='!h-4 !w-4' />
           </IconWrapper>
         </Menu.Button>
         <Menu.Items
           static={open}
           className={twMerge(
-            'absolute bg-bg flex flex-col z-[999] min-w-[96px] border border-border rounded-md',
-            'w-[150px] gap-y-4 p-4 !mt-0',
+            'absolute z-[999] flex min-w-[96px] flex-col rounded-md border border-border bg-bg',
+            '!mt-0 w-[150px] gap-y-4 p-4',
             position === 'top'
               ? 'bottom-9 left-1/2 -translate-x-1/2 transform'
-              : 'top-9 left-1/2 -translate-x-1/2 transform',
+              : 'left-1/2 top-9 -translate-x-1/2 transform',
           )}
           as='div'>
           <DropdownListItem

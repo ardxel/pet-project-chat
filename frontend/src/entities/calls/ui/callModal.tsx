@@ -21,7 +21,7 @@ export const CallModal: FC<CallModalProps> = ({ open, children }) => {
 
   return (
     <Dialog as='div' open={open} className={twMerge('relative z-[999]')} onClose={onTryClose}>
-      <div className='fixed inset-0 bg-opacity-50 dark:bg-opacity-10 transition-colors duration-300 bg-black  dark:bg-white ' />
+      <div className='fixed inset-0 bg-black bg-opacity-50 transition-colors duration-300 dark:bg-white  dark:bg-opacity-10 ' />
       <div className='fixed inset-0'>
         <div
           className={twMerge(
@@ -29,7 +29,7 @@ export const CallModal: FC<CallModalProps> = ({ open, children }) => {
             'transition-all duration-300',
             fade ? 'scale-[1.2]' : 'scale-100',
           )}>
-          <Dialog.Panel className={twMerge('relative bg-bg rounded-md transition-all')}>{children}</Dialog.Panel>
+          <Dialog.Panel className={twMerge('relative rounded-md bg-bg transition-all')}>{children}</Dialog.Panel>
         </div>
       </div>
     </Dialog>

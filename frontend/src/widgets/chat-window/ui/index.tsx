@@ -9,7 +9,7 @@ export const ChatWindow = () => {
   if (!access) return null;
 
   return (
-    <section className='flex flex-col w-full h-full'>
+    <section className='flex h-full w-full flex-col'>
       <ChatHeader />
       <ChatArea />
       <ChatInput />

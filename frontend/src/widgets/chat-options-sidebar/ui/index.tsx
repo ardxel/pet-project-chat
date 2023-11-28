@@ -32,16 +32,16 @@ export const ChatOptions = () => {
     <>
       <aside
         className={twMerge(
-          'h-full border-l border-border flex flex-col flex-shrink-0 w-80 1400:!w-[360px] bg-bg z-[900]',
+          'z-[900] flex h-full w-80 flex-shrink-0 flex-col border-l border-border bg-bg 1400:!w-[360px]',
           'absolute right-0 xl:relative',
         )}>
         <div className='full h-1/6 bg-transparent'></div>
         <div className='w-full'>
-          <UserAvatar user={chatCompanion} className='w-14 h-14 mx-auto' />
-          <h4 className='w-full text-center mt-3'>{username}</h4>
-          <p className='w-full text-center mt-2 text-xs h-2 text-gray-400 dark:text-gray-500'>{chatCompanionStatus}</p>
+          <UserAvatar user={chatCompanion} className='mx-auto h-14 w-14' />
+          <h4 className='mt-3 w-full text-center'>{username}</h4>
+          <p className='mt-2 h-2 w-full text-center text-xs text-gray-400 dark:text-gray-500'>{chatCompanionStatus}</p>
         </div>
-        <div className='flex justify-between mx-5'>
+        <div className='mx-5 flex justify-between'>
           <MuteButton />
           <MediaButton focus={selected === 'media'} onClick={() => openOptionMenu('media')} />
           <OptionsButton focus={selected === 'options'} onClick={() => openOptionMenu('options')} />
@@ -53,7 +53,7 @@ export const ChatOptions = () => {
       </aside>
       {openChatOptions && (
         <div
-          className='w-[calc(100%-320px)] xl:hidden 1400:w-[calc(100%-360px)] h-full z-[900] absolute left-0 bg-opacity-50 bg-black'
+          className='absolute left-0 z-[900] h-full w-[calc(100%-320px)] bg-black bg-opacity-50 1400:w-[calc(100%-360px)] xl:hidden'
           onClick={closeChatOptions}></div>
       )}
     </>

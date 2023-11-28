@@ -16,12 +16,12 @@ export const ContactWindowListButton: FC<ContactWindowListButtonProps> = ({ clas
     <Menu as='div' className='dropdown'>
       {({ close }) => (
         <>
-          <Menu.Button className={twMerge('w-10 h-10', className)}>
+          <Menu.Button className={twMerge('h-10 w-10', className)}>
             <IconWrapper className='bg-white dark:bg-bg dark:hover:bg-icon-active-bg'>
               <MoreHorizIcon />
             </IconWrapper>
           </Menu.Button>
-          <Menu.Items as='div' className='dropdown-menu w-[300px] !mt-0 [&>*]:px-4 [&>*]:py-4'>
+          <Menu.Items as='div' className='dropdown-menu !mt-0 w-[300px] [&>*]:px-4 [&>*]:py-4'>
             <ContactWindowActionButtons onClose={close} />
           </Menu.Items>
         </>

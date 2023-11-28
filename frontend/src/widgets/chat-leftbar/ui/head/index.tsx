@@ -6,7 +6,7 @@ interface LeftbarHeaderProps {}
 
 export const LeftbarHeader: FC<LeftbarHeaderProps> = () => {
   return (
-    <div className='w-full py-5 px-6 flex items-center justify-between flex-shrink-0'>
+    <div className='flex w-full flex-shrink-0 items-center justify-between px-6 py-5'>
       <h1 className='text-xl'>Chats</h1>
       <div className='flex gap-x-3'>
         <ChatCreate />

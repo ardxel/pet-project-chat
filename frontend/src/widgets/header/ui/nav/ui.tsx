@@ -15,7 +15,7 @@ const Nav: FC = () => {
   const pathHas = (path: string) => pathname === path || pathname.startsWith(path);
 
   return (
-    <ul className='hidden xs2:flex items-center [&>li]:inline-flex gap-x-5 ml-5 '>
+    <ul className='ml-5 hidden items-center gap-x-5 xs2:flex [&>li]:inline-flex '>
       {items.map((item) => (
         <li key={item.id}>
           <NavLink to={item.href}>

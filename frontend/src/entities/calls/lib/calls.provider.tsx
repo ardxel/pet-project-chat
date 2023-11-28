@@ -324,11 +324,11 @@ export const CallsProvider: FC<CallsProviderProps> = ({ children }) => {
             {needToAnswer ? (
               <AnswerOnCall answer={callAnswer} callFrom={callerName} withVideo={callWithVideo} />
             ) : (
-              <div className='min-w-[20rem] h-[500px] bg-white dark:bg-aside-bg p-5 rounded-md relative'>
+              <div className='relative h-[500px] min-w-[20rem] rounded-md bg-white p-5 dark:bg-aside-bg'>
                 {receiverName && !conversationIsStarted ? (
                   <div className='absolute left-5 top-10 z-[1001]'>
                     <p>звоним...</p>
-                    <h5 className='font-normal text-sm'>{receiverName}</h5>
+                    <h5 className='text-sm font-normal'>{receiverName}</h5>
                   </div>
                 ) : null}
                 {conversationIsStarted ? (
@@ -354,26 +354,26 @@ export const CallsProvider: FC<CallsProviderProps> = ({ children }) => {
                   muted></video>
                 <video
                   className={twMerge(
-                    'absolute w-[calc(100%-40px)] h-full top-0 bottom-0 z-[1000]',
+                    'absolute bottom-0 top-0 z-[1000] h-full w-[calc(100%-40px)]',
                     isRemoteVideoEnabled ? 'visible' : 'invisible',
                   )}
                   ref={remoteVideoRef}
                   autoPlay
                   muted={!isRemoteAudioEnabled}
                   playsInline></video>
-                <div className='absolute flex gap-x-4 justify-center z-[1001] bottom-5 w-[calc(100%-40px)]'>
+                <div className='absolute bottom-5 z-[1001] flex w-[calc(100%-40px)] justify-center gap-x-4'>
                   <button onClick={toggleActiveMicrophone}>
-                    <IconWrapper className='w-12 h-12'>
+                    <IconWrapper className='h-12 w-12'>
                       {isMicrophoneActive ? <MicOffOutlinedIcon /> : <KeyboardVoiceOutlinedIcon />}
                     </IconWrapper>
                   </button>
                   <button onClick={toggleActiveVideoCamera}>
-                    <IconWrapper className='w-12 h-12'>
+                    <IconWrapper className='h-12 w-12'>
                       {isLocalVideoEnabled ? <VideocamOutlinedIcon /> : <VideocamOffOutlinedIcon />}
                     </IconWrapper>
                   </button>
                   <button onClick={callEnd}>
-                    <IconWrapper className='bg-rose-500 w-12 h-12'>
+                    <IconWrapper className='h-12 w-12 bg-rose-500'>
                       <CallEndOutlinedIcon className='!text-white' />
                     </IconWrapper>
                   </button>
