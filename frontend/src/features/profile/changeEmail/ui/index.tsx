@@ -3,14 +3,15 @@ import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { selectUserData } from 'entities/session';
 import { Field, Form, Formik } from 'formik';
-import { useState } from 'react';
+import { ProfileFormProps } from 'pages/profile/details';
+import { FC, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
 import { IconWrapper } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
 import * as yup from 'yup';
 import { changeEmailThunk } from '../model';
 
-export const ProfileChangeEmail = () => {
+export const ProfileChangeEmail: FC<ProfileFormProps> = ({ enabledEditingByUser }) => {
   const user = useAppSelector(selectUserData);
   const [isEdit, setIsEdit] = useState(false);
   const [error, setError] = useState<string>('');
@@ -44,7 +45,11 @@ export const ProfileChangeEmail = () => {
         }
       }}>
       {({ isSubmitting, isValid, dirty, resetForm, errors, values }) => (
-        <Form className='flex w-full flex-col rounded-md border border-border p-4 '>
+        <Form
+          className={twMerge(
+            'flex w-full flex-col rounded-md p-4 ',
+            enabledEditingByUser ? 'border border-border' : '',
+          )}>
           <div className='flex w-full flex-col gap-x-4 lg:flex-row lg:justify-between'>
             <div className='flex w-full flex-col'>
               <div className='flex w-full flex-col gap-x-4 xs2:flex-row lg:gap-x-6'>
@@ -61,10 +66,11 @@ export const ProfileChangeEmail = () => {
                   className={twMerge(
                     'form-input mt-2 h-10 w-full duration-300 focus:border-blue-500',
                     !isEdit ? '!bg-icon-bg !text-gray-400 opacity-50 dark:!text-gray-300' : '',
+                    enabledEditingByUser ? 'pointer-events-auto' : 'pointer-events-none',
                   )}
                   name='email'
                   placeholder={user.email}
-                  disabled={!isEdit}
+                  disabled={!isEdit && !enabledEditingByUser}
                   id='input-change-email'
                 />
                 <div
@@ -76,7 +82,7 @@ export const ProfileChangeEmail = () => {
                         ? undefined
                         : 'Ваш почтовый адрес совпадает с текущим'
                   }>
-                  {isEdit && (
+                  {isEdit && enabledEditingByUser ? (
                     <button type='submit' disabled={isSubmitting}>
                       <IconWrapper
                         className={twMerge(
@@ -89,26 +95,28 @@ export const ProfileChangeEmail = () => {
                         <DoneOutlinedIcon className='!h-5 !w-5' />
                       </IconWrapper>
                     </button>
-                  )}
-                  <button
-                    type='button'
-                    onClick={() => {
-                      setIsEdit(!isEdit);
-                      setError('');
-                      resetForm();
-                    }}>
-                    <IconWrapper
-                      className={twMerge(
-                        'h-[38px] w-[38px]',
-                        isEdit ? 'rounded-none rounded-r-[5px]' : 'rounded-[5px]',
-                      )}>
-                      {isEdit ? (
-                        <CloseOutlinedIcon className='!h-5 !w-5' />
-                      ) : (
-                        <EditOutlinedIcon className='!h-5 !w-5' />
-                      )}
-                    </IconWrapper>
-                  </button>
+                  ) : null}
+                  {enabledEditingByUser ? (
+                    <button
+                      type='button'
+                      onClick={() => {
+                        setIsEdit(!isEdit);
+                        setError('');
+                        resetForm();
+                      }}>
+                      <IconWrapper
+                        className={twMerge(
+                          'h-[38px] w-[38px]',
+                          isEdit ? 'rounded-none rounded-r-[5px]' : 'rounded-[5px]',
+                        )}>
+                        {isEdit ? (
+                          <CloseOutlinedIcon className='!h-5 !w-5' />
+                        ) : (
+                          <EditOutlinedIcon className='!h-5 !w-5' />
+                        )}
+                      </IconWrapper>
+                    </button>
+                  ) : null}
                 </div>
               </div>
             </div>

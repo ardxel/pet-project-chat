@@ -9,6 +9,7 @@ export const loginThunk = createAsyncThunk<void, RequestLoginBody>(
     try {
       await dispatch(sessionApi.endpoints.login.initiate(body)).unwrap();
     } catch (error) {
+      console.log(error);
       if (isRegisteredError(error)) {
         throw new ClientError(error.data.message as string);
       } else {

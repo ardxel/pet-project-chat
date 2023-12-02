@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { HydratedDocument, Types } from 'mongoose';
 
 export type UserStatus = 'online' | 'offline' | 'typing';
-
+export const userConversationStatus = ['common', 'archived', 'spam', 'trash'] as const;
 export type UserDocument = HydratedDocument<User>;
 
 @Schema({ versionKey: false, strict: true })
@@ -24,6 +24,10 @@ export class User {
   @ApiProperty()
   lastName?: string;
 
+  @Prop({ required: false, type: String })
+  @ApiProperty()
+  avatar?: string;
+
   @Prop({
     required: true,
     type: String,
@@ -36,17 +40,16 @@ export class User {
   @Prop({
     required: false,
     _id: false,
-    // select: false,
     type: [
       {
         data: { type: Types.ObjectId, ref: 'Conversation' },
-        status: { type: String, enum: ['common', 'archived', 'spam', 'trash'], default: 'common' },
+        status: { type: String, enum: userConversationStatus, default: 'common' },
       },
     ],
     default: [],
   })
   @ApiProperty()
-  conversations?: { data: Types.ObjectId; status: 'common' | 'archived' | 'spam' | 'trash' }[];
+  conversations?: { data: Types.ObjectId; status: (typeof userConversationStatus)[number] }[];
 
   @Prop({
     required: false,

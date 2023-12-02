@@ -14,7 +14,7 @@ const ErrMessage = ({ name }: { name: string }) => (
   </div>
 );
 
-const ProfileChangePassword = () => {
+export const ProfileChangePassword = () => {
   const user = useAppSelector(selectUserData);
   const [fetchError, setFetchError] = useState('');
   const [completed, setCompleted] = useState(false);
@@ -106,5 +106,3 @@ const ProfileChangePassword = () => {
     </Formik>
   );
 };
-
-export default ProfileChangePassword;

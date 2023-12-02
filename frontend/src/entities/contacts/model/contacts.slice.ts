@@ -123,3 +123,13 @@ export const selectContactByUserId = (userId: string): Selector<Contact<true> | 
   createSelector(selectSelf, (state) => {
     return state.contacts.contacts.find((contact) => contact.user._id === userId);
   });
+
+export const selectIsExistContactByChatId = (chatId: string): Selector<boolean> =>
+  createSelector(selectSelf, (state) => {
+    const chat = state.privateChats.chats[chatId];
+    if (!chat) return false;
+    const companionId = chat.companion._id;
+    return state.contacts.contacts.some((contact) => contact.user._id === companionId);
+  });
+
+export const selectContactsLength: Selector<number> = (state: RootState) => state.contacts.contacts.length;

@@ -37,8 +37,8 @@ export const LoginForm: FC<LoginFormProps> = ({ onSuccess }) => {
             <Formik
               enableReinitialize
               initialValues={{
-                email: 'test1@gmail.com',
-                password: 'Onlyonemm1!',
+                email: '',
+                password: '',
               }}
               validationSchema={loginValidationSchema}
               onSubmit={async (values, { resetForm }) => {
@@ -50,7 +50,7 @@ export const LoginForm: FC<LoginFormProps> = ({ onSuccess }) => {
                   resetForm();
                 }
               }}>
-              {({ isSubmitting }) => (
+              {({ isSubmitting, dirty, isValid }) => (
                 <Form>
                   <div className='flex flex-col gap-y-6 xs0:gap-x-6 xs0:gap-y-4'>
                     <div className='flex flex-col'>
@@ -76,7 +76,7 @@ export const LoginForm: FC<LoginFormProps> = ({ onSuccess }) => {
                     </div>
                   </div>
                   <button
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || (dirty && !isValid)}
                     type='submit'
                     className='mt-5 w-full rounded-md bg-btn-bg py-3 text-center font-bold text-white'>
                     Войти

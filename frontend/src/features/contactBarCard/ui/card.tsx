@@ -16,9 +16,7 @@ export const ContactBarCard: FC<ContactBarCardProps> = ({ data }) => {
   const openedContactPageUserId = useAppSelector(selectOpenedContactPageUserId);
   const [hover, setHover] = useState(false);
   const dispatch = useAppDispatch();
-  const { user, isFavorite } = data;
-
-  const username = userUtils.getName(user);
+  const { user } = data;
 
   const handleOpenContactPage = useCallback(() => {
     dispatch(openContactPageById(user._id));
@@ -40,8 +38,11 @@ export const ContactBarCard: FC<ContactBarCardProps> = ({ data }) => {
           <div className='relative h-[50px] w-[50px]'>
             <UserAvatar user={user} className='h-full w-full' />
           </div>
-          <div className='flex h-full items-center py-[0.4rem]'>
-            <h4 className='text-left text-sm'>{username}</h4>
+          <div className='flex h-full flex-col gap-y-2 py-[0.4rem]'>
+            <h4 className='text-left text-sm'>{userUtils.getName(user)}</h4>
+            <p className='text-left text-xs leading-none text-form-color'>
+              {userUtils.hasFullname(user) ? `@${user.name}` : null}
+            </p>
           </div>
         </div>
         <div className='pointer-events-none absolute bottom-0 left-0 right-0 top-0 h-full w-full opacity-50' />
@@ -61,7 +62,7 @@ export const ContactBarCard: FC<ContactBarCardProps> = ({ data }) => {
               audioCall: true,
               videoCall: true,
               sendMessage: { hr: true },
-              remove: true,
+              deleteContact: true,
               report: true,
             }}
           />

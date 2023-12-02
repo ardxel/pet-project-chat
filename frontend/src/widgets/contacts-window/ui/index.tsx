@@ -9,7 +9,7 @@ export const ContactsWindow = () => {
 
   return (
     <div className='scroll h-full w-full bg-aside-bg p-7'>
-      <div className='mx-auto h-full max-w-[64rem] rounded-md'>
+      <div className='mx-auto h-full max-w-[75rem] rounded-md'>
         <Header />
         <Description />
       </div>

@@ -13,13 +13,13 @@ export const profileLinks = [
   {
     id: 1,
     Icon: SettingsOutlinedIcon,
-    href: Paths.settings,
+    href: Paths.profile,
     text: 'Настройки',
   },
   {
     id: 2,
     Icon: LockOpenOutlinedIcon,
-    href: '/profile/edit',
+    href: Paths.profile,
     text: 'Изменить пароль',
   },
-];
+] as const;

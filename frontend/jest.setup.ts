@@ -10,6 +10,7 @@ global.Response = Response;
 global.React = React;
 global.TextDecoder = TextDecoder;
 global.TextEncoder = TextEncoder;
+globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
 export default {
   transform: {},

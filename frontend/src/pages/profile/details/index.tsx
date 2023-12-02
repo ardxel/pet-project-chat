@@ -1,58 +1,71 @@
-import { ProfileChangeCountry } from 'features/profile/changeCountry';
-import { ProfileChangeEmail } from 'features/profile/changeEmail';
-import { ProfileChangePhoneNumber } from 'features/profile/changePhoneNumber';
-import { ProfileEditFullname } from 'features/profile/editFullname';
-import { lazy, useState } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import 'react-phone-number-input/style.css';
+import { Location, useLocation } from 'react-router';
+import { ScaleLoader } from 'react-spinners';
+import { wait } from 'shared/lib';
 import { HorizontalTabs } from 'shared/ui';
+
 const tabOptions = ['Изменить данные', 'Сменить пароль', 'Изменить другие данные'];
 
-const ProfileChangePassword = lazy(() => import('features/profile/changePassword'));
+const lazyWithDelay = (factory: () => Promise<any>, delay = 1000000) => {
+  return lazy(() => Promise.all([factory(), wait(delay)]).then(([module]) => module));
+};
+
+const ProfilePersonalInfoTab = lazy(() => import('./personalInfo'));
+const ProfileChangePasswordTab = lazy(() => import('./changePassword'));
+const ProfileRestInfoTab = lazy(() => import('./restInfo'));
+// const ProfileRestInfoTab = lazyWithDelay(() => import('./restInfo'));
+
+export interface ProfileFormProps {
+  enabledEditingByUser: boolean;
+  toggleEditByUser?: () => void;
+}
+
+type LocationState = { passwordTab?: boolean; editProfileMain?: boolean };
 
 export const ProfileDetails = () => {
   const [selectedTab, setSelectedTab] = useState(0);
+  const [enabledEditingByUser, setEnabledEditingByUser] = useState(false);
+  const location = useLocation() as Location<LocationState>;
+
+  useEffect(() => {
+    if (!location?.state) return;
+    if ('editProfileMain' in location.state) {
+      setSelectedTab(0);
+      setEnabledEditingByUser(location?.state.editProfileMain);
+    }
+    if ('passwordTab' in location.state) {
+      setSelectedTab(1);
+    }
+  }, [location]);
+
+  const toggleEditByUser = () => {
+    setEnabledEditingByUser((prev) => !prev);
+  };
 
   return (
     <div className='flex flex-col'>
       <div className='mt-5 flex w-full items-center justify-between'>
         <HorizontalTabs
+          value={selectedTab}
           items={tabOptions}
           onSelect={(index) => setSelectedTab(index)}
-          className='text-[0.7rem] font-semibold text-gray-500 dark:text-gray-400 xs1:text-xs'
+          className='text-[0.6rem] font-semibold text-gray-500 dark:text-gray-400 xs2:text-[0.7rem] xs1:text-xs'
         />
       </div>
-      <div className='mt-2 w-full rounded-b-2xl bg-bg p-7'>
-        {selectedTab === 0 && (
-          <div className='flex w-full flex-col lg:flex-row'>
-            <div className='flex w-full flex-col gap-y-5 lg:flex-row'>
-              <div className='w-full lg:w-1/4'>
-                <h4 className='text-[14px] font-semibold '>Персональная информация</h4>
-                <p className='mt-3 text-xs'>Изменить персональные данные</p>
-              </div>
-              <div className='flex w-full flex-col gap-y-7 lg:w-3/4'>
-                <ProfileEditFullname />
-                <ProfileChangeEmail />
-                <div className='flex w-full gap-x-4 rounded-md border border-border p-4'>
-                  <ProfileChangePhoneNumber />
-                  <ProfileChangeCountry />
-                </div>
-              </div>
+      <div className='relative mt-2 min-h-[30vh] w-full rounded-b-2xl bg-bg p-7'>
+        <Suspense
+          fallback={
+            <div className='absolute left-0 right-0 top-0 flex h-full w-full items-center justify-center'>
+              <ScaleLoader className='[&>span]:!bg-blue-500' />
             </div>
-          </div>
-        )}
-        {selectedTab === 1 && (
-          <div className='flex w-full flex-col lg:flex-row'>
-            <div className='flex w-full flex-col gap-y-5 lg:flex-row'>
-              <div className='w-full lg:w-1/4'>
-                <h4 className='text-[14px] font-semibold '>Пароль доступа</h4>
-                <p className='mt-3 text-xs'>Изменить персональные данные</p>
-              </div>
-              <div className='flex w-full flex-col gap-y-7 lg:w-3/4'>
-                <ProfileChangePassword />
-              </div>
-            </div>
-          </div>
-        )}
+          }>
+          {selectedTab === 0 && (
+            <ProfilePersonalInfoTab enabledEditingByUser={enabledEditingByUser} toggleEditByUser={toggleEditByUser} />
+          )}
+          {selectedTab === 1 && <ProfileChangePasswordTab />}
+          {selectedTab === 2 && <ProfileRestInfoTab />}
+        </Suspense>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
-import { useLazySearchUsersByNameQuery } from 'entities/chats';
+import { useLazySearchUsersQuery } from 'entities/chats';
 import { selectUserId } from 'entities/session';
 import { ChangeEvent, FC, Fragment, useCallback, useMemo } from 'react';
 import { ScaleLoader } from 'react-spinners';
@@ -15,9 +15,9 @@ interface CreateChatModalProps {
   onClose: () => void;
 }
 
-export const CreateChatModal: FC<CreateChatModalProps> = ({ onClose, isOpen }) => {
+const CreateChatModal: FC<CreateChatModalProps> = ({ onClose, isOpen }) => {
   const userId = useAppSelector(selectUserId);
-  const [fetchUsers, { data: users = [], isLoading }] = useLazySearchUsersByNameQuery();
+  const [fetchUsers, { data: users = [], isLoading }] = useLazySearchUsersQuery();
   const showUsers = !isLoading && users.length > 0;
 
   const handleSearch = useCallback(
@@ -87,3 +87,5 @@ export const CreateChatModal: FC<CreateChatModalProps> = ({ onClose, isOpen }) =
     </Transition>
   );
 };
+
+export default CreateChatModal;

@@ -2,6 +2,7 @@ import { createSelector, createSlice } from '@reduxjs/toolkit';
 import { IMessage, messageUtil } from 'entities/message';
 import { editMessageThunk } from 'features/message/edit';
 import moment from 'moment';
+import { chatsApi } from '../api';
 import { privateChatReducers } from '../lib';
 import { PrivateChatsMap } from './types';
 
@@ -35,6 +36,13 @@ export const privateChatsSlice = createSlice({
     builder.addCase(editMessageThunk.fulfilled, (state) => {
       state.editableMessage = false;
     });
+    builder.addMatcher(chatsApi.endpoints.changeChatStatus.matchFulfilled, (state, action) => {
+      const { conversationId, status } = action.payload;
+
+      if (conversationId in state.chats) {
+        state.chats[conversationId].status = status;
+      }
+    });
   },
 });
 
@@ -53,6 +61,8 @@ export const {
   setIsLoading,
   setEditableMessage,
 } = privateChatsSlice.actions;
+
+type SelectorWithUndefined<T> = (state: RootState) => T | undefined;
 
 export const selectPrivateChatList = (state: RootState) => state.privateChats.chats;
 export const selectOpenedChatId = (state: RootState) => state.privateChats.openedChatId;
@@ -84,10 +94,8 @@ export const selectPrivateChatListSorted = createSelector(selectPrivateChatList,
   });
 });
 
-export const selectOpenedChatData = createSelector(
-  selectOpenedChatId,
-  selectPrivateChatList,
-  (chatId, chatList) => chatList[chatId],
+export const selectOpenedChatData = createSelector(selectOpenedChatId, selectPrivateChatList, (chatId, chatList) =>
+  chatList[chatId] ? chatList[chatId] : undefined,
 );
 
 export const selectOpenedChatHasAllMessages = createSelector(selectOpenedChatData, (chat) =>
@@ -103,7 +111,12 @@ export const selectChatLastMessage = (chatId: string) =>
 export const selectOpenedChatMessagesLength = createSelector(selectOpenedChatMessages, (messages) => messages?.length);
 
 export const selectConversationIdAndCompanionListSorted = createSelector(selectPrivateChatListSorted, (chats) =>
-  chats.map(([conversationId, chatData]) => ({ conversationId, companion: chatData.companion })),
+  chats.map(([conversationId, chatData]) => ({
+    conversationId,
+    companion: chatData.companion,
+    chatStatus: chatData.status,
+    companionStatus: chatData.companionStatus,
+  })),
 );
 
 export const selectOpenedChatCompanion = createSelector(selectOpenedChatId, selectPrivateChatList, (chatId, chats) => {

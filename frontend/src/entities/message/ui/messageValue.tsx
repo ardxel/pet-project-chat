@@ -1,14 +1,50 @@
 import PhoneForwardedOutlinedIcon from '@mui/icons-material/PhoneForwardedOutlined';
 import PhoneMissedOutlinedIcon from '@mui/icons-material/PhoneMissedOutlined';
 import { selectUserId } from 'entities/session';
+import * as linkPreview from 'link-preview-js';
 import { duration, utc } from 'moment';
-import { FC, memo } from 'react';
+import { FC, memo, useEffect, useState } from 'react';
 import Linkify from 'react-linkify';
 import { useAppSelector } from 'shared/model';
 import { IconWrapper } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
 import { messageUtil as msgUtils } from '../lib';
 import { IMessage } from '../model';
+
+const LinkPreview = ({ url, text }) => {
+  const [linkInfo, setLinkInfo] = useState(null);
+  const [error, setError] = useState(null);
+
+  const fetchLinkInfo = async () => {
+    await linkPreview
+      .getLinkPreview(url)
+      .then((info) => {
+        console.log(info);
+        setLinkInfo(info);
+      })
+      .catch((error) => setError(error));
+  };
+
+  useEffect(() => {
+    fetchLinkInfo();
+  }, [url]);
+
+  const show = Boolean(linkInfo && linkInfo.contentType.startsWith('image') && !error);
+
+  return (
+    <>
+      {show ? (
+        <div className='relative flex items-center justify-center overflow-hidden rounded-lg'>
+          <img src={linkInfo.url} className='h-full w-full object-cover' />
+        </div>
+      ) : (
+        <a href={url} target='_blank' rel='noopener noreferrer' className='text-link-color underline'>
+          {text}
+        </a>
+      )}
+    </>
+  );
+};
 
 interface MessageValueProps {
   message: IMessage;
@@ -39,9 +75,7 @@ export const MessageValue: FC<MessageValueProps> = memo(({ message }) => {
       <div className='px-4 py-3'>
         <Linkify
           componentDecorator={(decoratedHref, decoratedText, key) => (
-            <a key={key} href={decoratedHref} className='text-link-color underline'>
-              {decoratedText}
-            </a>
+            <LinkPreview key={key} url={decoratedHref} text={decoratedText} />
           )}>
           <p className={twMerge(isBgBlue ? 'text-white' : '', showUpdatedTime ? 'mr-10' : 'mr-5', 'min-w-[15px]')}>
             {message.text}

@@ -1,12 +1,13 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { PreloadedState, configureStore } from '@reduxjs/toolkit';
 import { invalidateAccessTokenListener } from 'features/auth/invalidateAccessToken';
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistStore } from 'redux-persist';
 import { baseApi, config } from 'shared/api';
 import { StateType } from 'typesafe-actions';
 import { rootReducer } from './root.reducer';
 
-export const buildStore = () =>
+export const buildStore = (preloadedState?: PreloadedState<object>) =>
   configureStore({
+    preloadedState,
     devTools: config.isDev,
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>

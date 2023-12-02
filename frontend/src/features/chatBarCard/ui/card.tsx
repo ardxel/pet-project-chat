@@ -1,4 +1,4 @@
-import { selectChatLastMessage, selectOpenedChatId, setOpenedChatId } from 'entities/chats';
+import { selectChatLastMessage, selectOpenedChatData, selectOpenedChatId, setOpenedChatId } from 'entities/chats';
 import { IMessage } from 'entities/message';
 import { IUser, userUtils } from 'entities/session';
 import { selectOpenChat, setOpenChat } from 'entities/ui-visibility';
@@ -14,10 +14,14 @@ interface ChatBarCardProps {
   chatId: string;
 }
 
+const URL_REGEXP =
+  /(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})(\.[a-zA-Z0-9]{2,})?/;
+
 export const ChatBarCard: FC<ChatBarCardProps> = memo(({ user, chatId }) => {
+  const openedChatData = useAppSelector(selectOpenedChatData);
   const openedChatId = useAppSelector(selectOpenedChatId);
   const openChat = useAppSelector(selectOpenChat);
-  const companionStatus = useChatCompanionStatus(chatId);
+  const { status, isExistedInContacts } = useChatCompanionStatus(chatId);
   const lastMessage: IMessage | undefined = useAppSelector(selectChatLastMessage(chatId));
 
   const lastMessageCreatedAt = useLastMessageIntervalTime(chatId);
@@ -35,9 +39,14 @@ export const ChatBarCard: FC<ChatBarCardProps> = memo(({ user, chatId }) => {
   };
 
   const LAST_MESSAGE_MAX_LENGTH = 23;
+  const chatInArchive = openedChatData?.status === 'archived';
+  const chatInTrash = openedChatData?.status === 'trash';
 
   const lastMessageText = useMemo(() => {
     if (!lastMessage || !lastMessage.text) return;
+
+    if (URL_REGEXP.test(lastMessage.text)) return <em>ссылка</em>;
+
     if (lastMessage.text.length > LAST_MESSAGE_MAX_LENGTH) {
       return lastMessage.text.substring(0, LAST_MESSAGE_MAX_LENGTH - 3) + '...';
     } else {
@@ -56,7 +65,7 @@ export const ChatBarCard: FC<ChatBarCardProps> = memo(({ user, chatId }) => {
       onMouseEnter={() => setHover(true)}>
       <div className='flex gap-x-3'>
         <div className='relative h-[50px] w-[50px]'>
-          <UserAvatar user={user} className='h-full w-full' />
+          <UserAvatar user={user} className='h-full w-full rounded-md' />
         </div>
         <div className='flex flex-col justify-center gap-y-[6px]'>
           <div className='flex items-center'>
@@ -65,7 +74,7 @@ export const ChatBarCard: FC<ChatBarCardProps> = memo(({ user, chatId }) => {
             </div>
 
             <div>
-              <p className='ml-2 text-xs text-gray-400 dark:text-gray-500'>{companionStatus}</p>
+              <p className='ml-2 text-xs text-gray-400 dark:text-gray-500'>{status}</p>
             </div>
           </div>
 
@@ -87,11 +96,14 @@ export const ChatBarCard: FC<ChatBarCardProps> = memo(({ user, chatId }) => {
           menuClassName={twMerge('w-[275px]')}
           options={{
             markAsRead: true,
-            disableNotifications: true,
-            viewProfile: { hr: true },
+            disableNotifications: { hr: !isExistedInContacts },
+            viewProfile: isExistedInContacts ? { hr: true } : undefined,
             audioCall: true,
             videoCall: { hr: true },
-            saveToArchive: true,
+            saveToArchive: chatInArchive ? undefined : true,
+            restoreFromArchive: chatInArchive ? true : undefined,
+            deleteChat: chatInTrash ? undefined : true,
+            restoreFromTrash: chatInTrash ? true : undefined,
             report: true,
           }}
         />

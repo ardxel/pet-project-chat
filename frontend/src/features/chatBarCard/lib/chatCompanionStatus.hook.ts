@@ -1,4 +1,5 @@
 import { selectCompanionStatusByChatId, selectOpenedChatCompanionStatus } from 'entities/chats';
+import { selectIsExistContactByChatId } from 'entities/contacts';
 import { useMemo } from 'react';
 import { useAppSelector } from 'shared/model';
 
@@ -9,8 +10,9 @@ export const useChatCompanionStatus = (chatId?: string) => {
   const companionStatusByOpenedChat = useAppSelector(selectOpenedChatCompanionStatus, {
     stabilityCheck: chatId ? 'never' : 'always',
   });
+  const isExistedInContacts = useAppSelector(selectIsExistContactByChatId(chatId));
 
-  const companionStatus = useMemo(() => {
+  const status = useMemo(() => {
     const status = companionStatusByChatId || companionStatusByOpenedChat;
     if (!status) return;
 
@@ -26,5 +28,5 @@ export const useChatCompanionStatus = (chatId?: string) => {
     }
   }, [companionStatusByChatId, companionStatusByOpenedChat]);
 
-  return companionStatus;
+  return { status, isExistedInContacts };
 };

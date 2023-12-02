@@ -14,23 +14,23 @@ import { MemoryRouter, MemoryRouterProps } from 'react-router';
 interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
   memoryRouterOptions?: MemoryRouterProps;
   preloadedState?: PreloadedState<RootState>;
-  store?: ReturnType<typeof configureStore> | RootState;
+  store?: ReturnType<typeof configureStore>;
 }
 
 export function renderWithProviders(
   ui: React.ReactElement,
   {
-    // preloadedState,
+    preloadedState,
     memoryRouterOptions,
     // Automatically create a store instance if no store was passed in
-    store = buildStore(),
+    store = buildStore(preloadedState),
     ...renderOptions
   }: ExtendedRenderOptions = {},
 ) {
   function Wrapper({ children }: PropsWithChildren<any>): JSX.Element {
     return (
       <MemoryRouter {...memoryRouterOptions}>
-        <Provider store={store as any}>
+        <Provider store={store}>
           <ThemeProvider>{children}</ThemeProvider>
         </Provider>
       </MemoryRouter>

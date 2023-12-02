@@ -1,11 +1,13 @@
 import { selectUserData } from 'entities/session';
 import { Field, Form, Formik } from 'formik';
+import { ProfileFormProps } from 'pages/profile/details';
+import { FC } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
 import { twMerge } from 'tailwind-merge';
 import * as yup from 'yup';
 import { editFullnameThunk } from '../model';
 
-export const ProfileEditFullname = () => {
+export const ProfileEditFullname: FC<ProfileFormProps> = ({ enabledEditingByUser }) => {
   const user = useAppSelector(selectUserData);
   const dispatch = useAppDispatch();
   return (
@@ -34,14 +36,22 @@ export const ProfileEditFullname = () => {
         }
       }}>
       {({ isSubmitting, isValid, dirty }) => (
-        <Form className='flex w-full flex-col rounded-md border border-border p-4 '>
+        <Form
+          className={twMerge(
+            'flex w-full flex-col rounded-md p-4 ',
+            enabledEditingByUser ? 'border border-border' : '',
+          )}>
           <div className='flex w-full flex-col gap-x-4 lg:flex-row lg:justify-between'>
             <div className='flex w-full flex-col lg:w-1/2'>
               <label htmlFor='input-firstName' className='text-sm font-semibold'>
                 Имя
               </label>
               <Field
-                className='form-input mt-2 h-10 capitalize duration-300 focus:border-blue-500'
+                disabled={!enabledEditingByUser}
+                className={twMerge(
+                  'form-input mt-2 h-10 capitalize duration-300 focus:border-blue-500',
+                  enabledEditingByUser ? 'pointer-events-auto' : 'pointer-events-none',
+                )}
                 name='firstName'
                 placeholder={user.firstName || 'ваше имя'}
                 id='input-firstName'
@@ -52,24 +62,30 @@ export const ProfileEditFullname = () => {
                 Фамилия
               </label>
               <Field
-                className='form-input mt-2 h-10 capitalize duration-300 focus:border-blue-500'
+                disabled={!enabledEditingByUser}
+                className={twMerge(
+                  'form-input mt-2 h-10 capitalize duration-300 focus:border-blue-500',
+                  enabledEditingByUser ? 'pointer-events-auto' : 'pointer-events-none',
+                )}
                 name='lastName'
                 placeholder={user.lastName || 'ваша фамилия'}
                 id='input-lastName'
               />
             </div>
           </div>
-          <div className='mt-4 flex h-11 w-full justify-end'>
-            <button
-              type='submit'
-              disabled={isSubmitting}
-              className={twMerge(
-                'max-w-[12rem] rounded-md bg-blue-900 p-3 text-center text-sm font-semibold text-white duration-200',
-                isValid && dirty ? 'bg-blue-600 hover:bg-blue-800' : 'cursor-default bg-blue-900',
-              )}>
-              Отправить
-            </button>
-          </div>
+          {enabledEditingByUser ? (
+            <div className='mt-4 flex h-11 w-full justify-end'>
+              <button
+                type='submit'
+                disabled={isSubmitting}
+                className={twMerge(
+                  'max-w-[12rem] rounded-md bg-blue-900 p-3 text-center text-sm font-semibold text-white duration-200',
+                  isValid && dirty ? 'bg-blue-600 hover:bg-blue-800' : 'cursor-default bg-blue-900',
+                )}>
+                Отправить
+              </button>
+            </div>
+          ) : null}
         </Form>
       )}
     </Formik>

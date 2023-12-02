@@ -3,13 +3,14 @@ import { FC, useEffect, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 interface TabsProps {
+  value?: number;
   items: string[] | readonly string[];
   onSelect?: (index: number) => unknown;
   className?: string;
 }
 
 export const HorizontalTabs: FC<TabsProps> = (props) => {
-  const { onSelect, items, className } = props;
+  const { onSelect, items, className, value } = props;
 
   const [selected, setSelected] = useState(0);
   /* Размеры для отображения нижней линии под табами. */
@@ -34,6 +35,10 @@ export const HorizontalTabs: FC<TabsProps> = (props) => {
       });
     }
   };
+
+  useEffect(() => {
+    setSelected(value);
+  }, [value]);
 
   useEffect(() => {
     setTabPosition(0);

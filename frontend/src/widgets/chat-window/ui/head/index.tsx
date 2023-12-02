@@ -70,7 +70,7 @@ export const ChatHeader = () => {
   const chatCompanion = useAppSelector(selectOpenedChatCompanion);
   const openChatOptions = useAppSelector(selectOpenChatOptions);
   const openSearchMessageBar = useAppSelector(selectOpenSearchMessageBar);
-  const companionStatus = useChatCompanionStatus();
+  const { status: companionStatus } = useChatCompanionStatus();
   const dispatch = useAppDispatch();
 
   if (!chatCompanion) return null;

@@ -29,7 +29,6 @@ export const contactsApi = baseApi.injectEndpoints({
       providesTags: [CONTACTS_TAG],
       transformResponse: (response: DataResponse<ContactsDto>) => mapContacts(response),
     }),
-
     addContact: build.mutation({
       query: (body: AddContactDto) => ({
         url: '/user/contacts',

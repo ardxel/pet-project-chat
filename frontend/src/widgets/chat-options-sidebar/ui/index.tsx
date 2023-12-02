@@ -13,7 +13,7 @@ import { OptionsButton, OptionsContainer } from './options';
 export const ChatOptions = () => {
   const openChatOptions = useAppSelector(selectOpenChatOptions);
   const chatCompanion = useAppSelector(selectOpenedChatCompanion);
-  const chatCompanionStatus = useChatCompanionStatus();
+  const { status: companionStatus } = useChatCompanionStatus();
   const [selected, setSelected] = useState<'media' | 'options'>('media');
   const dispatch = useAppDispatch();
 
@@ -37,9 +37,9 @@ export const ChatOptions = () => {
         )}>
         <div className='full h-1/6 bg-transparent'></div>
         <div className='w-full'>
-          <UserAvatar user={chatCompanion} className='mx-auto h-14 w-14' />
+          <UserAvatar user={chatCompanion} className='mx-auto h-14 w-14 rounded-md' />
           <h4 className='mt-3 w-full text-center'>{username}</h4>
-          <p className='mt-2 h-2 w-full text-center text-xs text-gray-400 dark:text-gray-500'>{chatCompanionStatus}</p>
+          <p className='mt-2 h-2 w-full text-center text-xs text-gray-400 dark:text-gray-500'>{companionStatus}</p>
         </div>
         <div className='mx-5 flex justify-between'>
           <MuteButton />

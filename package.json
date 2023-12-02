@@ -4,7 +4,10 @@
   "description": "my pet project chat",
   "main": "''",
   "scripts": {
-    "prepare": "npx husky install"
+    "prepare": "npx husky install",
+    "frontend:metrics": "npx cloc frontend --exclude-dir=node_modules,build,docs --exclude-ext=json",
+    "backend:metrics": "npx cloc backend --exclude-dir=node_modules,dist --exclude-ext=json",
+    "combined:metrics": "npx cloc --exclude-dir=node_modules,build,docs --exclude-ext=json frontend backend"
   },
   "repository": {
     "type": "git",
@@ -18,5 +21,8 @@
   "homepage": "https://github.com/ardxel/pet-project-chat#readme",
   "dependencies": {
     "husky": "^8.0.3"
+  },
+  "devDependencies": {
+    "cloc": "^1.98.0-cloc"
   }
 }

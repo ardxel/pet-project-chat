@@ -1,5 +1,6 @@
 import { openContactPageById, selectContactByUserId } from 'entities/contacts';
-import { IUser, userUtils } from 'entities/session';
+import { IUser, selectUserId, userUtils } from 'entities/session';
+import { deleteContactThunk } from 'features/contact/delete';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import { useAppDispatch, useAppSelector } from 'shared/model';
@@ -11,6 +12,7 @@ import { Paths } from 'shared/routing';
  */
 export const useContactActions = (targetUser: IUser | string) => {
   const contact = useAppSelector(selectContactByUserId(userUtils.getUserId(targetUser)));
+  const my_id = useAppSelector(selectUserId);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -28,7 +30,18 @@ export const useContactActions = (targetUser: IUser | string) => {
     navigate(Paths.contacts, { replace: true });
   }, [contact]);
 
+  const deleteContact = useCallback(() => {
+    dispatch(
+      deleteContactThunk({
+        deletedId: contact.user._id,
+        initiatorId: my_id,
+        returnUserAfter: false,
+      }),
+    );
+  }, [contact]);
+
   return {
     openContactProfile,
+    deleteContact,
   };
 };

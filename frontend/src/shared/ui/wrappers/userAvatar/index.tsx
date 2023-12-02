@@ -1,4 +1,4 @@
-import { IUser } from 'entities/session';
+import { IUser, userUtils } from 'entities/session';
 import { FC, memo } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { AvatarByFirstLetter } from '../firstLetterAvatar';
@@ -13,10 +13,13 @@ export const UserAvatar: FC<UserAvatarProps> = memo(({ user, className }) => {
 
   if (hasAvatar) {
     return (
-      <img
-        className={twMerge('overflow-hidden rounded-md object-cover', 'absolute h-full w-full', className)}
-        src={user.avatar}
-      />
+      <div className={twMerge('relative overflow-hidden', className)}>
+        <img
+          className={'absolute inset-0 left-0 right-0 top-0 h-full w-full overflow-hidden object-cover'}
+          src={user.avatar}
+          alt={`Avatar of ${userUtils.getName(user)}`}
+        />
+      </div>
     );
   }
 

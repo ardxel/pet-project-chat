@@ -4,16 +4,25 @@ import { useCallsContext } from 'entities/calls';
 import { IUser, userUtils } from 'entities/session';
 import { FC, useCallback, useMemo } from 'react';
 import { userActionItems } from 'shared/custom';
+import { excludeNullableValues } from 'shared/lib';
 import { DropdownListItem, IconWrapper } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
 import { useChatActions, useContactActions } from '../lib';
 
+type FirstArgType<T> = T extends (...args: infer P) => any ? P[0] : never;
+
+type MaybeAsync<T = (...args: any[]) => any> = T extends (...args: infer P) => infer R
+  ? (...args: P) => Promise<R> | R
+  : never;
+
 type ActionKey = keyof typeof userActionItems;
+
 type UserMongoId = string;
-type ActionButtonGroupOptions<T = typeof userActionItems> = {
-  [P in keyof T]?:
+
+type ActionButtonGroupOptions = {
+  [P in keyof typeof userActionItems]?:
     | {
-        callback?: (...args: unknown[]) => unknown;
+        callback?: MaybeAsync;
         rewriteCb?: boolean;
         hr?: boolean;
       }
@@ -35,43 +44,49 @@ export const ActionButtonGroup: FC<ActionButtonGroupProps> = ({
   btnClassName,
   menuClassName,
 }) => {
-  const { sendMessage } = useChatActions(targetUser);
-  const { openContactProfile } = useContactActions(targetUser);
+  const { sendMessage, changeChatStatus } = useChatActions(targetUser);
+  const { openContactProfile, deleteContact } = useContactActions(targetUser);
   const { callUser } = useCallsContext();
 
-  const optionKeys = useMemo(() => Object.keys(options) as ActionKey[], [options]);
+  const optionKeys = useMemo(() => Object.keys(excludeNullableValues(options)) as ActionKey[], [options]);
 
-  const selectProperHandler = useCallback(
+  const selectProperHandler: MaybeAsync = useCallback(
     (key: ActionKey) => {
       switch (key) {
         case 'audioCall':
-          return callUser.bind(
-            null,
-            ...([
-              {
-                isVideoCall: false,
-                receiverName: userUtils.getName(targetUser),
-                userId: userUtils.getUserId(targetUser),
-              },
-            ] as Parameters<typeof callUser>),
-          );
+          return callUser.bind(null, {
+            isVideoCall: false,
+            receiverName: userUtils.getName(targetUser),
+            userId: userUtils.getUserId(targetUser),
+          } as FirstArgType<typeof callUser>);
+
         case 'videoCall':
-          return callUser.bind(
-            null,
-            ...([
-              {
-                isVideoCall: true,
-                receiverName: userUtils.getName(targetUser),
-                userId: userUtils.getUserId(targetUser),
-              },
-            ] as Parameters<typeof callUser>),
-          );
+          return callUser.bind(null, {
+            isVideoCall: true,
+            receiverName: userUtils.getName(targetUser),
+            userId: userUtils.getUserId(targetUser),
+          } as FirstArgType<typeof callUser>);
+
         case 'sendMessage':
           return sendMessage;
+
         case 'viewProfile':
           return openContactProfile;
+
+        case 'restoreFromArchive':
+        case 'restoreFromTrash':
+          return changeChatStatus.bind(null, 'common' as FirstArgType<typeof changeChatStatus>);
+
+        case 'saveToArchive':
+          return changeChatStatus.bind(null, 'archived' as FirstArgType<typeof changeChatStatus>);
+
+        case 'deleteChat':
+          return changeChatStatus.bind(null, 'trash' as FirstArgType<typeof changeChatStatus>);
+
+        case 'deleteContact':
+          return deleteContact;
         default:
-          return undefined;
+          return () => console.warn('empty handler');
       }
     },
     [targetUser],
@@ -97,12 +112,12 @@ export const ActionButtonGroup: FC<ActionButtonGroupProps> = ({
                     : (options?.[key] as Exclude<ActionButtonGroupOptions[ActionKey], true>);
 
                   const handler = async () => {
-                    if (option?.rewriteCb === true) {
-                      option?.callback ? option.callback() : void 1;
+                    if (option?.rewriteCb) {
+                      await option?.callback?.();
                       return;
                     }
                     await selectProperHandler(key)();
-                    option?.callback ? option.callback() : void 1;
+                    await option?.callback?.();
                   };
 
                   return (

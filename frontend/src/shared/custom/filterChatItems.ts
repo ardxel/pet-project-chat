@@ -42,4 +42,8 @@ export const filterChatItems = [
     text: 'trash',
     Icon: DeleteForeverOutlinedIcon,
   },
-];
+] as const;
+
+type ValueOfReadonlyArrayField<T extends readonly any[], U extends keyof T[number]> = T[number][U];
+
+export type FilterChatText = ValueOfReadonlyArrayField<typeof filterChatItems, 'text'>;

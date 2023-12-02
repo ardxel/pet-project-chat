@@ -25,7 +25,7 @@ export const ChatMessage: FC<ChatMessageProps> = ({ message, showAvatar, isSelec
   const [isPressing, setPressing] = useState(false);
   const timeout = useRef(null);
 
-  const { text, sender, _id, conversationId } = message;
+  const { sender, _id, conversationId } = message;
   const SHOW_MENU_DELAY = 500;
   const isUserMsg = userId === sender;
   const isTextMsg = !message.type || message.type === 'text';
@@ -83,7 +83,7 @@ export const ChatMessage: FC<ChatMessageProps> = ({ message, showAvatar, isSelec
           </div>
           <div
             className={twMerge(
-              'absolute flex h-10 w-10 items-center justify-center',
+              'absolute bottom-0 flex h-10 w-10 items-center justify-center',
               isUserMsg ? '-left-11' : '-right-11',
             )}>
             {isUserMsg ? (

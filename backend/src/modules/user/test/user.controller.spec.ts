@@ -1,4 +1,6 @@
+import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
+import { B2Service } from 'modules/b2/b2.service';
 import { ContactService } from '../contact.service';
 import { HashService } from '../hash.service';
 import { UserController } from '../user.controller';
@@ -11,7 +13,7 @@ describe('UserController', () => {
   let userService: UserService;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UserService, ContactService, HashService],
+      providers: [UserService, ContactService, HashService, B2Service, ConfigService],
       controllers: [UserController],
     }).compile();
 

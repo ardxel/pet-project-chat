@@ -16,6 +16,8 @@ const _constants = {
     BUILD_DIR: resolveFromMainDir('build'),
     PUBLIC_DIR: resolveFromMainDir('static'),
     SRC_DIR: resolveFromMainDir('src'),
+    TEST_DIR: resolveFromMainDir('src/test'),
+    MOCK_DIR: resolveFromMainDir('__mocks__'),
     HTML_TEMPLATE: path.join(__dirname, 'public', 'index.html'),
     ENTRYPOINT: path.join(__dirname, 'src', 'app', 'index.tsx'),
   },
@@ -59,27 +61,27 @@ const configurePlugins = () => {
 const configureRules = () => {
   return [
     // --- JS | TS USING BABEL
-    // {
-    //   test: /\.[jt]sx?$/,
-    //   exclude: /node_modules/,
-    //   use: {
-    //     loader: 'babel-loader',
-    //     options: {
-    //       cacheDirectory: true, // Using a cache to avoid of recompilation
-    //     },
-    //   },
-    // },
-    // --- JS | TS USING ESBUILD
     {
       test: /\.[jt]sx?$/,
-      exclude: [/node_modules/, /test\.[jt]sx?$/],
+      exclude: [/node_modules/, /test\.[jt]sx?$/, _constants.paths.TEST_DIR, _constants.paths.MOCK_DIR],
       use: {
-        loader: 'esbuild-loader',
+        loader: 'babel-loader',
         options: {
-          tsconfig: './tsconfig.json',
+          cacheDirectory: true, // Using a cache to avoid of recompilation
         },
       },
     },
+    // --- JS | TS USING ESBUILD
+    // {
+    //   test: /\.[jt]sx?$/,
+    //   exclude: [/node_modules/, /test\.[jt]sx?$/, /jest@utils/],
+    //   use: {
+    //     loader: 'esbuild-loader',
+    //     options: {
+    //       tsconfig: './tsconfig.json',
+    //     },
+    //   },
+    // },
     // --- HTML
     {
       test: /\.(html)$/,

@@ -40,5 +40,15 @@ export const sessionApi = baseApi.injectEndpoints({
       invalidatesTags: [SESSION_TAG],
       transformResponse: (response: DataResponse<IUser>) => mapUpdatedUser(response),
     }),
+    changeAvatar: build.mutation({
+      query: (body: FormData) => ({
+        url: '/user/avatar',
+        headers: {},
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: [SESSION_TAG],
+      transformResponse: (response: DataResponse<IUser>) => mapUpdatedUser(response),
+    }),
   }),
 });

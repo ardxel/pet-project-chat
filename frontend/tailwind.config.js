@@ -27,6 +27,7 @@ const config = {
       xs1: '520px',
       xs0: '576px',
       1400: '1400px',
+      '3xl': '1400px',
       ...require('tailwindcss/defaultTheme').screens,
     },
     colors: modernColors(appColors),

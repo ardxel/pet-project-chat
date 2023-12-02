@@ -1,5 +1,5 @@
 import { screen } from '@testing-library/react';
-import { renderWithProviders } from 'shared/lib';
+import { renderWithProviders } from 'test';
 import { AvatarByFirstLetter } from './index';
 
 describe('Test FirstLetterAvatar component', () => {

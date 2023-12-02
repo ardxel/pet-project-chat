@@ -9,7 +9,7 @@ class UserUtils {
    */
   public getMutualContactIds(...users: IUser[]): string[] {
     const contactsCounterMap: Record<string, number> = {};
-    const contactIds: string[] = [];
+    const contactIds: Set<string> = new Set();
 
     users.forEach((user) => {
       if (user.contacts && user.contacts.length > 0) {
@@ -18,7 +18,7 @@ class UserUtils {
           if (contactId in contactsCounterMap) {
             const count = (contactsCounterMap[contactId] += 1);
             if (count === users.length) {
-              contactIds.push(contactId);
+              contactIds.add(contactId);
             }
           } else {
             contactsCounterMap[contactId] = 1;
@@ -27,7 +27,7 @@ class UserUtils {
       }
     });
 
-    return contactIds;
+    return Array.from(contactIds);
   }
 
   /**
@@ -35,7 +35,7 @@ class UserUtils {
    * @param {IUser} user
    * @returns вернуть полное имя если оно есть, иначе вернуть основное (name)
    */
-  public getName(user: IUser | string): string {
+  public getName(user: IUser | Partial<IUser> | string): string {
     if (typeof user === 'string') return;
 
     if (this.hasFullname(user)) {

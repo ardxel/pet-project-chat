@@ -3,7 +3,8 @@ import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { selectUserData } from 'entities/session';
 import { Form, Formik } from 'formik';
-import { useState } from 'react';
+import { ProfileFormProps } from 'pages/profile/details';
+import { FC, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'shared/model';
 import { IconWrapper } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
@@ -11,10 +12,10 @@ import * as yup from 'yup';
 import { changeCountryThunk } from '../model';
 import { SelectCountryComponent } from './SelectCountryComponent';
 
-export const ProfileChangeCountry = () => {
+export const ProfileChangeCountry: FC<ProfileFormProps> = ({ enabledEditingByUser }) => {
   const user = useAppSelector(selectUserData);
   const [isEdit, setIsEdit] = useState(false);
-  const [error, setError] = useState<string>('');
+  const [fetchError, setFetchError] = useState<string>('');
   const dispatch = useAppDispatch();
 
   return (
@@ -32,10 +33,10 @@ export const ProfileChangeCountry = () => {
           await dispatch(changeCountryThunk({ _id: user._id, ...values })).unwrap();
           actions.resetForm({ values: { country: values.country } });
           setIsEdit(false);
-          setError('');
+          setFetchError('');
         } catch (error) {
           console.log(error);
-          setError((error as Error).message);
+          setFetchError((error as Error).message);
           actions.resetForm({ values: { country: user.phoneNumber || '' } });
         }
       }}>
@@ -47,16 +48,20 @@ export const ProfileChangeCountry = () => {
                 <label htmlFor='input-change-phone-number' className='mb-2 w-full xs2:w-2/4 lg:w-2/4'>
                   Ваша страна
                 </label>
-                {Boolean(error) && (
-                  <h1 className='w-full text-sm text-red-500 first-letter:capitalize xs2:w-2/4 lg:w-2/4'>{error}</h1>
+                {Boolean(fetchError) && (
+                  <h1 className='w-full text-sm text-red-500 first-letter:capitalize xs2:w-2/4 lg:w-2/4'>{fetchError}</h1>
                 )}
               </div>
               <div className='relative w-full'>
-                <SelectCountryComponent name={'country'} value={user.country} disabled={!isEdit} />
+                <SelectCountryComponent
+                  name={'country'}
+                  value={user.country}
+                  disabled={!isEdit || !enabledEditingByUser}
+                />
                 <div
                   className='absolute -bottom-[1px] right-[1px] h-full transform border-r-border'
                   title={errors['country']}>
-                  {isEdit && (
+                  {isEdit && enabledEditingByUser ? (
                     <button type='submit' disabled={isSubmitting}>
                       <IconWrapper
                         className={twMerge(
@@ -69,25 +74,27 @@ export const ProfileChangeCountry = () => {
                         <DoneOutlinedIcon className='!h-5 !w-5' />
                       </IconWrapper>
                     </button>
+                  ) : null}
+                  {enabledEditingByUser && (
+                    <button
+                      type='button'
+                      onClick={() => {
+                        resetForm({ values: { country: isEdit ? user.country || '' : '' } });
+                        setIsEdit(!isEdit);
+                      }}>
+                      <IconWrapper
+                        className={twMerge(
+                          'h-[38px] w-[38px]',
+                          isEdit ? 'rounded-none rounded-r-[5px]' : 'rounded-[5px]',
+                        )}>
+                        {isEdit ? (
+                          <CloseOutlinedIcon className='!h-5 !w-5' />
+                        ) : (
+                          <EditOutlinedIcon className='!h-5 !w-5' />
+                        )}
+                      </IconWrapper>
+                    </button>
                   )}
-                  <button
-                    type='button'
-                    onClick={() => {
-                      resetForm({ values: { country: isEdit ? user.country || '' : '' } });
-                      setIsEdit(!isEdit);
-                    }}>
-                    <IconWrapper
-                      className={twMerge(
-                        'h-[38px] w-[38px]',
-                        isEdit ? 'rounded-none rounded-r-[5px]' : 'rounded-[5px]',
-                      )}>
-                      {isEdit ? (
-                        <CloseOutlinedIcon className='!h-5 !w-5' />
-                      ) : (
-                        <EditOutlinedIcon className='!h-5 !w-5' />
-                      )}
-                    </IconWrapper>
-                  </button>
                 </div>
               </div>
             </div>

@@ -1,23 +1,37 @@
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { RegisterUserDto } from 'modules/auth/dto';
+import { B2Service } from 'modules/b2/b2.service';
 import { Model, Types } from 'mongoose';
 import { User, UserDocument } from 'schemas';
-import { ChangePasswordDto, FindManyQueryDto, UpdateUserDto } from './dto';
+import {
+  ChangeAvatarDto,
+  ChangeConversationStatusDto,
+  ChangePasswordDto,
+  FindManyQueryDto,
+  UpdateUserDto,
+} from './dto';
 import { HashService } from './hash.service';
 
-type EmailOrId = { email?: string; _id?: Types.ObjectId };
+type UniqueMap = { email?: string; _id?: Types.ObjectId; name?: string };
 
 @Injectable()
 export class UserService {
+  private readonly _logger: Logger = new Logger(UserService.name);
   constructor(
     @InjectModel(User.name) private readonly model: Model<UserDocument>,
     private readonly hashService: HashService,
+    private readonly b2Service: B2Service,
   ) {}
 
   async create(dto: RegisterUserDto): Promise<UserDocument> {
-    const user = await this.model.create(dto);
-    return user;
+    try {
+      const user = await this.model.create(dto);
+      return user;
+    } catch (error) {
+      this._logger.error(error);
+      throw new BadRequestException(error?.message);
+    }
   }
 
   async findById(_id: Types.ObjectId, options?: { selectPassword?: boolean }) {
@@ -29,7 +43,7 @@ export class UserService {
   }
 
   async findByEmail(email: string, options?: { selectPassword?: boolean }): Promise<UserDocument | null> {
-    return await this.model.findOne({ email }).select(options?.selectPassword ? '+password' : undefined);
+    return await this.model.findOne({ email }, options?.selectPassword ? '+password' : undefined);
   }
 
   async findAll() {
@@ -37,7 +51,7 @@ export class UserService {
   }
 
   async findMany(queryDto: FindManyQueryDto) {
-    if (!queryDto.limit || queryDto.limit > 10) {
+    if (!queryDto.limit) {
       queryDto.limit = 10;
     }
     if (!queryDto.page || queryDto.page < 1) {
@@ -45,12 +59,15 @@ export class UserService {
     }
 
     const skip = (queryDto.page - 1) * queryDto.limit;
-    const regexPattern = new RegExp(queryDto.name, 'i');
 
-    const users = await this.model
-      .find({ name: { $regex: regexPattern } })
-      .skip(skip)
-      .limit(queryDto.limit);
+    const filterQueryByName = queryDto.name ? { name: { $regex: new RegExp(queryDto.name, 'i') } } : undefined;
+    const filterQueryByIds = queryDto.ids?.length ? { _id: { $in: queryDto.ids } } : undefined;
+
+    const filterQueries = [];
+    if (filterQueryByName) filterQueries.push(filterQueryByName);
+    if (filterQueryByIds) filterQueries.push(filterQueryByIds);
+
+    const users = await this.model.find({ $and: filterQueries }).skip(skip).limit(queryDto.limit);
 
     return users;
   }
@@ -87,9 +104,29 @@ export class UserService {
 
     userById.set('password', hashedNewPassword);
     await userById.save();
+    return;
+  }
 
-    const { password, ...safeUserData } = userById;
-    return safeUserData;
+  async changeAvatar(dto: ChangeAvatarDto, file: Express.Multer.File) {
+    const user = await this.findById(dto.userId);
+    const avatarUrl = await this.b2Service.uploadFile(dto.userId, file);
+
+    return await this.update({ _id: user._id, avatar: avatarUrl });
+  }
+
+  async changeConversationStatus(dto: ChangeConversationStatusDto) {
+    const user = await this.findById(dto.userId);
+
+    const conversationIndex = user.conversations.findIndex((item) => item.data.equals(dto.conversationId));
+
+    if (conversationIndex === -1) {
+      throw new BadRequestException('Conversation was not found');
+    }
+
+    user.conversations[conversationIndex].status = dto.status;
+
+    await user.save();
+    return user;
   }
 
   async delete(_id: Types.ObjectId): Promise<boolean> {
@@ -101,12 +138,12 @@ export class UserService {
     return await this.model.deleteMany({});
   }
 
-  async isExist({ email, _id }: EmailOrId) {
-    return Boolean(await this.model.exists(email ? { email } : { _id }));
+  async isExist(fields: UniqueMap) {
+    return Boolean(await this.model.exists(fields));
   }
 
-  async isNotExist({ email, _id }: EmailOrId) {
-    return !Boolean(await this.model.exists(email ? { email } : { _id }));
+  async isNotExist(fields: UniqueMap) {
+    return !Boolean(await this.model.exists(fields));
   }
 
   public _externalModel() {

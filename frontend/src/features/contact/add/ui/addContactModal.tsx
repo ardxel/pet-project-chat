@@ -2,7 +2,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import DownloadDoneOutlinedIcon from '@mui/icons-material/DownloadDoneOutlined';
 import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined';
-import { useLazySearchUsersByNameQuery } from 'entities/chats';
+import { useLazySearchUsersQuery } from 'entities/chats';
 import { AddContactDto, selectContactList } from 'entities/contacts';
 import { selectUserId, userUtils } from 'entities/session';
 import { ChangeEvent, FC, Fragment, useCallback, useMemo } from 'react';
@@ -18,8 +18,8 @@ interface AddContactModalProps {
   onClose: () => void;
 }
 
-export const AddContactModal: FC<AddContactModalProps> = ({ onClose, isOpen }) => {
-  const [fetchUsers, { data: users = [], isLoading }] = useLazySearchUsersByNameQuery();
+const AddContactModal: FC<AddContactModalProps> = ({ onClose, isOpen }) => {
+  const [fetchUsers, { data: users = [], isLoading }] = useLazySearchUsersQuery();
   const contacts = useAppSelector(selectContactList);
   const userId = useAppSelector(selectUserId);
   const dispatch = useAppDispatch();
@@ -64,7 +64,7 @@ export const AddContactModal: FC<AddContactModalProps> = ({ onClose, isOpen }) =
           <div className='fixed inset-0 bg-black bg-opacity-25' />
         </Transition.Child>
         <div className='fixed inset-0'>
-          <div className='flex min-h-full items-center justify-center p-4 text-center'>
+          <div className='flex min-h-full  items-center justify-center p-4 text-center'>
             <Transition.Child
               as={Fragment}
               enter='ease-out duration-300'
@@ -73,7 +73,10 @@ export const AddContactModal: FC<AddContactModalProps> = ({ onClose, isOpen }) =
               leave='ease-in duration-200'
               leaveFrom='opacity-100 scale-100'
               leaveTo='opacity-0 scale-95'>
-              <Dialog.Panel className={twMerge('w-full rounded-md bg-bg transition-all xs1:w-80')}>
+              <Dialog.Panel
+                className={twMerge(
+                  'h-full max-h-[420px] min-h-[420px] w-full rounded-md bg-bg transition-all xs1:w-80',
+                )}>
                 <button
                   onClick={onClose}
                   className='absolute -right-3 -top-3 h-5 w-5 rounded-full bg-bg p-5 transition-colors hover:bg-icon-active-bg  [&>*]:hover:text-icon-active-color'>
@@ -97,13 +100,13 @@ export const AddContactModal: FC<AddContactModalProps> = ({ onClose, isOpen }) =
                             className='relative flex cursor-pointer items-center justify-between px-4 py-3'>
                             <div className='flex gap-x-3'>
                               <div className='relative h-[50px] w-[50px]'>
-                                <UserAvatar user={user} className='h-full w-full' />
+                                <UserAvatar user={user} className='h-full w-full rounded-md' />
                               </div>
                               <div>
                                 {hasFullname ? (
                                   <>
                                     <h4 className='text-left text-sm'>{`${user.firstName} ${user.lastName}`}</h4>
-                                    <p className='mt-1 text-xs'>{user.name}</p>
+                                    <p className='mt-1 text-left text-xs'>{`@${user.name}`}</p>
                                   </>
                                 ) : (
                                   <div className='flex h-full items-center'>
@@ -138,3 +141,5 @@ export const AddContactModal: FC<AddContactModalProps> = ({ onClose, isOpen }) =
     </Transition>
   );
 };
+
+export default AddContactModal;

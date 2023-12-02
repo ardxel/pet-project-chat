@@ -16,7 +16,6 @@ const router = createBrowserRouter([
   {
     element: <MainLayout />,
     path: Paths.home,
-
     children: [
       {
         path: Paths.chat,
@@ -30,10 +29,6 @@ const router = createBrowserRouter([
       {
         path: Paths.profile,
         element: withGuestGuard(<ProfilePage />),
-      },
-      {
-        path: Paths.stories,
-        element: <div></div>,
       },
       NOT_FOUND,
     ],

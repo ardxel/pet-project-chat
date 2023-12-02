@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { FilterChatText } from 'shared/custom';
 
 interface UIVisibilityState {
   openChat: boolean;
@@ -6,6 +7,7 @@ interface UIVisibilityState {
   autoOpenContactPage: boolean;
   openChatOptions: boolean;
   openSearchMessageBar: boolean;
+  chatBarFilterOption: FilterChatText;
 }
 
 const initialUIVisibilityState: UIVisibilityState = {
@@ -14,6 +16,7 @@ const initialUIVisibilityState: UIVisibilityState = {
   autoOpenContactPage: true,
   openChatOptions: false,
   openSearchMessageBar: false,
+  chatBarFilterOption: 'general',
 };
 
 const getIgnoredUIVisibilityStateKeys = <T extends Record<string, any>>(initialState: T): (keyof T)[] => {
@@ -33,6 +36,11 @@ export const uiVisibilitySlice = createSlice({
     clearUiVisibilityStateData: () => {
       return initialUIVisibilityState;
     },
+
+    setChatBarFilterOption: (state, action: PayloadAction<FilterChatText>) => {
+      state.chatBarFilterOption = action.payload;
+    },
+
     setAutoOpenContactPage: (state, action: PayloadAction<boolean>) => {
       state.autoOpenContactPage = action.payload;
     },
@@ -67,6 +75,7 @@ export const {
   setOpenSearchMessageBar,
   setOpenContactPage,
   setAutoOpenContactPage,
+  setChatBarFilterOption,
 } = uiVisibilitySlice.actions;
 
 export const selectOpenChat = (state: RootState) => state.uiVisibility.openChat;
@@ -74,3 +83,4 @@ export const selectOpenChatOptions = (state: RootState) => state.uiVisibility.op
 export const selectOpenSearchMessageBar = (state: RootState) => state.uiVisibility.openSearchMessageBar;
 export const selectOpenContactPage = (state: RootState) => state.uiVisibility.openContactPage;
 export const selectIsAutoOpenContactPage = (state: RootState) => state.uiVisibility.autoOpenContactPage;
+export const selectChatBarFilterOption = (state: RootState) => state.uiVisibility.chatBarFilterOption;

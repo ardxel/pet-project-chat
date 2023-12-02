@@ -1,5 +1,6 @@
-import { selectChatIdByCompanionId, setOpenedChatId } from 'entities/chats';
+import { ConversationStatus, selectChatIdByCompanionId, setOpenedChatId } from 'entities/chats';
 import { IUser, userUtils } from 'entities/session';
+import { changeChatStatusThunk } from 'features/chat/changeChatStatus';
 import { createPrivateChat } from 'features/chat/create/model';
 import { useNavigate } from 'react-router';
 import { useAppDispatch, useAppSelector } from 'shared/model';
@@ -31,7 +32,14 @@ export const useChatActions = (targetUser: IUser | string) => {
     navigate(Paths.chat, { replace: true });
   };
 
+  const changeChatStatus = async (status: ConversationStatus) => {
+    if (!chatId) return;
+
+    dispatch(changeChatStatusThunk({ userId, conversationId: chatId, status })).unwrap();
+  };
+
   return {
     sendMessage,
+    changeChatStatus,
   };
 };

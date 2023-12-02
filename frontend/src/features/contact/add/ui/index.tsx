@@ -1,13 +1,14 @@
-import { useState } from 'react';
+import { Suspense, lazy, useState } from 'react';
 import { AddContactButton } from './addContactButton';
-import { AddContactModal } from './addContactModal';
+
+const AddContactModal = lazy(() => import('./addContactModal'));
 
 export const AddContact = () => {
   const [open, setOpen] = useState(false);
   return (
     <>
       <AddContactButton onClick={() => setOpen(true)} />
-      <AddContactModal isOpen={open} onClose={() => setOpen(false)} />
+      <Suspense>{open && <AddContactModal isOpen={open} onClose={() => setOpen(false)} />}</Suspense>
     </>
   );
 };

@@ -1,5 +1,7 @@
+import { ConfigService } from '@nestjs/config';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
+import { B2Service } from 'modules/b2/b2.service';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'schemas';
 import { HashService } from '../hash.service';
@@ -16,6 +18,8 @@ describe('UserService', () => {
       providers: [
         UserService,
         HashService,
+        B2Service,
+        ConfigService,
         {
           provide: getModelToken(User.name),
           useClass: UserModel,

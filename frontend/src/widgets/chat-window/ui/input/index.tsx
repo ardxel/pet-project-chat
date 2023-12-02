@@ -6,7 +6,7 @@ import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import TagFacesOutlinedIcon from '@mui/icons-material/TagFacesOutlined';
 import { selectEditableMessage, selectOpenedChatId, setEditableMessage } from 'entities/chats';
 import { selectUserId } from 'entities/session';
-import { updateUserStatusInChat } from 'features/chat/updateStatus';
+import { updateUserStatusInChat } from 'features/chat/updateUserStatus';
 import { createMessageThunk } from 'features/message/create';
 import { editMessageThunk } from 'features/message/edit';
 import { debounce } from 'lodash';

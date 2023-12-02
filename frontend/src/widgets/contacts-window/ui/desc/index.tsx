@@ -1,12 +1,15 @@
 import { selectOpenedPageContactData } from 'entities/contacts';
 import { ActionButtonGroup } from 'features/actionButtonGroup';
-import { useState } from 'react';
+import { Suspense, lazy, useState } from 'react';
+import { ScaleLoader } from 'react-spinners';
 import { useAppSelector } from 'shared/model';
 import { HorizontalTabs } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
 import { ContactsWindowAboutTab } from './about.tab';
 
 const tabOptions = ['Информация', 'Общие контакты', 'Галерея'] as const;
+
+const MutualContactsTab = lazy(() => import('../desc/mutuals.tab'));
 
 export const ContactWindowDescription = function () {
   const contact = useAppSelector(selectOpenedPageContactData);
@@ -34,7 +37,15 @@ export const ContactWindowDescription = function () {
         />
       </div>
       <div className='w-full rounded-b-2xl bg-bg p-7'>
-        {selectedTab === 0 && <ContactsWindowAboutTab contact={contact} />}
+        <Suspense
+          fallback={
+            <div className='flex h-full w-full items-center justify-center'>
+              <ScaleLoader className='[&>span]:!bg-blue-500' />
+            </div>
+          }>
+          {selectedTab === 0 && <ContactsWindowAboutTab contact={contact} />}
+          {selectedTab === 1 && <MutualContactsTab contact={contact} />}
+        </Suspense>
       </div>
     </div>
   );

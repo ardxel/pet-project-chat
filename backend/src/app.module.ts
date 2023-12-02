@@ -8,6 +8,7 @@ import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { B2Module } from './modules/b2/b2.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { ConversationModule } from './modules/conversation/conversation.module';
 import { MessageModule } from './modules/message/message.module';
@@ -35,7 +36,10 @@ import { isDevMode } from './utils';
     ChatModule,
     /* Message module */
     MessageModule,
+    /* Conversation Module */
     ConversationModule,
+    /* Backblaze Module */
+    B2Module,
   ],
   controllers: [AppController],
   providers: [

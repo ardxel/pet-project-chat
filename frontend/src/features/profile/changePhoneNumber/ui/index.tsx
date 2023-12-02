@@ -3,7 +3,8 @@ import DoneOutlinedIcon from '@mui/icons-material/DoneOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { selectUserData } from 'entities/session';
 import { Form, Formik } from 'formik';
-import { useState } from 'react';
+import { ProfileFormProps } from 'pages/profile/details';
+import { FC, useState } from 'react';
 import { isValidPhoneNumber } from 'react-phone-number-input';
 import { useAppDispatch, useAppSelector } from 'shared/model';
 import { IconWrapper, MobileInputWithFormik } from 'shared/ui';
@@ -11,7 +12,7 @@ import { twMerge } from 'tailwind-merge';
 import * as yup from 'yup';
 import { changePhoneNumberThunk } from '../model';
 
-export const ProfileChangePhoneNumber = () => {
+export const ProfileChangePhoneNumber: FC<ProfileFormProps> = ({ enabledEditingByUser }) => {
   const user = useAppSelector(selectUserData);
   const [isEdit, setIsEdit] = useState(false);
   const [error, setError] = useState<string>('');
@@ -44,7 +45,7 @@ export const ProfileChangePhoneNumber = () => {
           actions.resetForm({ values: { phoneNumber: user.phoneNumber || '' } });
         }
       }}>
-      {({ isSubmitting, isValid, dirty, resetForm, errors }) => (
+      {({ isSubmitting, isValid, dirty, resetForm, errors, values }) => (
         <Form className='flex w-full flex-col rounded-md '>
           <div className='flex w-full flex-col gap-x-4 lg:flex-row lg:justify-between'>
             <div className='flex w-full flex-col'>
@@ -57,11 +58,16 @@ export const ProfileChangePhoneNumber = () => {
                 )}
               </div>
               <div className='relative w-full'>
-                <MobileInputWithFormik id='input-change-phone-number' name='phoneNumber' disabled={!isEdit} />
+                <MobileInputWithFormik
+                  placeholder={!values.phoneNumber && !enabledEditingByUser ? 'Телефон не выбран' : undefined}
+                  id='input-change-phone-number'
+                  name='phoneNumber'
+                  disabled={!isEdit || !enabledEditingByUser}
+                />
                 <div
                   className='absolute -bottom-[1px] right-[1px] h-full transform border-r-border'
                   title={errors['phoneNumber']}>
-                  {isEdit && (
+                  {isEdit && enabledEditingByUser ? (
                     <button type='submit' disabled={isSubmitting}>
                       <IconWrapper
                         className={twMerge(
@@ -74,25 +80,27 @@ export const ProfileChangePhoneNumber = () => {
                         <DoneOutlinedIcon className='!h-5 !w-5' />
                       </IconWrapper>
                     </button>
-                  )}
-                  <button
-                    type='button'
-                    onClick={() => {
-                      resetForm({ values: { phoneNumber: isEdit ? user.phoneNumber || '' : '' } });
-                      setIsEdit(!isEdit);
-                    }}>
-                    <IconWrapper
-                      className={twMerge(
-                        'h-[38px] w-[38px]',
-                        isEdit ? 'rounded-none rounded-r-[5px]' : 'rounded-[5px]',
-                      )}>
-                      {isEdit ? (
-                        <CloseOutlinedIcon className='!h-5 !w-5' />
-                      ) : (
-                        <EditOutlinedIcon className='!h-5 !w-5' />
-                      )}
-                    </IconWrapper>
-                  </button>
+                  ) : null}
+                  {enabledEditingByUser ? (
+                    <button
+                      type='button'
+                      onClick={() => {
+                        resetForm({ values: { phoneNumber: isEdit ? user.phoneNumber || '' : '' } });
+                        setIsEdit(!isEdit);
+                      }}>
+                      <IconWrapper
+                        className={twMerge(
+                          'h-[38px] w-[38px]',
+                          isEdit ? 'rounded-none rounded-r-[5px]' : 'rounded-[5px]',
+                        )}>
+                        {isEdit ? (
+                          <CloseOutlinedIcon className='!h-5 !w-5' />
+                        ) : (
+                          <EditOutlinedIcon className='!h-5 !w-5' />
+                        )}
+                      </IconWrapper>
+                    </button>
+                  ) : null}
                 </div>
               </div>
             </div>

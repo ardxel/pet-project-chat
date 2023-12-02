@@ -120,13 +120,11 @@ export class ConversationService {
   async delete(conversationId: Types.ObjectId) {}
 
   async isExist(conversationId: Types.ObjectId) {
-    const chatCount = await this.model.countDocuments(conversationId);
-    return chatCount > 0;
+    return Boolean(await this.model.exists({ _id: conversationId }));
   }
 
   async isNotExist(conversationId: Types.ObjectId) {
-    const chatCount = await this.model.countDocuments(conversationId);
-    return chatCount === 0;
+    return !Boolean(await this.model.exists({ _id: conversationId }));
   }
 
   async findAll() {

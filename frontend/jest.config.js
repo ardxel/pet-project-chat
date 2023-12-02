@@ -41,7 +41,7 @@ module.exports = {
   modulePaths: [compilerOptions.baseUrl],
   moduleNameMapper: {
     ...pathsToModuleNameMapper({}, { prefix: '<rootDir>/' }),
-    '\\.svg$': '<rootDir>/__mocks__/svg.js',
+    '\\.svg': '<rootDir>/__mocks__/svg.js',
   },
 
   // Additional Jest options (optional)

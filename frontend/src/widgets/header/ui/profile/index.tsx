@@ -56,16 +56,26 @@ const ProfileDarkModeSwitcher = () => {
   );
 };
 
+const [toProfile, toSettings, toChangePassword] = profileLinks;
+
 const ProfileLinks = () => {
   return (
     <ul className='flex flex-col gap-y-2'>
-      {profileLinks.map((link) => (
-        <li key={link.href}>
-          <Link to={link.href}>
-            <DropdownListItem Icon={<link.Icon />} text={link.text} />
-          </Link>
-        </li>
-      ))}
+      <li>
+        <Link to={toProfile.href} state={{ editProfileMain: false }}>
+          <DropdownListItem Icon={<toProfile.Icon />} text={toProfile.text} />
+        </Link>
+      </li>
+      <li>
+        <Link to={toSettings.href} state={{ editProfileMain: true }}>
+          <DropdownListItem Icon={<toSettings.Icon />} text={toSettings.text} />
+        </Link>
+      </li>
+      <li>
+        <Link to={toChangePassword.href} state={{ passwordTab: true }}>
+          <DropdownListItem Icon={<toChangePassword.Icon />} text={toChangePassword.text} />
+        </Link>
+      </li>
     </ul>
   );
 };
@@ -74,8 +84,8 @@ const HeaderProfile = () => {
   const user = useAppSelector(selectUserData);
   return (
     <Menu as='div' className='dropdown'>
-      <Menu.Button className='relative h-11 w-11 md:h-12 md:w-12'>
-        <UserAvatar user={user} className='h-full w-full rounded-full transition-all duration-200 hover:border-4' />
+      <Menu.Button className='relative flex h-11 w-11 items-center justify-center md:h-12 md:w-12'>
+        <UserAvatar user={user} className='h-full w-full rounded-full' />
       </Menu.Button>
       <Menu.Items
         as='div'
