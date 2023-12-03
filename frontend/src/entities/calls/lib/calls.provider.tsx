@@ -37,58 +37,53 @@ interface CallsProviderProps {
 }
 
 export const CallsProvider: FC<CallsProviderProps> = ({ children }) => {
+  // prettier-ignore
   const {
-    open,
-    setOpen,
-    receivingCall,
-    setReceivingCall,
-    setVerdict,
-    verdict,
-    callWithVideo,
-    setCallWithVideo,
+    open,          setOpen,
+    receivingCall, setReceivingCall,
+    verdict,       setVerdict,
+    callWithVideo, setCallWithVideo,
+
     resetCallState,
   } = useCallState();
 
+  // prettier-ignore
   const {
-    callerId,
-    setCallerId,
-    callerName,
-    setCallerName,
-    callerSignal,
-    setCallerSignal,
-    resetCallerState,
-    callerIsMe,
-    setCallerIsMe,
+    callerId,     setCallerId,
+    callerName,   setCallerName,
+    callerSignal, setCallerSignal,
+    callerIsMe,   setCallerIsMe,
+
+    resetCallerState
   } = useCallerState();
 
+  // prettier-ignore
   const {
-    receiverId,
-    setReceiverId,
-    receiverName,
-    setReceiverName,
-    resetReceiverState,
-    receiverIsMe,
-    setReceiverIsMe,
+    receiverId,   setReceiverId,
+    receiverName, setReceiverName,
+    receiverIsMe, setReceiverIsMe,
+
+    resetReceiverState
   } = useReceiverState();
 
+  // prettier-ignore
   const {
-    setRemoteStream,
-    isRemoteAudioEnabled,
-    setIsRemoteAudioEnabled,
-    isRemoteVideoEnabled,
-    setIsRemoteVideoEnabled,
+    remoteStream,         setRemoteStream,
+    isRemoteAudioEnabled, setIsRemoteAudioEnabled,
+    isRemoteVideoEnabled, setIsRemoteVideoEnabled,
+
     resetRemoteMediaState,
     remoteVideoRef,
+    
   } = useRemoteMediaState();
 
+  // prettier-ignore
   const {
-    isLocalVideoEnabled,
-    setIsLocalVideoEnabled,
-    isMicrophoneActive,
-    setIsMicrophoneActive,
-    localStream,
-    setLocalStream,
+    isLocalVideoEnabled, setIsLocalVideoEnabled,
+    isMicrophoneActive,  setIsMicrophoneActive,
+    localStream,         setLocalStream,
     localVideoRef,
+    
     resetLocalMediaState,
   } = useLocalMediaState();
 

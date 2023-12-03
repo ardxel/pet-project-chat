@@ -1,6 +1,5 @@
 import ChatIcon from '@mui/icons-material/Chat';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-import SwitchAccountIcon from '@mui/icons-material/SwitchAccount';
 import { Paths } from 'shared/routing';
 
 export const quickNavigation = [
@@ -19,12 +18,12 @@ export const quickNavigation = [
         Icon: PeopleAltIcon,
         text: 'Контакты',
       },
-      {
-        id: 2,
-        href: Paths.stories,
-        Icon: SwitchAccountIcon,
-        text: 'Сторисы',
-      },
+      // {
+      //   id: 2,
+      //   href: Paths.stories,
+      //   Icon: SwitchAccountIcon,
+      //   text: 'Сторисы',
+      // },
     ],
   },
 ] as const;

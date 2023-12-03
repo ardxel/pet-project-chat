@@ -1,6 +1,6 @@
 import { Listbox } from '@headlessui/react';
 import { useField } from 'formik';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { getCountries } from 'react-phone-number-input';
 import labels from 'react-phone-number-input/locale/ru.json';
 import { useAdaptiveMenuPosition } from 'shared/model';
@@ -11,8 +11,7 @@ const labelCountries = getCountries().map((country) => labels[country]);
 export const SelectCountryComponent = ({ disabled, name }: any) => {
   const [field, meta, helper] = useField({ name });
   const [country, setCountry] = useState();
-  const optionsRef = useRef();
-  const position = useAdaptiveMenuPosition(optionsRef);
+  const [position, optionsRef] = useAdaptiveMenuPosition([disabled]);
 
   if (disabled) {
     return (

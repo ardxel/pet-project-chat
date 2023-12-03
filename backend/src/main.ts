@@ -5,11 +5,12 @@ import { IoAdapter } from '@nestjs/platform-socket.io';
 import { useContainer } from 'class-validator';
 import { TransformResponseInterceptor } from 'common';
 import { setupSwagger } from 'common/swagger';
+import helmet from 'helmet';
 import { AppModule } from './app.module';
 
 const corsOptions = {
   development: { origin: '*' },
-  production: { origin: [process.env.CLIENT_DOMAIN], methods: ['GET', 'PUT', 'POST', 'PATCH', 'DELETE'] },
+  production: { methods: ['GET', 'PUT', 'POST', 'PATCH', 'DELETE'] },
 };
 
 async function bootstrap() {
@@ -20,6 +21,7 @@ async function bootstrap() {
   const node_env = configService.get('NODE_ENV');
 
   app.enableCors(corsOptions[node_env]);
+  app.use(helmet());
   app.useGlobalPipes(new ValidationPipe());
 
   app.setGlobalPrefix('api/v1');

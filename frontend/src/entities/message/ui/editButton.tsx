@@ -2,7 +2,7 @@ import { Menu } from '@headlessui/react';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import DriveFileRenameOutlineOutlinedIcon from '@mui/icons-material/DriveFileRenameOutlineOutlined';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { FC, useRef } from 'react';
+import { FC } from 'react';
 import { useAdaptiveMenuPosition } from 'shared/model';
 import { DropdownListItem, IconWrapper } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
@@ -15,8 +15,7 @@ interface ChatMessageEditButtonProps {
 }
 
 export const ChatMessageEditButton: FC<ChatMessageEditButtonProps> = ({ show, open, onDelete, onEdit }) => {
-  const btnRef = useRef<HTMLButtonElement>(null);
-  const position = useAdaptiveMenuPosition(btnRef, [show], { menuHeight: 300 });
+  const [position, btnRef] = useAdaptiveMenuPosition<HTMLButtonElement>([show], { menuHeight: 300 });
 
   if (show) {
     return (

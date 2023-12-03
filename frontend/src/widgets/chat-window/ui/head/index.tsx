@@ -4,8 +4,7 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import SearchIcon from '@mui/icons-material/Search';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import { useCallsContext } from 'entities/calls';
-import { selectOpenedChatCompanion, selectOpenedChatId, setOpenedChatId } from 'entities/chats';
-import { userUtils } from 'entities/session';
+import { selectOpenedChatCompanion, setOpenedChatId } from 'entities/chats';
 import {
   selectOpenChatOptions,
   selectOpenSearchMessageBar,
@@ -66,7 +65,6 @@ const ChatOptionsButton = memo(({ onClick, focus }: { onClick: () => void; focus
 });
 
 export const ChatHeader = () => {
-  const chatId = useAppSelector(selectOpenedChatId);
   const chatCompanion = useAppSelector(selectOpenedChatCompanion);
   const openChatOptions = useAppSelector(selectOpenChatOptions);
   const openSearchMessageBar = useAppSelector(selectOpenSearchMessageBar);
@@ -75,7 +73,7 @@ export const ChatHeader = () => {
 
   if (!chatCompanion) return null;
 
-  const username = userUtils.getName(chatCompanion);
+  const companionName = chatCompanion.firstName || chatCompanion.name;
 
   const handleOpenChatOptions = () => {
     dispatch(setOpenChatOptions(!openChatOptions));
@@ -89,30 +87,29 @@ export const ChatHeader = () => {
   const toggleSearchMessageBar = () => {
     dispatch(setOpenSearchMessageBar(!openSearchMessageBar));
   };
-
   return (
     <div>
       <div className='border-b border-border bg-bg p-5'>
         <div className='flex items-center justify-between'>
-          <div className='flex items-center gap-x-4'>
+          <div className='flex items-center gap-x-2 xs2:gap-x-4'>
             <button onClick={handleCloseChat} className='md:hidden'>
               <IconWrapper className='header-chat-icon !rounded-full'>
                 <ChevronLeftIcon />
               </IconWrapper>
             </button>
-            <div className='relative h-[50px] w-[50px]'>
-              <UserAvatar user={chatCompanion} className='h-full w-full' />
+            <div className='relative h-[40px] w-[40px] xs2:h-[50px] xs2:w-[50px]'>
+              <UserAvatar user={chatCompanion} className='h-full w-full rounded-md' />
             </div>
             <div>
               <div className='flex h-full items-center'>
-                <h4 className='text-left text-sm'>{username}</h4>
+                <h4 className='text-left text-sm font-semibold xs2:text-base'>{companionName}</h4>
               </div>
-              <div>
-                <p className='mt-1 text-xs text-gray-400 dark:text-gray-500'>{companionStatus}</p>
+              <div className='h-4'>
+                <p className='text-xs leading-4 text-gray-400 dark:text-gray-500'>{companionStatus || 'offline'}</p>
               </div>
             </div>
           </div>
-          <div className='flex gap-x-4'>
+          <div className='flex gap-x-2 xs2:gap-x-4'>
             <PhoneCallButton />
             <VideoCallButton />
             <SearchButton onClick={toggleSearchMessageBar} />

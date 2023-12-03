@@ -12,7 +12,7 @@ export const useChatCompanionStatus = (chatId?: string) => {
   });
   const isExistedInContacts = useAppSelector(selectIsExistContactByChatId(chatId));
 
-  const status = useMemo(() => {
+  const status: string | undefined = useMemo(() => {
     const status = companionStatusByChatId || companionStatusByOpenedChat;
     if (!status) return;
 

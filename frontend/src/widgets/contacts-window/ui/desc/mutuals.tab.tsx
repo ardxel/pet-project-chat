@@ -19,12 +19,12 @@ const MutualContactsTab: FC<MutualContactsTabProps> = ({ contact }) => {
 
   return (
     <div className='h-full w-full'>
-      <div className='3xl:!grid-cols-5 grid grid-cols-1 gap-6 xs1:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+      <div className='grid grid-cols-1 gap-6 xs1:grid-cols-2 3xl:!grid-cols-5 lg:grid-cols-3 xl:grid-cols-4'>
         {!isLoading &&
           users.map((user, i) => {
             return (
               <div
-                className='3xl:!h-[11rem] flex h-44 w-full flex-col items-center rounded-md border border-border p-5 xs1:h-44 lg:h-44 xl:!h-[10rem]'
+                className='flex h-44 w-full flex-col items-center rounded-md border border-border p-5 xs1:h-44 3xl:!h-[11rem] lg:h-44 xl:!h-[10rem]'
                 key={i}>
                 <UserAvatar
                   user={user}

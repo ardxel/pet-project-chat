@@ -82,10 +82,7 @@ export class UserService {
       }
     }
 
-    /**
-     * Id лучше не использовать в update query, а пароль меняется в другом месте.
-     */
-    const { _id, password, ...rest } = dto;
+    const { _id, password, ...rest } = dto as UpdateUserDto & { password: string };
     return await this.model.findByIdAndUpdate(dto._id, { $set: rest }, { new: true });
   }
 

@@ -12,7 +12,6 @@ export class B2Service {
   private _bucketName: string;
   private _uploadUrl: string;
   private _authorizationToken: string;
-  private reconnectionCount = 0;
 
   constructor(private readonly configService: ConfigService) {
     this.b2 = new B2({
@@ -38,19 +37,15 @@ export class B2Service {
       this._uploadUrl = uploadUrl;
     } catch (error) {
       this._logger.log(error?.message);
-      // if (this.configService.get<string>('NODE_ENV').toLowerCase() === 'test') return;
-
-      // if (this.reconnectionCount < 10) {
-      //   this.authorize();
-      //   this.reconnectionCount++;
-      // }
     }
   }
 
   private async getUploadUrlAndToken(): Promise<[string, string]> {
     const response = await this.b2.getUploadUrl({ bucketId: this._bucketId });
+
     const uploadUrl = response.data.uploadUrl;
     const authorizationToken = response.data.authorizationToken;
+
     return [authorizationToken, uploadUrl];
   }
 
@@ -58,16 +53,10 @@ export class B2Service {
     return `https://f005.backblazeb2.com/file/${this._bucketName}/${filename}`;
   }
 
-  // private async deleteFileByFileName(filename: string) {
-  //   const {} = await this.b2.listFileNames({
-  //     bucketId: this._bucketId,
-  //   });
-  // }
-
   async uploadFile(userId: Types.ObjectId, file: Express.Multer.File): Promise<string> {
     try {
       const fileName = `${userId}/avatar`;
-      const { data } = await this.b2.uploadFile({
+      await this.b2.uploadFile({
         uploadUrl: this._uploadUrl,
         fileName,
         data: file.buffer,

@@ -15,3 +15,8 @@ export class MessageResponseData extends ResponseData {
     message: MessageData;
   };
 }
+
+export class ResponseDataDeletedMessage extends ResponseData {
+  @ApiProperty({ type: Boolean })
+  payload: Boolean;
+}

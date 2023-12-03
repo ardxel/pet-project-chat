@@ -49,7 +49,9 @@ export const ProfileChangeCountry: FC<ProfileFormProps> = ({ enabledEditingByUse
                   Ваша страна
                 </label>
                 {Boolean(fetchError) && (
-                  <h1 className='w-full text-sm text-red-500 first-letter:capitalize xs2:w-2/4 lg:w-2/4'>{fetchError}</h1>
+                  <h1 className='w-full text-sm text-red-500 first-letter:capitalize xs2:w-2/4 lg:w-2/4'>
+                    {fetchError}
+                  </h1>
                 )}
               </div>
               <div className='relative w-full'>

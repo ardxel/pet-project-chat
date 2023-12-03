@@ -3,7 +3,7 @@ import { IsMongoId, IsStrongPassword } from 'class-validator';
 import { Types } from 'mongoose';
 
 export class ChangePasswordDto {
-  @ApiProperty({ type: Types.ObjectId })
+  @ApiProperty({ type: String })
   @IsMongoId()
   _id: Types.ObjectId;
 

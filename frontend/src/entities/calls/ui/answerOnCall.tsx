@@ -9,9 +9,8 @@ interface AnswerOnCallProps {
 }
 
 export const AnswerOnCall: FC<AnswerOnCallProps> = (props) => {
-  let { answer, callFrom, withVideo } = props;
+  const { answer, callFrom, withVideo } = props;
 
-  callFrom = callFrom ? callFrom : 'Jessica';
   return (
     <div className='flex min-h-[24rem] min-w-[16rem] flex-col justify-center gap-y-14 rounded-md'>
       <div className='flex w-full flex-col justify-center'>

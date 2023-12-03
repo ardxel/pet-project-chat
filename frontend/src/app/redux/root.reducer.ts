@@ -14,35 +14,32 @@ const rootPersistConfig = {
   blacklist: [uiVisibilitySlice.name, privateChatsSlice.name],
 };
 
-const uiVisibilityPersistedReducer = {
-  [uiVisibilitySlice.name]: persistReducer(
-    {
-      key: uiVisibilitySlice.name,
-      storage,
-      blacklist: ignoredUIVisibilityStateKeys,
-    },
-    uiVisibilitySlice.reducer,
-  ),
-};
+const uiVisibilityPersistedReducer = persistReducer(
+  {
+    key: uiVisibilitySlice.name,
+    storage,
+    blacklist: ignoredUIVisibilityStateKeys,
+  },
+  uiVisibilitySlice.reducer,
+);
 
-const privateChatsPersistedReducer = {
-  [privateChatsSlice.name]: persistReducer(
-    {
-      key: privateChatsSlice.name,
-      storage,
-      blacklist: ignoredPrivateChatsStateKeys,
-    },
-    privateChatsSlice.reducer,
-  ),
-};
+const privateChatsPersistedReducer = persistReducer(
+  {
+    key: privateChatsSlice.name,
+    storage,
+    blacklist: ignoredPrivateChatsStateKeys,
+  },
+  privateChatsSlice.reducer,
+);
 
+// prettier-ignore
 const reducers = combineReducers({
-  ...uiVisibilityPersistedReducer,
-  ...privateChatsPersistedReducer,
-  [contactsSlice.name]: contactsSlice.reducer,
-  [sessionSlice.name]: sessionSlice.reducer,
-  [themeSlice.name]: themeSlice.reducer,
-  [baseApi.reducerPath]: baseApi.reducer,
+  [uiVisibilitySlice.name]: uiVisibilityPersistedReducer,
+  [privateChatsSlice.name]: privateChatsPersistedReducer,
+  [contactsSlice.name]:     contactsSlice.reducer,
+  [sessionSlice.name]:      sessionSlice.reducer,
+  [themeSlice.name]:        themeSlice.reducer,
+  [baseApi.reducerPath]:    baseApi.reducer,
 });
 
 export const rootReducer = persistReducer(rootPersistConfig, reducers);
