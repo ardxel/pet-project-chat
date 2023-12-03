@@ -105,12 +105,12 @@ const AddContactModal: FC<AddContactModalProps> = ({ onClose, isOpen }) => {
                               <div>
                                 {hasFullname ? (
                                   <>
-                                    <h4 className='text-left text-sm'>{`${user.firstName} ${user.lastName}`}</h4>
-                                    <p className='mt-1 text-left text-xs'>{`@${user.name}`}</p>
+                                    <h4 className='text-left text-sm'>{`${user?.firstName} ${user?.lastName}`}</h4>
+                                    <p className='mt-1 text-left text-xs'>{`@${user?.name}`}</p>
                                   </>
                                 ) : (
                                   <div className='flex h-full items-center'>
-                                    <h4 className='text-left text-sm'>{user.name}</h4>
+                                    <h4 className='text-left text-sm'>{user?.name}</h4>
                                   </div>
                                 )}
                               </div>

@@ -36,7 +36,9 @@ export const ContactsWindowHeader = () => {
           <div className='flex flex-col'>
             <div className='flex items-baseline gap-x-2'>
               <h1 className='text-xl text-gray-500 dark:text-gray-300'>{userUtils.getName(contact.user)}</h1>
-              <p className='font-600 text-[0.9rem] text-form-color'>{'@' + contact.user.name}</p>
+              {contact.user?.name && (
+                <p className='font-600 text-[0.9rem] text-form-color'>{'@' + contact.user?.name}</p>
+              )}
             </div>
             <div className='inline-block h-4 leading-4'>
               <p className='text-[0.8rem] text-form-color'>

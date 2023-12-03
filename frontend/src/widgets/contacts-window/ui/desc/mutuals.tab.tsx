@@ -30,7 +30,7 @@ const MutualContactsTab: FC<MutualContactsTabProps> = ({ contact }) => {
                   user={user}
                   className='mb-2 h-3/5 max-h-[4.5rem] w-3/5 max-w-[4.5rem] flex-shrink-0 rounded-full'
                 />
-                <p className='mb-2 rounded-sm text-center text-sm font-normal'>{`@${user.name}`}</p>
+                {user?.name && <p className='mb-2 rounded-sm text-center text-sm font-normal'>{`@${user?.name}`}</p>}
                 <div className='h-6'>
                   {userUtils.hasFullname(user) && <h4 className='text-sm '>{userUtils.getName(user)}</h4>}
                 </div>

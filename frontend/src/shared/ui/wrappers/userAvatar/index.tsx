@@ -23,5 +23,5 @@ export const UserAvatar: FC<UserAvatarProps> = memo(({ user, className }) => {
     );
   }
 
-  return <AvatarByFirstLetter name={user.name} className={className} />;
+  return <AvatarByFirstLetter name={user?.name} className={className} />;
 });

@@ -64,11 +64,11 @@ export const ContactsWindowAboutTab: FC<ContactWindowAboutTabProps> = ({ contact
               <h2 className='text-sm font-semibold leading-8 xs1:text-base'>{contact.user.language.join(', ')}</h2>
             </div>
           )}
-          {contact.user.hometown && (
+          {contact.user.country && (
             <div className='flex flex-col'>
               <ApartmentIcon className='[&>*]:!text-gray-400 dark:[&>*]:!text-gray-500' />
               <p className='mt-2 text-xs text-gray-400 dark:text-gray-400'>Город</p>
-              <h2 className='text-sm font-semibold leading-8 xs1:text-base'>{contact.user.hometown}</h2>
+              <h2 className='text-sm font-semibold leading-8 xs1:text-base'>{contact.user.country}</h2>
             </div>
           )}
           {contact.user.phoneNumber && (

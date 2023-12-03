@@ -53,7 +53,7 @@ export const ProfileEditFullname: FC<ProfileFormProps> = ({ enabledEditingByUser
                   enabledEditingByUser ? 'pointer-events-auto' : 'pointer-events-none',
                 )}
                 name='firstName'
-                placeholder={user.firstName || 'ваше имя'}
+                placeholder={user?.firstName || 'ваше имя'}
                 id='input-firstName'
               />
             </div>

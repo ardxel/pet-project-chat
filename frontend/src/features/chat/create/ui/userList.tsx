@@ -50,17 +50,17 @@ export const UserList: FC<UserListProps> = ({ users, onClose }) => {
           <div>
             {hasFullname ? (
               <>
-                <h4 className='text-left text-sm'>{`${user.firstName} ${user.lastName}`}</h4>
-                <p className='mt-1 text-xs'>{user.name}</p>
+                <h4 className='text-left text-sm'>{`${user?.firstName} ${user?.lastName}`}</h4>
+                <p className='mt-1 text-xs'>{user?.name}</p>
               </>
             ) : (
               <div className='flex h-full items-center'>
-                <h4 className='text-left text-sm'>{user.name}</h4>
+                <h4 className='text-left text-sm'>{user?.name}</h4>
               </div>
             )}
           </div>
         </div>
-        <button className='absolute right-5 z-50' onClick={() => onCreateChat(user._id)}>
+        <button className='absolute right-5 z-50' onClick={() => onCreateChat(user?._id)}>
           <IconWrapper className='h-10 w-10'>
             <TextsmsOutlinedIcon className='!h-5 !w-5' />
           </IconWrapper>

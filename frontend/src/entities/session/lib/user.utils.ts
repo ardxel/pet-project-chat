@@ -39,10 +39,10 @@ class UserUtils {
     if (typeof user === 'string') return;
 
     if (this.hasFullname(user)) {
-      return `${this.capitalize(user.firstName)} ${this.capitalize(user.lastName)}`;
+      return `${this.capitalize(user?.firstName)} ${this.capitalize(user?.lastName)}`;
     }
 
-    return user.name;
+    return user?.name;
   }
 
   /**
@@ -70,7 +70,7 @@ class UserUtils {
    * @returns {boolean} есть ли у пользователя fullname и lastname свойства
    */
   public hasFullname(user: IUser | Partial<IUser>): boolean {
-    return Boolean(user.firstName && user.lastName);
+    return Boolean(user?.firstName && user?.lastName);
   }
 
   /**

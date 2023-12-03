@@ -73,7 +73,7 @@ export const ChatHeader = () => {
 
   if (!chatCompanion) return null;
 
-  const companionName = chatCompanion.firstName || chatCompanion.name;
+  const companionName = chatCompanion?.firstName || chatCompanion?.name;
 
   const handleOpenChatOptions = () => {
     dispatch(setOpenChatOptions(!openChatOptions));

@@ -178,10 +178,10 @@ export const CallsProvider: FC<CallsProviderProps> = ({ children }) => {
       peer.on('signal', (signalData) => {
         chatSocket.emit(ChatEvents.CALL_OFFER, {
           to: receiverUserId,
-          from: user._id,
+          from: user?._id,
           signal: signalData,
           isVideoCall,
-          name: user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.name,
+          name: user?.firstName && user?.lastName ? `${user?.firstName} ${user?.lastName}` : user?.name,
         });
       });
 
