@@ -9,14 +9,14 @@ interface UserAvatarProps {
 }
 
 export const UserAvatar: FC<UserAvatarProps> = memo(({ user, className }) => {
-  const hasAvatar = Boolean(user.avatar);
+  const hasAvatar = Boolean(user?.avatar);
 
   if (hasAvatar) {
     return (
       <div className={twMerge('relative overflow-hidden', className)}>
         <img
           className={'absolute inset-0 left-0 right-0 top-0 h-full w-full overflow-hidden object-cover'}
-          src={user.avatar}
+          src={user?.avatar}
           alt={`Avatar of ${userUtils.getName(user)}`}
         />
       </div>
