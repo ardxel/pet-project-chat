@@ -1,4 +1,8 @@
-import { selectConversationIdAndCompanionListSorted, selectSearchChatInput } from 'entities/chats';
+import {
+  selectConversationIdAndCompanionListSorted,
+  selectPrivateChatsExist,
+  selectSearchChatInput,
+} from 'entities/chats';
 import { userUtils } from 'entities/session';
 import { selectChatBarFilterOption } from 'entities/ui-visibility';
 import { useMemo } from 'react';
@@ -7,6 +11,7 @@ import { useAppSelector } from 'shared/model';
 
 export const useFilterChats = () => {
   const chats = useAppSelector(selectConversationIdAndCompanionListSorted);
+  const chatsIsLoaded = useAppSelector(selectPrivateChatsExist);
   const searchChatInput = useSelector(selectSearchChatInput);
   const filterOptions = useAppSelector(selectChatBarFilterOption);
 
@@ -44,5 +49,5 @@ export const useFilterChats = () => {
     });
   }, [chats, searchChatInput, filteredChatsByFilterOptions]);
 
-  return filteredChatsBySearchInput;
+  return chatsIsLoaded ? filteredChatsBySearchInput : undefined;
 };
