@@ -80,7 +80,7 @@ export const ProfileEditFullname: FC<ProfileFormProps> = ({ enabledEditingByUser
                 disabled={isSubmitting}
                 className={twMerge(
                   'max-w-[12rem] rounded-md bg-blue-900 p-3 text-center text-sm font-semibold text-white duration-200',
-                  isValid && dirty ? 'bg-blue-600 hover:bg-blue-800' : 'cursor-default bg-blue-900',
+                  (isValid && dirty) || isSubmitting ? 'bg-blue-600 hover:bg-blue-800' : 'cursor-default bg-blue-900',
                 )}>
                 Отправить
               </button>
