@@ -1,6 +1,6 @@
 import { Listbox } from '@headlessui/react';
 import { useField } from 'formik';
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import PhoneInput, { getCountries, getCountryCallingCode } from 'react-phone-number-input';
 import labels from 'react-phone-number-input/locale/ru.json';
 import { useAdaptiveMenuPosition } from 'shared/model';
@@ -9,8 +9,7 @@ import { twMerge } from 'tailwind-merge';
 
 const SelectCountryComponent = ({ value, onChange, iconComponent, disabled }) => {
   const [country, setCountry] = useState(value);
-  const optionsRef = useRef();
-  const position = useAdaptiveMenuPosition(optionsRef);
+  const [position, optionsRef] = useAdaptiveMenuPosition([disabled]);
 
   const countries = useMemo(() => {
     return getCountries().map((country) => (
