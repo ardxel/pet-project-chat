@@ -22,7 +22,7 @@ const MainLayout = () => {
       <Header />
       <Suspense
         fallback={
-          <div className='absolute left-0 right-0 top-0 flex h-full w-full items-center justify-center'>
+          <div className='flex h-full w-full items-center justify-center'>
             <ScaleLoader className='w-30 h-30 [&>span]:!bg-blue-500' />
           </div>
         }>

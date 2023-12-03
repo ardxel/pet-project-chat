@@ -1,9 +1,5 @@
 import { Component, Suspense, lazy } from 'react';
 import { ScaleLoader } from 'react-spinners';
-import { wait } from 'shared/lib';
-
-const lazyWithDelay = (factory: () => Promise<any>, delay = 100000) =>
-  lazy(() => Promise.all([factory(), wait(delay)]).then(([module]) => module));
 
 const ContactsLeftBar = lazy(() => import('widgets/contacts-leftbar'));
 const ContactsWindow = lazy(() => import('widgets/contacts-window'));

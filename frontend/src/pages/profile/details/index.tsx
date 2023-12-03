@@ -2,19 +2,13 @@ import { Suspense, lazy, useEffect, useState } from 'react';
 import 'react-phone-number-input/style.css';
 import { Location, useLocation } from 'react-router';
 import { ScaleLoader } from 'react-spinners';
-import { wait } from 'shared/lib';
 import { HorizontalTabs } from 'shared/ui';
 
 const tabOptions = ['Изменить данные', 'Сменить пароль', 'Изменить другие данные'];
 
-const lazyWithDelay = (factory: () => Promise<any>, delay = 1000000) => {
-  return lazy(() => Promise.all([factory(), wait(delay)]).then(([module]) => module));
-};
-
 const ProfilePersonalInfoTab = lazy(() => import('./personalInfo'));
 const ProfileChangePasswordTab = lazy(() => import('./changePassword'));
 const ProfileRestInfoTab = lazy(() => import('./restInfo'));
-// const ProfileRestInfoTab = lazyWithDelay(() => import('./restInfo'));
 
 export interface ProfileFormProps {
   enabledEditingByUser: boolean;

@@ -1,9 +1,9 @@
 import { Component, ReactNode, Suspense, lazy } from 'react';
 import { ScaleLoader } from 'react-spinners';
+import ChatOptions from 'widgets/chat-options-sidebar';
 
 const ChatWindow = lazy(() => import('widgets/chat-window'));
 const ChatLeftBar = lazy(() => import('widgets/chat-leftbar'));
-const ChatOptions = lazy(() => import('widgets/chat-options-sidebar'));
 
 class ChatPage extends Component {
   render(): ReactNode {
@@ -17,8 +17,8 @@ class ChatPage extends Component {
             </div>
           }>
           <ChatWindow />
+          <ChatOptions />
         </Suspense>
-        <ChatOptions />
       </div>
     );
   }

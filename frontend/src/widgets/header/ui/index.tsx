@@ -1,6 +1,5 @@
 import { Logo } from 'shared/ui';
 import Nav from './nav';
-import Notifications from './notifications';
 import HeaderProfile from './profile';
 import QuickLinks from './quick-navigation';
 
@@ -15,7 +14,7 @@ export const Header = () => {
         <div className='ml-5 flex items-center gap-x-5 pr-6'>
           <QuickLinks />
 
-          <Notifications />
+          {/* <Notifications /> */}
 
           <HeaderProfile />
         </div>

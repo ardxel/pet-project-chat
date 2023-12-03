@@ -20,6 +20,7 @@ const ChatOptions = () => {
   if (!openChatOptions) return null;
 
   const username = userUtils.getName(chatCompanion);
+
   const closeChatOptions = () => {
     dispatch(setOpenChatOptions(false));
   };
