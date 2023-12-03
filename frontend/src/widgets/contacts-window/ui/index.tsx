@@ -2,7 +2,7 @@ import { useContactGuard } from '../lib';
 import { ContactWindowDescription as Description } from './desc';
 import { ContactsWindowHeader as Header } from './head';
 
-export const ContactsWindow = () => {
+const ContactsWindow = () => {
   const access = useContactGuard();
 
   if (!access) return null;
@@ -16,3 +16,5 @@ export const ContactsWindow = () => {
     </div>
   );
 };
+
+export default ContactsWindow;

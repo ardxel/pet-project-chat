@@ -3,7 +3,7 @@ import { ChatArea } from './chat-area';
 import { ChatHeader } from './head';
 import { ChatInput } from './input';
 
-export const ChatWindow = () => {
+const ChatWindow = () => {
   const access = useChatGuard();
 
   if (!access) return null;
@@ -16,3 +16,5 @@ export const ChatWindow = () => {
     </section>
   );
 };
+
+export default ChatWindow;

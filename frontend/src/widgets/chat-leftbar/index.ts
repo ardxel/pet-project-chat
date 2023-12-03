@@ -1,1 +1,1 @@
-export { ChatLeftBar as default } from './ui';
+export { default } from './ui';

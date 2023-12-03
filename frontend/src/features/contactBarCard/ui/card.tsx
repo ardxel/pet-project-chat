@@ -41,7 +41,7 @@ export const ContactBarCard: FC<ContactBarCardProps> = ({ data }) => {
           <div className='flex h-full flex-col gap-y-2 py-[0.4rem]'>
             <h4 className='text-left text-sm'>{userUtils.getName(user)}</h4>
             <p className='text-left text-xs leading-none text-form-color'>
-              {userUtils.hasFullname(user) ? `@${user.name}` : null}
+              {userUtils.hasFullname(user) ? `@${user?.name}` : null}
             </p>
           </div>
         </div>

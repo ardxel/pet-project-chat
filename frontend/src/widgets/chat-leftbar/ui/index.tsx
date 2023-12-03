@@ -10,7 +10,7 @@ import { SearchBar } from './searchbar';
 
 interface ChatLeftBarProps {}
 
-export const ChatLeftBar: FC<ChatLeftBarProps> = () => {
+const ChatLeftBar: FC<ChatLeftBarProps> = () => {
   const openChat = useAppSelector(selectOpenChat);
   const dispatch = useAppDispatch();
 
@@ -22,3 +22,5 @@ export const ChatLeftBar: FC<ChatLeftBarProps> = () => {
     </LeftBar>
   );
 };
+
+export default ChatLeftBar;

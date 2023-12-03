@@ -7,7 +7,7 @@ import { ContactList } from './contactList';
 import { LeftBarHeader } from './head';
 import { SearchBar } from './searchbar';
 
-export const ContactsLeftBar = () => {
+const ContactsLeftBar = () => {
   const openContactPage = useAppSelector(selectOpenContactPage);
   const dispatch = useAppDispatch();
 
@@ -27,3 +27,5 @@ export const ContactsLeftBar = () => {
     </LeftBar>
   );
 };
+
+export default ContactsLeftBar;

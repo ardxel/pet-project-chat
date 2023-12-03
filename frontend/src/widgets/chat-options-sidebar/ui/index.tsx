@@ -10,7 +10,7 @@ import { MediaButton, MediaContainer } from './media';
 import { MuteButton } from './muteModal';
 import { OptionsButton, OptionsContainer } from './options';
 
-export const ChatOptions = () => {
+const ChatOptions = () => {
   const openChatOptions = useAppSelector(selectOpenChatOptions);
   const chatCompanion = useAppSelector(selectOpenedChatCompanion);
   const { status: companionStatus } = useChatCompanionStatus();
@@ -59,3 +59,5 @@ export const ChatOptions = () => {
     </>
   );
 };
+
+export default ChatOptions;

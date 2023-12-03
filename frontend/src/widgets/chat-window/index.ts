@@ -1,1 +1,1 @@
-export { ChatWindow as default } from './ui';
+export { default } from './ui';
