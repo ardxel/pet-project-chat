@@ -25,36 +25,29 @@ import { ChangeUserStatusDto } from './dto/change-user-status.dto';
 
 type EventData<T> = (data: T) => void;
 
+// prettier-ignore
 interface ClientToServerEvents {
-  [ChatEvents.USER_STATUS]: EventData<{
-    userId: Types.ObjectId;
-    conversationId: Types.ObjectId;
-    status: UserStatus;
-  }>;
+  [ChatEvents.USER_STATUS]: EventData<{userId: Types.ObjectId; conversationId: Types.ObjectId; status: UserStatus;}>;
 }
 
+// prettier-ignore
 interface ServerToClientEvents {
-  [ChatClientErrorEvents.INVALID_TOKEN]: EventData<{
-    message: string;
-    status: string;
-    stack?: any;
-  }>;
-  [ChatEvents.USER_INIT]: EventData<User>;
-  [ChatEvents.USER_STATUS]: EventData<{
-    userId: Types.ObjectId;
-    conversationId: Types.ObjectId;
-    status: UserStatus;
-  }>;
-  [ChatEvents.CONVERSATION_CREATE]: EventData<Conversation>;
-  [ChatEvents.CONVERSATION_FETCH]: EventData<{ data: Conversation; status: ConversationStatus }[]>;
-  [ChatEvents.MESSAGE_FETCH]: EventData<{ conversationId: Types.ObjectId; messages: Message[] }>;
-  [ChatEvents.MESSAGE_CREATE]: EventData<{ conversationId: Types.ObjectId; message: Message }>;
-  [ChatEvents.MESSAGE_UPDATE]: EventData<Message>;
-  [ChatEvents.MESSAGE_DELETE]: EventData<DeleteMessageDto>;
-  [ChatEvents.CALL_OFFER]: EventData<CallOfferDto>;
-  [ChatEvents.CALL_ANSWER]: EventData<Omit<CallAnswerDto, 'to'>>;
-  [ChatEvents.CALL_END]: EventData<CallEndDto>;
-  [ChatEvents.CALL_UPDATE]: EventData<CallUpdateDto>;
+  [ChatClientErrorEvents.INVALID_TOKEN]: EventData<{message: string; status: string; stack?: any}>;
+  [ChatEvents.USER_INIT]:                EventData<User>;
+  [ChatEvents.USER_STATUS]:              EventData<{userId: Types.ObjectId; conversationId: Types.ObjectId; status: UserStatus}>;
+  
+  [ChatEvents.CONVERSATION_CREATE]:      EventData<Conversation>;
+  [ChatEvents.CONVERSATION_FETCH]:       EventData<{ data: Conversation; status: ConversationStatus }[]>;
+
+  [ChatEvents.MESSAGE_FETCH]:            EventData<{ conversationId: Types.ObjectId; messages: Message[] }>;
+  [ChatEvents.MESSAGE_CREATE]:           EventData<{ conversationId: Types.ObjectId; message: Message }>;
+  [ChatEvents.MESSAGE_UPDATE]:           EventData<Message>;
+  [ChatEvents.MESSAGE_DELETE]:           EventData<DeleteMessageDto>;
+  
+  [ChatEvents.CALL_OFFER]:               EventData<CallOfferDto>;
+  [ChatEvents.CALL_ANSWER]:              EventData<Omit<CallAnswerDto, 'to'>>;
+  [ChatEvents.CALL_END]:                 EventData<CallEndDto>;
+  [ChatEvents.CALL_UPDATE]:              EventData<CallUpdateDto>;
 }
 
 @WebSocketGateway({ namespace: 'chat', cors: { origin: '*' } })
