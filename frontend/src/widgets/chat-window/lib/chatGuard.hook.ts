@@ -23,7 +23,7 @@ export const useChatGuard = () => {
     }
   }, [openedChatId, isOpen]);
 
-  const access = (isAuthorized && isConnected) || isOpen;
+  const access = isAuthorized && isConnected;
 
   return access;
 };

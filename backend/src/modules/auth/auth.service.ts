@@ -77,6 +77,8 @@ export class AuthService {
 
     const admin = await this.userService.findByEmail('admin@gmail.com');
 
+    if (!admin) return;
+
     await this.conversationService.create({ userIds: [admin.id, user.id] });
     await this.contactsService.addContact({ initiatorId: user.id, addedId: admin.id, returnUserAfter: false });
     await this.contactsService.addContact({ initiatorId: admin.id, addedId: user.id, returnUserAfter: false });
