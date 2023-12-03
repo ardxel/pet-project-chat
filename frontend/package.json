@@ -7,6 +7,7 @@
     "start": "cross-env webpack serve --config ./webpack.dev.js",
     "build:dev": "cross-env webpack --config ./webpack.dev.js",
     "build:prod": "cross-env webpack --config ./webpack.prod.js --stats-children",
+    "build:vercel": "npx webpack --config ./webpack.prod.js",
     "lint:check": "eslint src/**/*.{ts,tsx}",
     "lint:fix": "eslint --fix src/**/*.{ts,tsx}",
     "prettier:check": "npx prettier --check src/**/*.{ts,tsx}",
