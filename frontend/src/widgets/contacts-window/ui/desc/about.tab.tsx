@@ -41,11 +41,13 @@ export const ContactsWindowAboutTab: FC<ContactWindowAboutTabProps> = ({ contact
       <div className='flex flex-col'>
         <h2 className='mb-2 text-sm font-semibold xs1:text-base'>Базовая информация</h2>
         <div className='flex flex-wrap items-center gap-x-6'>
-          <div className='flex flex-col'>
-            <CakeIcon className='[&>*]:!text-gray-400 dark:[&>*]:!text-gray-500' />
-            <p className='mt-2 text-xs text-gray-400 dark:text-gray-400'>День рождения</p>
-            <h2 className='text-sm font-semibold leading-8 xs1:text-base'>Июль 11</h2>
-          </div>
+          {contact.user.birthday && (
+            <div className='flex flex-col'>
+              <CakeIcon className='[&>*]:!text-gray-400 dark:[&>*]:!text-gray-500' />
+              <p className='mt-2 text-xs text-gray-400 dark:text-gray-400'>День рождения</p>
+              <h2 className='text-sm font-semibold leading-8 xs1:text-base'>{contact.user.birthday?.toString()}</h2>
+            </div>
+          )}
           {contact.user.gender && (
             <div className='flex flex-col'>
               {contact.user.gender === 'male' ? (
@@ -54,7 +56,9 @@ export const ContactsWindowAboutTab: FC<ContactWindowAboutTabProps> = ({ contact
                 <FemaleIcon className='[&>*]:!text-gray-400 dark:[&>*]:!text-gray-500' />
               )}
               <p className='mt-2 text-xs text-gray-400 dark:text-gray-400'>Пол</p>
-              <h2 className='text-sm font-semibold leading-8 xs1:text-base'>Мужчина</h2>
+              <h2 className='text-sm font-semibold leading-8 xs1:text-base'>
+                {contact.user.gender === 'male' ? 'Мужчина' : 'Женщина'}
+              </h2>
             </div>
           )}
           {contact.user.language.length > 0 && (

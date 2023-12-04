@@ -3,13 +3,14 @@ import PhoneMissedOutlinedIcon from '@mui/icons-material/PhoneMissedOutlined';
 import { selectUserId } from 'entities/session';
 import * as linkPreview from 'link-preview-js';
 import { duration, utc } from 'moment';
-import { FC, memo, useEffect, useState } from 'react';
-import Linkify from 'react-linkify';
+import { FC, Suspense, lazy, memo, useEffect, useState } from 'react';
 import { useAppSelector } from 'shared/model';
 import { IconWrapper } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
 import { messageUtil as msgUtils } from '../lib';
 import { IMessage } from '../model';
+
+const Linkify = lazy(() => import('react-linkify'));
 
 const LinkPreview = ({ url, text }) => {
   const [linkInfo, setLinkInfo] = useState(null);
@@ -73,14 +74,16 @@ export const MessageValue: FC<MessageValueProps> = memo(({ message }) => {
   if (type === 'text') {
     return (
       <div className='px-4 py-3'>
-        <Linkify
-          componentDecorator={(decoratedHref, decoratedText, key) => (
-            <LinkPreview key={key} url={decoratedHref} text={decoratedText} />
-          )}>
-          <p className={twMerge(isBgBlue ? 'text-white' : '', showUpdatedTime ? 'mr-10' : 'mr-5', 'min-w-[15px]')}>
-            {message.text}
-          </p>
-        </Linkify>
+        <Suspense>
+          <Linkify
+            componentDecorator={(decoratedHref, decoratedText, key) => (
+              <LinkPreview key={key} url={decoratedHref} text={decoratedText} />
+            )}>
+            <p className={twMerge(isBgBlue ? 'text-white' : '', showUpdatedTime ? 'mr-10' : 'mr-5', 'min-w-[15px]')}>
+              {message.text}
+            </p>
+          </Linkify>
+        </Suspense>
       </div>
     );
   }
