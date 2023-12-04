@@ -38,7 +38,7 @@ export const ProfileEditFullname: FC<ProfileFormProps> = ({ enabledEditingByUser
       {({ isSubmitting, isValid, dirty }) => (
         <Form
           className={twMerge(
-            'flex w-full flex-col rounded-md p-4 ',
+            'flex w-full flex-col rounded-md xs2:p-4 ',
             enabledEditingByUser ? 'border border-border' : '',
           )}>
           <div className='flex w-full flex-col gap-x-4 lg:flex-row lg:justify-between'>

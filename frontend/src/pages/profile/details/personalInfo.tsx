@@ -12,7 +12,7 @@ export default function ProfilePersonalInfoTab({ enabledEditingByUser, toggleEdi
   return (
     <div className='flex w-full flex-col lg:flex-row'>
       <div className='flex w-full flex-col gap-y-5 lg:flex-row'>
-        <div className='w-full lg:w-1/4'>
+        <div className='w-full xs2:p-4 lg:w-1/4'>
           <h4 className='text-[14px] font-semibold '>Персональная информация</h4>
           <p className='mt-3 text-xs'>Изменить персональные данные</p>
           <button
@@ -31,7 +31,7 @@ export default function ProfilePersonalInfoTab({ enabledEditingByUser, toggleEdi
           <ProfileChangeEmail enabledEditingByUser={enabledEditingByUser} />
           <div
             className={twMerge(
-              'flex w-full flex-col gap-x-4 gap-y-5 rounded-md p-4 lg:flex-row',
+              'flex w-full flex-col gap-x-4 gap-y-5 rounded-md xs2:p-4 lg:flex-row',
               enabledEditingByUser ? 'border border-border' : '',
             )}>
             <ProfileChangePhoneNumber enabledEditingByUser={enabledEditingByUser} />

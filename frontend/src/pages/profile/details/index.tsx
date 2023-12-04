@@ -47,7 +47,7 @@ export const ProfileDetails = () => {
           className='text-[0.6rem] font-semibold text-gray-500 dark:text-gray-400 xs2:text-[0.7rem] xs1:text-xs'
         />
       </div>
-      <div className='relative mt-2 min-h-[30vh] w-full rounded-b-2xl bg-bg p-7'>
+      <div className='relative mt-2 min-h-[30vh] w-full rounded-b-2xl bg-bg p-5 xs2:p-7'>
         <Suspense
           fallback={
             <div className='absolute left-0 right-0 top-0 flex h-full w-full items-center justify-center'>
