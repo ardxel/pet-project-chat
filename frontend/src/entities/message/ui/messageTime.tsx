@@ -3,7 +3,7 @@ import moment from 'moment';
 import { FC, memo } from 'react';
 import { useAppSelector } from 'shared/model';
 import { twMerge } from 'tailwind-merge';
-import { messageUtil } from '../lib';
+import { messageUtils } from '../lib';
 import { IMessage } from '../model';
 
 interface MessageTimeProps {
@@ -12,9 +12,9 @@ interface MessageTimeProps {
 
 export const MessageTime: FC<MessageTimeProps> = memo(({ message }) => {
   const userId = useAppSelector(selectUserId);
-  const showUpdatedTime = messageUtil.showUpdatedTime(message);
-  const isUserMsg = messageUtil.isMine(message, userId);
-  const isTextMsg = messageUtil.getType(message) === 'text';
+  const showUpdatedTime = messageUtils.showUpdatedTime(message);
+  const isUserMsg = messageUtils.isMine(message, userId);
+  const isTextMsg = messageUtils.getType(message) === 'text';
   return (
     <p
       className={twMerge(

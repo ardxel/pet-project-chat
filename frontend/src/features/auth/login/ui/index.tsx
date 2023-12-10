@@ -24,7 +24,7 @@ export const LoginForm: FC<LoginFormProps> = ({ onSuccess }) => {
   const dispatch = useAppDispatch();
   return (
     <div className='main flex items-center justify-center overflow-hidden bg-aside-bg'>
-      <div className='mx-4 w-full xs0:mx-auto xs0:w-auto'>
+      <div className='mx-4 w-full xs0:mx-auto xs0:w-auto xs0:min-w-[24rem]'>
         <div className='mx-auto flex items-center justify-center'>
           <Logo />
           <h1 className='text-xl'>ConnectMe</h1>

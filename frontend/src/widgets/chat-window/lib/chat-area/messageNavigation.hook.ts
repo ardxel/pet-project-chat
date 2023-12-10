@@ -1,5 +1,5 @@
 import { selectOpenedChatId, selectOpenedChatMessages } from 'entities/chats';
-import { messageUtil } from 'entities/message';
+import { messageUtils } from 'entities/message';
 import { selectOpenSearchMessageBar } from 'entities/ui-visibility';
 import { ChangeEvent, useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { useAppSelector } from 'shared/model';
@@ -25,7 +25,7 @@ export const useMessageNavigation = (onSelect: (index: number) => void) => {
     if (!searchTerm) return;
     const messageIndexes: number[] = [];
     messages.forEach((msg, index) => {
-      const type = messageUtil.getType(msg);
+      const type = messageUtils.getType(msg);
       if (type === 'text' && msg.text.includes(searchTerm)) {
         messageIndexes.push(index);
       }

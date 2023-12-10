@@ -11,19 +11,20 @@ const resolveFromMainDir = (endpoint) => {
   return path.resolve(__dirname, endpoint);
 };
 
+// prettier-ignore
 const _constants = {
   paths: {
-    BUILD_DIR: resolveFromMainDir('build'),
-    PUBLIC_DIR: resolveFromMainDir('static'),
-    SRC_DIR: resolveFromMainDir('src'),
-    TEST_DIR: resolveFromMainDir('src/test'),
-    MOCK_DIR: resolveFromMainDir('__mocks__'),
+    BUILD_DIR:     resolveFromMainDir('build'),
+    PUBLIC_DIR:    resolveFromMainDir('static'),
+    SRC_DIR:       resolveFromMainDir('src'),
+    TEST_DIR:      resolveFromMainDir('src/test'),
+    MOCK_DIR:      resolveFromMainDir('__mocks__'),
     HTML_TEMPLATE: path.join(__dirname, 'public', 'index.html'),
-    ENTRYPOINT: path.join(__dirname, 'src', 'app', 'index.tsx'),
+    ENTRYPOINT:    path.join(__dirname, 'src', 'app', 'index.tsx'),
   },
   env: {
-    isServe: Boolean(process.env.SERVE),
-    port: parseInt(process.env.PORT, 10) || 3000,
+    isServe:       Boolean(process.env.SERVE),
+    port:          parseInt(process.env.PORT, 10) || 3000,
   },
 };
 

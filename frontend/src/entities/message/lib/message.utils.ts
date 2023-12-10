@@ -1,6 +1,6 @@
 import { CallEndReason, IMessage, MessageType, ParsedCallText } from '../model';
 
-class MessageUtil {
+class MessageUtils {
   public isMine<T extends IMessage, U extends string>(message: T, userId: U): boolean {
     return message.sender === userId;
   }
@@ -21,6 +21,8 @@ class MessageUtil {
   }
 
   public parseCallText<T extends IMessage>(message: T): ParsedCallText {
+    if (this.getType(message) !== 'call') return;
+
     const splitted: any[] = message.text.split('.');
     splitted[2] = parseInt(splitted[2]);
 
@@ -30,4 +32,4 @@ class MessageUtil {
   }
 }
 
-export const messageUtil = new MessageUtil();
+export const messageUtils = new MessageUtils();

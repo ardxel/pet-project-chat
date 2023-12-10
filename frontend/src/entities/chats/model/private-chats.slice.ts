@@ -1,5 +1,5 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
-import { IMessage, messageUtil } from 'entities/message';
+import { IMessage, messageUtils } from 'entities/message';
 import { editMessageThunk } from 'features/message/edit';
 import moment from 'moment';
 import { chatsApi } from '../api';
@@ -105,7 +105,7 @@ export const selectOpenedChatHasAllMessages = createSelector(selectOpenedChatDat
 export const selectChatLastMessage = (chatId: string) =>
   createSelector(
     (state: RootState) => state.privateChats.chats[chatId],
-    ({ messages }) => messages.findLast((msg) => messageUtil.getType(msg) === 'text'),
+    ({ messages }) => messages.findLast((msg) => messageUtils.getType(msg) === 'text'),
   );
 
 export const selectOpenedChatMessagesLength = createSelector(selectOpenedChatMessages, (messages) => messages?.length);

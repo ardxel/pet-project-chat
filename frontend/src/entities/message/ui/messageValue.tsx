@@ -7,7 +7,7 @@ import { FC, Suspense, lazy, memo, useEffect, useState } from 'react';
 import { useAppSelector } from 'shared/model';
 import { IconWrapper } from 'shared/ui';
 import { twMerge } from 'tailwind-merge';
-import { messageUtil as msgUtils } from '../lib';
+import { messageUtils as msgUtils } from '../lib';
 import { IMessage } from '../model';
 
 const Linkify = lazy(() => import('react-linkify'));
